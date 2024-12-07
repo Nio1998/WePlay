@@ -1,17 +1,21 @@
 package model.prenotazione;
 
 import java.io.Serializable;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class PrenotazioneBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private Integer eventoID;
+	private int eventoID;
 	private String utenteUsername;
-	private Integer posizioneInCoda;
+	private int posizioneInCoda;
 	private String stato;
 	
-	public PrenotazioneBean(Integer eventoID, String utenteUsername, Integer posizioneInCoda, String stato) {
+	public PrenotazioneBean() {}
+	
+	public PrenotazioneBean(int eventoID, String utenteUsername, int posizioneInCoda, String stato) {
 		super();
 		this.eventoID = eventoID;
 		this.utenteUsername = utenteUsername;
@@ -19,10 +23,18 @@ public class PrenotazioneBean implements Serializable {
 		this.stato = stato;
 	}
 	
-	public Integer getEventoID() {
+	public PrenotazioneBean(ResultSet rs) throws SQLException {
+		super();
+		this.eventoID = rs.getInt("ID_evento");
+		this.utenteUsername = rs.getString("username_utente");
+		this.posizioneInCoda = rs.getInt("posizione_in_coda");
+		this.stato = rs.getString("stato");
+	}
+	
+	public int getEventoID() {
 		return eventoID;
 	}
-	public void setEventoID(Integer eventoID) {
+	public void setEventoID(int eventoID) {
 		this.eventoID = eventoID;
 	}
 	public String getUtenteUsername() {
@@ -31,10 +43,10 @@ public class PrenotazioneBean implements Serializable {
 	public void setUtenteUsername(String utenteUsername) {
 		this.utenteUsername = utenteUsername;
 	}
-	public Integer getPosizioneInCoda() {
+	public int getPosizioneInCoda() {
 		return posizioneInCoda;
 	}
-	public void setPosizioneInCoda(Integer posizioneInCoda) {
+	public void setPosizioneInCoda(int posizioneInCoda) {
 		this.posizioneInCoda = posizioneInCoda;
 	}
 	public String getStato() {
