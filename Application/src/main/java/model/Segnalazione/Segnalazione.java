@@ -1,4 +1,4 @@
-package model;
+package model.Segnalazione;
 
 import java.io.Serializable;
 
