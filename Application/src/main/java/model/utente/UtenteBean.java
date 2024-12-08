@@ -1,4 +1,4 @@
-package model;
+package model.utente;
 
 import java.util.Date;
 
@@ -11,7 +11,7 @@ import java.util.Date;
  * @author Carmine
  * @version 1.0
  */
-public class Utente {
+public class UtenteBean {
 
     // Informazioni personali
     private String username;
@@ -49,7 +49,7 @@ public class Utente {
      * @param numValutazioniNegative il numero di valutazioni negative ricevute
      * @param numValutazioniPositive il numero di valutazioni positive ricevute
      */
-    public Utente(String username, String cognome, String nome, Date dataDiNascita, String email, String pw,
+    public UtenteBean(String username, String cognome, String nome, Date dataDiNascita, String email, String pw,
                   int numTimeout, boolean isTimeout, boolean isAdmin, Date dataOraFineTimeout,
                   int numValutazioniNeutre, int numValutazioniNegative, int numValutazioniPositive) {
         this.username = username;

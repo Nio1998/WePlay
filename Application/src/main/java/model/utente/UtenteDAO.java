@@ -1,8 +1,10 @@
-package model;
+package model.utente;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+
+import model.ConDB;
 
 /**
  * La classe `UtenteDAO` gestisce le operazioni di accesso al database per la tabella `utente`.
@@ -17,7 +19,7 @@ public class UtenteDAO {
      * @param utente l'oggetto Utente da salvare
      * @throws SQLException se si verifica un errore durante l'operazione
      */
-	public void save(Utente utente) throws SQLException {
+	public void save(UtenteBean utente) throws SQLException {
 	    Connection connection = null;
 	    PreparedStatement preparedStatement = null;
 
@@ -64,7 +66,7 @@ public class UtenteDAO {
      * @param utente l'oggetto Utente con i dati aggiornati
      * @throws SQLException se si verifica un errore durante l'operazione o nessun utente viene aggiornato
      */
-	public void update(Utente utente) throws SQLException {
+	public void update(UtenteBean utente) throws SQLException {
 	    Connection connection = null;
 	    PreparedStatement preparedStatement = null;
 
@@ -130,7 +132,7 @@ public class UtenteDAO {
      * @return un oggetto `Utente` se trovato, altrimenti `null`
      * @throws SQLException se si verifica un errore durante l'operazione
      */
-	public Utente findByUsername(String username) throws SQLException {
+	public UtenteBean findByUsername(String username) throws SQLException {
 	    Connection connection = null;
 	    PreparedStatement preparedStatement = null;
 	    ResultSet resultSet = null;
@@ -144,7 +146,7 @@ public class UtenteDAO {
 
 	        if (resultSet.next()) {
 	            // Costruzione dell'oggetto Utente dai risultati del database
-	            return new Utente(
+	            return new UtenteBean(
 	                resultSet.getString("username"),
 	                resultSet.getString("cognome"),
 	                resultSet.getString("nome"),
@@ -185,11 +187,11 @@ public class UtenteDAO {
      * @return una lista di oggetti `Utente` contenente tutti gli utenti
      * @throws SQLException se si verifica un errore durante l'operazione
      */
-	public List<Utente> getAllUtenti() throws SQLException {
+	public List<UtenteBean> getAllUtenti() throws SQLException {
 	    Connection connection = null;
 	    PreparedStatement preparedStatement = null;
 	    ResultSet resultSet = null;
-	    List<Utente> utenti = new ArrayList<>();
+	    List<UtenteBean> utenti = new ArrayList<>();
 
 	    try {
 	        connection = ConDB.getConnection();
@@ -198,7 +200,7 @@ public class UtenteDAO {
 	        resultSet = preparedStatement.executeQuery();
 
 	        while (resultSet.next()) {
-	            Utente utente = new Utente(
+	            UtenteBean utente = new UtenteBean(
 	            		resultSet.getString("username"),
 		                resultSet.getString("cognome"),
 		                resultSet.getString("nome"),
