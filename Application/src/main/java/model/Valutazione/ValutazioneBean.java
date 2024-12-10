@@ -1,7 +1,7 @@
 package model.Valutazione;
 
 public class ValutazioneBean {
-    private static int idCounter = 1; // Variabile statica per calcolare l'ID automaticamente
+    
     private int id; // ID univoco per la valutazione
     private String esito; // Valori ammessi: "-1" (negativa), "0" (neutra), "1" (positiva)
     private String utenteValutato; // Utente che riceve la valutazione
@@ -9,8 +9,8 @@ public class ValutazioneBean {
     private int idEvento; // ID dell'evento associato
 
     // Costruttore
-    public ValutazioneBean(String esito, String utenteValutato, String utenteValutante, int idEvento) {
-        this.id = idCounter++;
+    public ValutazioneBean(int id, String esito, String utenteValutato, String utenteValutante, int idEvento) {
+        this.id = id;
         this.esito = esito;
         this.utenteValutato = utenteValutato;
         this.utenteValutante = utenteValutante;

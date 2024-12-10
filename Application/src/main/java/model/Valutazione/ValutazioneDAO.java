@@ -8,24 +8,39 @@ import java.util.Collection;
 import java.util.ArrayList;
 
 import model.ConDB;
+import model.evento.Evento;
 
 public class ValutazioneDAO {
+	
+	
     public synchronized void save(ValutazioneBean valutazione) throws SQLException {
-        try (Connection conn = ConDB.getConnection();
-             PreparedStatement query = conn.prepareStatement("INSERT INTO valutazione (esito, utente_valutato, utente_valutante, ID_evento) VALUES (?, ?, ?, ?)")) {
+    	
+    	Connection conn = null;
+        try {
+        	conn = ConDB.getConnection();
+        	
+        	try (PreparedStatement query = conn.prepareStatement("INSERT INTO valutazione (esito, utente_valutato, utente_valutante, ID_evento) VALUES (?, ?, ?, ?)")) {
             query.setString(1, valutazione.getEsito());
             query.setString(2, valutazione.getUtenteValutato());
             query.setString(3, valutazione.getUtenteValutante());
             query.setInt(4, valutazione.getIdEvento());
             
             query.executeUpdate();
+             
+             }
+        } finally {
+            ConDB.releaseConnection(conn);
         }
     }
 
     public synchronized void update(ValutazioneBean valutazione) throws SQLException {
-        try (Connection conn = ConDB.getConnection();
-             PreparedStatement query = conn.prepareStatement(
-                     "UPDATE valutazione SET esito = ?, utente_valutato = ?, utente_valutante = ?, ID_evento = ? WHERE ID = ?")) {
+    	
+    	Connection conn = null;
+    	
+        try {
+        	conn = ConDB.getConnection();
+        	
+        	try(PreparedStatement query = conn.prepareStatement("UPDATE valutazione SET esito = ?, utente_valutato = ?, utente_valutante = ?, ID_evento = ? WHERE ID = ?")) {
             query.setString(1, valutazione.getEsito());
             query.setString(2, valutazione.getUtenteValutato());
             query.setString(3, valutazione.getUtenteValutante());
@@ -33,25 +48,49 @@ public class ValutazioneDAO {
             query.setInt(5, valutazione.getId());
             
             query.executeUpdate();
-        }
+	        }
+	    }finally {
+	        ConDB.releaseConnection(conn);
+	    }
     }
 
+    
+    
+    
+    
     public synchronized boolean delete(int id) throws SQLException {
-        try (Connection conn = ConDB.getConnection();
-             PreparedStatement query = conn.prepareStatement("DELETE FROM valutazione WHERE ID = ?")) {
+    	
+    	Connection conn = null;
+    	
+    	try {
+    		conn = ConDB.getConnection();
+
+    		try (PreparedStatement query = conn.prepareStatement("DELETE FROM valutazione WHERE ID = ?")) {
             query.setInt(1, id);
             return query.executeUpdate() != 0; // Restituisce true se almeno una riga è stata eliminata
-        }
+	        }
+	    }finally {
+		        ConDB.releaseConnection(conn);
+		    }
     }
 
+    
+    
+    
     public synchronized ValutazioneBean get(int id) throws SQLException {
-        try (Connection conn = ConDB.getConnection();
-             PreparedStatement query = conn.prepareStatement("SELECT * FROM valutazione WHERE ID = ?")) {
+    	
+    	Connection conn = null;
+    	
+    	try {
+    		conn = ConDB.getConnection();
+    	
+        try(PreparedStatement query = conn.prepareStatement("SELECT * FROM valutazione WHERE ID = ?")) {
             query.setInt(1, id);
             
             try (ResultSet rs = query.executeQuery()) {
                 if (rs.next()) {
                     return new ValutazioneBean(
+                    	rs.getInt("ID"),
                         rs.getString("esito"),
                         rs.getString("utente_valutato"),
                         rs.getString("utente_valutante"),
@@ -59,26 +98,42 @@ public class ValutazioneDAO {
                     );
                 } else {
                     throw new SQLException("Nessun risultato trovato per l'ID fornito.");
-                }
-            }
-        }
+                	}
+            	}
+        	}
+    	}finally {
+	        ConDB.releaseConnection(conn);
+	    }
     }
 
     public synchronized Collection<ValutazioneBean> getAll() throws SQLException {
-        try (Connection conn = ConDB.getConnection();
-             PreparedStatement query = conn.prepareStatement("SELECT * FROM valutazione");
-             ResultSet rs = query.executeQuery()) {
+        
+        Connection conn = null;
+        
+        try {
+            // Ottieni la connessione dalla lista gestita
+            conn = ConDB.getConnection();
             
-            Collection<ValutazioneBean> valutazioni = new ArrayList<>();
-            while (rs.next()) {
-                valutazioni.add(new ValutazioneBean(
-                    rs.getString("esito"),
-                    rs.getString("utente_valutato"),
-                    rs.getString("utente_valutante"),
-                    rs.getInt("ID_evento")
-                ));
+            // Usa try-with-resources per PreparedStatement e ResultSet
+            try (PreparedStatement query = conn.prepareStatement("SELECT * FROM valutazione");
+                 ResultSet rs = query.executeQuery()) {
+                
+                Collection<ValutazioneBean> valutazioni = new ArrayList<>();
+                while (rs.next()) {
+                    valutazioni.add(new ValutazioneBean(
+                    	rs.getInt("ID"),
+                        rs.getString("esito"),
+                        rs.getString("utente_valutato"),
+                        rs.getString("utente_valutante"),
+                        rs.getInt("ID_evento")
+                    ));
+                }
+                return valutazioni;
             }
-            return valutazioni;
+        } finally {
+            // Rilascia la connessione se necessario
+            ConDB.releaseConnection(conn);
         }
     }
 }
+
