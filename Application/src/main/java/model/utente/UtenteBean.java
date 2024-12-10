@@ -33,6 +33,15 @@ public class UtenteBean {
     private int numValutazioniPositive;
 
     /**
+     * Costruttore vuoto per creare un'istanza di {@code Utente}.
+     *
+     */
+    public UtenteBean() {
+    	
+    }
+    
+  
+    /**
      * Costruttore completo per creare un'istanza di {@code Utente}.
      * 
      * @param username               lo username dell'utente
