@@ -177,6 +177,68 @@ public class UtenteDAO {
 	    // Restituisce null se non viene trovato alcun utente
 	    return null;
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	public UtenteBean findByEmail(String email) throws SQLException {
+	    Connection connection = null;
+	    PreparedStatement preparedStatement = null;
+	    ResultSet resultSet = null;
+
+	    try {
+	        connection = ConDB.getConnection();
+	        String selectSQL = "SELECT * FROM utente WHERE email = ?";
+	        preparedStatement = connection.prepareStatement(selectSQL);
+	        preparedStatement.setString(1, email);
+	        resultSet = preparedStatement.executeQuery();
+
+	        if (resultSet.next()) {
+	            // Costruzione dell'oggetto Utente dai risultati del database
+	            return new UtenteBean(
+	                resultSet.getString("username"),
+	                resultSet.getString("cognome"),
+	                resultSet.getString("nome"),
+	                resultSet.getDate("data_di_nascita"),
+	                resultSet.getString("email"),
+	                resultSet.getString("pw"),
+	                resultSet.getInt("num_timeout"),
+	                resultSet.getBoolean("is_timeout"),
+	                resultSet.getBoolean("is_admin"),
+	                resultSet.getTimestamp("data_ora_fine_timeout"),
+	                resultSet.getInt("num_valutazioni_neutre"),
+	                resultSet.getInt("num_valutazioni_negative"),
+	                resultSet.getInt("num_valutazioni_positive")    
+	            );
+	        }
+	    } finally {
+	        // Chiude il ResultSet
+	        if (resultSet != null) {
+	            resultSet.close();
+	        }
+	        // Chiude il PreparedStatement
+	        if (preparedStatement != null) {
+	            preparedStatement.close();
+	        }
+	        // Rilascia la connessione
+	        if (connection != null) {
+	            ConDB.releaseConnection(connection);
+	        }
+	    }
+
+	    // Restituisce null se non viene trovato alcun utente
+	    return null;
+	}
+	
+	
+	
+	
+	
 
 	/**
      * Recupera tutti gli utenti presenti nel database.
