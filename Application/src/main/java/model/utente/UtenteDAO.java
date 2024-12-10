@@ -61,7 +61,7 @@ public class UtenteDAO {
 
 	/**
      * Aggiorna le informazioni di un utente esistente nel database.
-     * I campi aggiornati sono: cognome, nome, data di nascita, email e, se fornita, la password.
+     * I campi aggiornati sono: email e, se fornita, la password.
      *
      * @param utente l'oggetto Utente con i dati aggiornati
      * @throws SQLException se si verifica un errore durante l'operazione o nessun utente viene aggiornato
@@ -75,7 +75,7 @@ public class UtenteDAO {
 	        boolean isChangingPw = false;
 
 	        // Query base per aggiornare i campi
-	        String updateSQL = "UPDATE utente SET cognome = ?, nome = ?, data_di_nascita = ?, email = ?";
+	        String updateSQL = "UPDATE utente SET email = ?";
 
 	        // Aggiungi il campo password se necessario
 	        if (utente.getPw() != null && !utente.getPw().isEmpty()) {
@@ -87,12 +87,9 @@ public class UtenteDAO {
 	        preparedStatement = connection.prepareStatement(updateSQL);
 
 	        // Imposta i valori dei parametri
-	        preparedStatement.setString(1, utente.getCognome());
-	        preparedStatement.setString(2, utente.getNome());
-	        preparedStatement.setDate(3, new java.sql.Date(utente.getDataDiNascita().getTime()));
-	        preparedStatement.setString(4, utente.getEmail());
+	        preparedStatement.setString(1, utente.getEmail());
 
-	        int index = 5;
+	        int index = 2;
 	        if (isChangingPw) {
 	            preparedStatement.setString(index++, utente.getPw());
 	        }
