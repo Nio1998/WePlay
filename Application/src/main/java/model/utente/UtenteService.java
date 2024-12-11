@@ -1,7 +1,10 @@
 package model.utente;
 
 import java.math.BigInteger;
+
 import java.security.MessageDigest;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
@@ -73,6 +76,32 @@ public class UtenteService {
         }
     }
     
+    public boolean is_admin(String username) {
+        UtenteBean utente;
+		try {
+			utente = utenteDAO.findByUsername(username);
+			return utente != null && utente.isAdmin();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return false;
+        
+    }
+    
+    public boolean is_organizzatore(String username, int eventoId) {
+        	
+    		try {
+				return  utenteDAO.is_organizzatore(username, eventoId);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+    		
+    		return false;
+    }
+
     
     
  // Metodo per registrare un nuovo utente con i seguenti dati (username, nome, cognome, email, pw, data_nascita)
@@ -99,4 +128,5 @@ public class UtenteService {
         }
     }    
     
+
 }

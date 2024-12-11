@@ -189,6 +189,42 @@ public class UtenteDAO {
 	    return null;
 	}
 	
+	public boolean is_organizzatore(String username, int id_evento) throws SQLException {
+		
+		Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try {
+            con = ConDB.getConnection();
+            String query = "SELECT stato FROM prenotazione WHERE username_utente = ? AND ID_evento = ?";
+            ps = con.prepareStatement(query);
+
+            ps.setString(1, username);
+            ps.setInt(2, id_evento);
+
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                String stato = rs.getString("stato");
+                return "organizzatore".equals(stato);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // Puoi migliorare la gestione degli errori in produzione
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (ps != null) ps.close();
+                if (con != null) ConDB.releaseConnection(con);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return false;
+    }
+	   
+	
 	
 	
 	

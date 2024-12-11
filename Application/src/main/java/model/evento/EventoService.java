@@ -63,6 +63,20 @@ public class EventoService {
         return false; // Se l'evento non esiste
     }
     
+
+    public boolean elimina_evento(int eventoId) {
+    	
+        try {
+            return eventoDAO.delete(eventoId);
+        } catch (SQLException e) {
+        	
+            e.printStackTrace();
+            return false;
+            
+        }
+    }
+    
+    
     public Collection<Evento> filtra_eventi(String dataInizio, String dataFine, String sport, String citta) {
     	LocalDate dataInizioDate = null;
     	LocalDate dataFineDate = null;
