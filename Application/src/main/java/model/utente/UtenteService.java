@@ -34,7 +34,7 @@ public class UtenteService {
     public boolean controlla_email_esistente(String email) {
         try {
             // Usa il DAO per verificare se l'email è già presente nel database
-            return utenteDAO.findByEmail(email) == null;
+            return utenteDAO.findByEmail(email) != null;
         } catch (SQLException e) {
             // Gestione dell'eccezione, ad esempio loggando l'errore
             e.printStackTrace(); // Puoi anche usare un logger al posto di printStackTrace
