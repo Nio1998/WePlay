@@ -4,8 +4,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 
 import model.ConDB;
 
@@ -130,4 +132,60 @@ public class EventoDao {
             ConDB.releaseConnection(conn);
         }
     }
+
+
+
+	public synchronized Collection<Evento> getByFilter(LocalDate dataInizio, LocalDate dataFine, String sport, String citta) throws SQLException {
+		if (dataInizio == null && dataFine == null && sport == null && citta == null)
+			return getAll();
+
+		Connection conn = null;
+		try {
+			conn = ConDB.getConnection();
+			ArrayList<String> queryConcat = new ArrayList<String>();
+			ArrayList<Object> filtri = new ArrayList<Object>();
+			String queryString = "SELECT * FROM evento WHERE ";
+
+			if (dataInizio != null) {
+				queryConcat.add("data_inizio > ?");
+				filtri.add(dataInizio);
+			}
+			if (dataFine != null) {
+				queryConcat.add("data_fine < ?");
+				filtri.add(dataFine);
+			}
+			if (sport != null) {
+				queryConcat.add("sport = ?");
+				filtri.add(sport);
+			}
+			if (citta != null) {
+				queryConcat.add("citta = ?");
+				filtri.add(citta);
+			}
+			
+			queryString += queryConcat.get(0);
+			for (int i = 1; i < queryConcat.size(); i++) {
+				queryString += " AND " + queryConcat.get(i);
+			}
+
+			try (PreparedStatement query = conn.prepareStatement(queryString)) {
+				for (int i = 0; i < filtri.size(); i++) {
+					if (filtri.get(i) instanceof String) {
+						query.setString(i, (String)filtri.get(i));
+					} else {
+						query.setObject(i, filtri.get(i));
+					}
+				}
+				try (ResultSet rs = query.executeQuery()) {
+					ArrayList<Evento> eventiFiltrati = new ArrayList<>();
+					while (rs.next()) {
+						eventiFiltrati.add(new Evento(rs));
+					}
+					return eventiFiltrati;
+				}
+			}
+		} finally {
+			ConDB.releaseConnection(conn);
+		}
+	}
 }
