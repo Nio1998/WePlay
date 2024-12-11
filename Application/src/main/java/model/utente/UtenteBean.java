@@ -1,7 +1,8 @@
 package model.utente;
 
 import java.time.LocalDate;
-import java.util.Date;
+import java.time.LocalDateTime;
+
 
 /**
  * La classe {@code Utente} rappresenta un record della tabella `utente` del database.
@@ -24,9 +25,9 @@ public class UtenteBean {
 
     // Stato dell'utente
     private int numTimeout; // Numero di timeout ricevuti
-    private boolean isTimeout; // Indica se l'utente Ã¨ in timeout
-    private boolean isAdmin; // Indica se l'utente Ã¨ un amministratore
-    private LocalDate dataOraFineTimeout; // Data e ora di fine timeout
+    private boolean isTimeout; // Indica se l'utente è in timeout
+    private boolean isAdmin; // Indica se l'utente è un amministratore
+    private LocalDateTime dataOraFineTimeout; // Data e ora di fine timeout
 
     // Valutazioni
     private int numValutazioniNeutre;
@@ -52,15 +53,15 @@ public class UtenteBean {
      * @param email                  l'email dell'utente
      * @param pw                     la password (hashata) dell'utente
      * @param numTimeout             il numero di timeout ricevuti
-     * @param isTimeout              indica se l'utente Ã¨ attualmente in timeout
-     * @param isAdmin                indica se l'utente Ã¨ un amministratore
+     * @param isTimeout              indica se l'utente è attualmente in timeout
+     * @param isAdmin                indica se l'utente è un amministratore
      * @param dataOraFineTimeout     la data e ora in cui termina il timeout (se applicabile)
      * @param numValutazioniNeutre   il numero di valutazioni neutre ricevute
      * @param numValutazioniNegative il numero di valutazioni negative ricevute
      * @param numValutazioniPositive il numero di valutazioni positive ricevute
      */
     public UtenteBean(String username, String cognome, String nome, LocalDate dataDiNascita, String email, String pw,
-                  int numTimeout, boolean isTimeout, boolean isAdmin, LocalDate dataOraFineTimeout,
+                  int numTimeout, boolean isTimeout, boolean isAdmin, LocalDateTime dataOraFineTimeout,
                   int numValutazioniNeutre, int numValutazioniNegative, int numValutazioniPositive) {
         this.username = username;
         this.cognome = cognome;
@@ -107,8 +108,8 @@ public class UtenteBean {
         return dataDiNascita;
     }
 
-    public void setDataDiNascita(LocalDate dataDiNascita) {
-        this.dataDiNascita = dataDiNascita;
+    public void setDataDiNascita(LocalDate data_di_nascita) {
+        this.dataDiNascita = data_di_nascita;
     }
 
     public String getEmail() {
@@ -151,11 +152,11 @@ public class UtenteBean {
         this.isAdmin = isAdmin;
     }
 
-    public LocalDate getDataOraFineTimeout() {
+    public LocalDateTime getDataOraFineTimeout() {
         return dataOraFineTimeout;
     }
 
-    public void setDataOraFineTimeout(LocalDate dataOraFineTimeout) {
+    public void setDataOraFineTimeout(LocalDateTime dataOraFineTimeout) {
         this.dataOraFineTimeout = dataOraFineTimeout;
     }
 
