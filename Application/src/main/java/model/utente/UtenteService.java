@@ -3,7 +3,8 @@ package model.utente;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.sql.SQLException;
-
+import java.time.*;
+import java.time.format.DateTimeFormatter;
 public class UtenteService {
 
     private UtenteDAO utenteDAO;
@@ -42,6 +43,18 @@ public class UtenteService {
         }
     }
     
+    // Metodo per controllare se un'username esiste già nel database
+    public boolean controlla_username_esistente(String username) {
+        try {
+            // Usa il DAO per verificare se l'username è gi�  presente nel database
+            return utenteDAO.findByUsername(username) != null;
+        } catch (SQLException e) {
+            // Gestione dell'eccezione, ad esempio loggando l'errore
+            e.printStackTrace(); // Puoi anche usare un logger al posto di printStackTrace
+            return false; // Considera l'username come non esistente se c'è un errore (puoi gestire diversamente)
+        }
+    }
+    
 
     
     // Metodo per aggiornare i dati dell'utente (email e password)
@@ -59,4 +72,31 @@ public class UtenteService {
             e.printStackTrace();
         }
     }
+    
+    
+    
+ // Metodo per registrare un nuovo utente con i seguenti dati (username, nome, cognome, email, pw, data_nascita)
+    public boolean registra_utente(String username, String nome, String cognome, String email, String pw, String data_nascita) {
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalDate data_di_nascita = LocalDate.parse(data_nascita, formatter);
+
+            UtenteBean utente = new UtenteBean();
+            utente.setUsername(username);
+            utente.setEmail(email);
+            utente.setNome(nome);
+            utente.setCognome(cognome);
+            utente.setPw(pw); // hash gi� effettuato nel controller
+            utente.setDataDiNascita(data_di_nascita); // Passa l'oggetto LocalDate
+			utenteDAO.save(utente); // Assumi che sollevi un'eccezione se fallisce
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace(); // Log per debugging
+            return false;
+        } catch (Exception e) {
+            e.printStackTrace(); // Log di errori generici
+            return false;
+        }
+    }    
+    
 }
