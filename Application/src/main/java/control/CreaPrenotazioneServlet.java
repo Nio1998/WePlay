@@ -25,8 +25,6 @@ public class CreaPrenotazioneServlet extends HttpServlet {
        try { // Otteniamo i parametri della prenotazione dalla richiesta
         String utenteUsername = request.getParameter("utenteUsername");
         int eventoID = Integer.parseInt(request.getParameter("eventoID"));
-        String stato = request.getParameter("stato");
-        int posizioneInCoda = Integer.parseInt(request.getParameter("posizioneInCoda"));
 
        
             // Controlliamo se l'utente è registrato
