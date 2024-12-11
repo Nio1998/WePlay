@@ -3,6 +3,7 @@ package model.evento;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Collection;
 
 public class EventoService {
 
@@ -62,6 +63,7 @@ public class EventoService {
         return false; // Se l'evento non esiste
     }
     
+
     public boolean elimina_evento(int eventoId) {
     	
         try {
@@ -75,6 +77,22 @@ public class EventoService {
     }
     
     
+    public Collection<Evento> filtra_eventi(String dataInizio, String dataFine, String sport, String citta) {
+    	LocalDate dataInizioDate = null;
+    	LocalDate dataFineDate = null;
+    	if (dataInizio != "") dataInizioDate = LocalDate.parse(dataInizio);
+    	if (dataFine != "") dataFineDate = LocalDate.parse(dataFine);
+    	if (sport == "") sport = null;
+    	if (citta == "") citta = null;
+    	
+    	try {
+			return eventoDAO.getByFilter(dataInizioDate, dataFineDate, sport, citta);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+    }
 }
 
 

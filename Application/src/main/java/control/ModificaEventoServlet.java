@@ -33,7 +33,7 @@ public class ModificaEventoServlet extends HttpServlet {
             LocalDate data = LocalDate.parse(request.getParameter("data"));
             LocalTime ora = LocalTime.parse(request.getParameter("ora"));
             String indirizzo = request.getParameter("indirizzo");
-            String città = request.getParameter("citta");
+            String citta = request.getParameter("citta");
             int maxPartecipanti = Integer.parseInt(request.getParameter("max_partecipanti"));
 
             // Validazione delle precondizioni
@@ -42,7 +42,7 @@ public class ModificaEventoServlet extends HttpServlet {
                 data.isBefore(LocalDate.now().plusDays(1)) || 
                 ora == null || 
                 indirizzo == null || 
-                città == null || 
+                citta == null || 
                 maxPartecipanti <= 0 ||
                 !eventoService.esiste_evento(eventoId)) {
                 
@@ -53,7 +53,7 @@ public class ModificaEventoServlet extends HttpServlet {
 
             // Modifica evento
             boolean successo = eventoService.modifica_evento(
-                eventoId, titolo, data, ora, indirizzo, città, maxPartecipanti
+                eventoId, titolo, data, ora, indirizzo, citta, maxPartecipanti
             );
 
             if (successo) {
