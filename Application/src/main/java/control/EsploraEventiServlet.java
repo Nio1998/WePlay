@@ -19,13 +19,13 @@ import model.evento.EventoService;
 //import model.OrderModel;
 import model.utente.*;
 
-@WebServlet("/VisualizzaEventi")
-public class VisualizzaEventiServlet extends HttpServlet {
+@WebServlet("/EsploraEventi")
+public class EsploraEventiServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     
     private EventoService eventoService = new EventoService(); 
 
-    public VisualizzaEventiServlet() {
+    public EsploraEventiServlet() {
         super();
     }
 
