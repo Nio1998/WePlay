@@ -2,9 +2,8 @@ package control;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.PreparedStatement;
+import java.util.List;
+
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -12,16 +11,16 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import model.ConDB;
 //import model.OrderModel;
 import model.utente.*;
 
 @WebServlet("/LoginServlet")
 public class LoginServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
-
+    UtenteDAO utenteDAO;
     public LoginServlet() {
         super();
+        utenteDAO= new UtenteDAO();
     }
 
     /**
@@ -40,24 +39,20 @@ public class LoginServlet extends HttpServlet {
         String redirectedPage = "/login.jsp";
         Boolean control = false;
         try {
-            Connection con = ConDB.getConnection();
-            String sql = "SELECT * FROM utente";
-            
-            PreparedStatement s = con.prepareStatement(sql);
-            ResultSet rs = s.executeQuery();
-            
-            while (rs.next()) {
-                if (username.compareTo(rs.getString(1)) == 0) {
+        	List<UtenteBean> lista= utenteDAO.getAllUtenti();
+            for(UtenteBean u: lista) {
+            	
+                if (username.compareTo(u.getUsername()) == 0) {
                     String pw = checkPsw(password);
-                    if (pw.compareTo(rs.getString("pw")) == 0) {
+                    if (pw.compareTo(u.getPw()) == 0) {
                         control = true;
-                        UtenteBean registeredUser = new UtenteBean(rs.getString("username"), rs.getString("cognome"),rs.getString("nome"),rs.getDate("dataDiNascita"),rs.getString("email"),rs.getString("pw"),rs.getInt("numTimeout"),rs.getBoolean("isTimeout"),rs.getBoolean("isAdmin"),rs.getDate("dataOraFineTimeout"),rs.getInt("numValutazioniNeutre"),rs.getInt("numValutazioniNegative"),rs.getInt("numValutazioniPositive"));
+                        UtenteBean registeredUser = new UtenteBean(u.getUsername(), u.getCognome(),u.getNome(),u.getDataDiNascita(),u.getEmail(),u.getPw(),u.getNumTimeout(),u.isTimeout(),u.isAdmin(),u.getDataOraFineTimeout(),u.getNumValutazioniNeutre(),u.getNumValutazioniNegative(),u.getNumValutazioniPositive());
                         request.getSession().setAttribute("registeredUser", registeredUser);
                         request.getSession().setAttribute("role", registeredUser.isAdmin());
-                        request.getSession().setAttribute("username", rs.getString("username"));                   		
+                        request.getSession().setAttribute("username", u.getUsername());                   		
                         
                         redirectedPage = "/index.jsp";
-                        ConDB.releaseConnection(con);
+                   
                     }
                 }
             }
