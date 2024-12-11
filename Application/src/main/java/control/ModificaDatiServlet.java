@@ -48,7 +48,7 @@ public class ModificaDatiServlet extends HttpServlet {
             // Aggiorna la sessione con la nuova email
             session.setAttribute("email", nuovaEmail);
 
-            request.setAttribute("messaggio", "Modifica effettuata con successo.");
+            request.setAttribute("successo", "Modifica effettuata con successo.");
             request.getRequestDispatcher("profilo.jsp").forward(request, response);
         } catch (Exception e) {
             e.printStackTrace();
