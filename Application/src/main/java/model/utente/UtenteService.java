@@ -1,7 +1,10 @@
 package model.utente;
 
 import java.math.BigInteger;
+
 import java.security.MessageDigest;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class UtenteService {
@@ -58,5 +61,31 @@ public class UtenteService {
             // Gestione dell'eccezione
             e.printStackTrace();
         }
+    }
+    
+    public boolean is_admin(String username) {
+        UtenteBean utente;
+		try {
+			utente = utenteDAO.findByUsername(username);
+			return utente != null && utente.isAdmin();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return false;
+        
+    }
+    
+    public boolean is_organizzatore(String username, int eventoId) {
+        	
+    		try {
+				return  utenteDAO.is_organizzatore(username, eventoId);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+    		
+    		return false;
     }
 }

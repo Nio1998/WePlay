@@ -61,6 +61,20 @@ public class EventoService {
        
         return false; // Se l'evento non esiste
     }
+    
+    public boolean elimina_evento(int eventoId) {
+    	
+        try {
+            return eventoDAO.delete(eventoId);
+        } catch (SQLException e) {
+        	
+            e.printStackTrace();
+            return false;
+            
+        }
+    }
+    
+    
 }
 
 
