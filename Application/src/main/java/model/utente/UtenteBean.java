@@ -1,5 +1,6 @@
 package model.utente;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 /**
@@ -17,7 +18,7 @@ public class UtenteBean {
     private String username;
     private String cognome;
     private String nome;
-    private Date dataDiNascita;
+    private LocalDate dataDiNascita;
     private String email;
     private String pw; // Password hash (CHAR(64))
 
@@ -25,7 +26,7 @@ public class UtenteBean {
     private int numTimeout; // Numero di timeout ricevuti
     private boolean isTimeout; // Indica se l'utente è in timeout
     private boolean isAdmin; // Indica se l'utente è un amministratore
-    private Date dataOraFineTimeout; // Data e ora di fine timeout
+    private LocalDate dataOraFineTimeout; // Data e ora di fine timeout
 
     // Valutazioni
     private int numValutazioniNeutre;
@@ -58,8 +59,8 @@ public class UtenteBean {
      * @param numValutazioniNegative il numero di valutazioni negative ricevute
      * @param numValutazioniPositive il numero di valutazioni positive ricevute
      */
-    public UtenteBean(String username, String cognome, String nome, Date dataDiNascita, String email, String pw,
-                  int numTimeout, boolean isTimeout, boolean isAdmin, Date dataOraFineTimeout,
+    public UtenteBean(String username, String cognome, String nome, LocalDate dataDiNascita, String email, String pw,
+                  int numTimeout, boolean isTimeout, boolean isAdmin, LocalDate dataOraFineTimeout,
                   int numValutazioniNeutre, int numValutazioniNegative, int numValutazioniPositive) {
         this.username = username;
         this.cognome = cognome;
@@ -102,11 +103,11 @@ public class UtenteBean {
         this.nome = nome;
     }
 
-    public Date getDataDiNascita() {
+    public LocalDate getDataDiNascita() {
         return dataDiNascita;
     }
 
-    public void setDataDiNascita(Date dataDiNascita) {
+    public void setDataDiNascita(LocalDate dataDiNascita) {
         this.dataDiNascita = dataDiNascita;
     }
 
@@ -150,11 +151,11 @@ public class UtenteBean {
         this.isAdmin = isAdmin;
     }
 
-    public Date getDataOraFineTimeout() {
+    public LocalDate getDataOraFineTimeout() {
         return dataOraFineTimeout;
     }
 
-    public void setDataOraFineTimeout(Date dataOraFineTimeout) {
+    public void setDataOraFineTimeout(LocalDate dataOraFineTimeout) {
         this.dataOraFineTimeout = dataOraFineTimeout;
     }
 
