@@ -1,4 +1,4 @@
-/*package control;
+package control;
 
 import java.io.IOException;
 import java.util.Properties;
@@ -28,11 +28,11 @@ public class AssistenzaServlet extends HttpServlet {
                 inviaEmail(email, descrizione, oggetto);
 
                 // Mostra un messaggio di successo
-                request.setAttribute("message", "Richiesta inviata con successo! Ti risponderemo al più presto.");
+                request.setAttribute("message", "Richiesta inviata con successo! Ti risponderemo al piÃ¹ presto.");
             } catch (Exception e) {
                 e.printStackTrace();
                 // Gestione errori
-                request.setAttribute("error", "Si è verificato un errore durante l'invio della richiesta.");
+                request.setAttribute("error", "Si Ã¨ verificato un errore durante l'invio della richiesta.");
             }
         } else {
             // Messaggio di errore per parametri mancanti
@@ -44,7 +44,7 @@ public class AssistenzaServlet extends HttpServlet {
     }
 
     private void inviaEmail(String userEmail, String descrizione, String oggetto) throws MessagingException {
-        // Configura le proprietà del server SMTP
+        // Configura le proprietÃ  del server SMTP
         Properties props = new Properties();
         props.put("mail.smtp.host", "smtp.gmail.com"); // Server SMTP di Gmail
         props.put("mail.smtp.port", "587"); // Porta TLS
@@ -55,7 +55,7 @@ public class AssistenzaServlet extends HttpServlet {
         javax.mail.Session session = Session.getInstance(props, new Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication("weplay.assistenza@gmail.com", "AMOWEPLAY"); 
+                return new PasswordAuthentication("weplay.assistenza@gmail.com", "ihuq taep thmh hjzo"); 
             }
         });
 
@@ -74,4 +74,4 @@ public class AssistenzaServlet extends HttpServlet {
         // Invia l'email
         Transport.send(message);
     }
-}*/
+}
