@@ -59,7 +59,7 @@ public class ModificaEventoServlet extends HttpServlet {
             if (successo) {
                 // Forward alla pagina di dettaglio
                 request.setAttribute("successo", "Evento modificato con successo.");
-                request.getRequestDispatcher("Dettaglio_evento_organizzatore?eventoId=" + eventoId).forward(request, response);
+                request.getRequestDispatcher("DettagliEvento?eventoId=" + eventoId).forward(request, response);
             } else {
                 // Errore nella modifica
                 request.setAttribute("errore", "Impossibile modificare l'evento. Riprova.");
