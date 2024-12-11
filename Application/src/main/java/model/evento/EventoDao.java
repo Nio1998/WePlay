@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -130,4 +131,24 @@ public class EventoDao {
             ConDB.releaseConnection(conn);
         }
     }
+
+
+
+public synchronized Collection<Evento> getByFilter(LocalDate data_inzio, LocalDate data, String sport, String luogo) throws SQLException {
+   Connection conn = null;
+   try {
+       conn = ConDB.getConnection();
+       try (PreparedStatement query = conn.prepareStatement("SELECT * FROM evento WHERE sport = ?")) {
+           try (ResultSet rs = query.executeQuery()) {
+               ArrayList<Evento> prenotazioni = new ArrayList<>();
+               while (rs.next()) {
+                   prenotazioni.add(new Evento(rs));
+               }
+               return prenotazioni;
+           }                
+       }
+   } finally {
+       ConDB.releaseConnection(conn);
+   }
+}
 }
