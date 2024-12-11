@@ -1,0 +1,147 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    color: #000;
+    background-color: #E0F7FA;
+}
+
+.header {
+    background-color: #fff;
+    border-bottom: 1px solid #ddd;
+}
+
+/*NAVBAR*/
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #00ACC1;
+}
+
+.navbar a {
+    text-decoration: none;
+    color: #000;
+    margin: 0 30px;
+}
+
+.navbar h1 {
+    text-decoration: none;
+    color: #000;
+    text-align: center;
+}
+
+.navbar img {
+    height: 80px;
+    margin: 0px;
+}
+
+.navbar a ion-icon {
+    font-size: 50px; /* Dimensione dell'icona */
+    vertical-align: middle; /* Allineamento verticale con il testo */
+    margin-right: 5px; /* Spazio tra l'icona e il testo */
+    color: #000; /* Colore dell'icona */
+}
+
+.navbar a:hover ion-icon {
+    color: #fff; /* Cambia colore quando si passa con il mouse */
+}
+
+.navbar a, .navbar h1:hover {
+    color: #fff; /* Cambia colore quando si passa con il mouse */
+}
+
+/*CONENT PAGE*/
+
+.main-content {
+    padding: 20px;
+}
+
+.intro-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 50px 20px;
+    background-color: #4DD0E1;
+    border-radius: 25px;
+}
+
+.content-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.intro-text {
+    max-width: 60%;
+    margin-right: 20px;
+}
+
+.intro-text h1 {
+    font-size: 36px;
+    margin-bottom: 20px;
+}
+
+.intro-text p {
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+
+.intro-text button {
+    padding: 10px 20px;
+    background-color: #FFBF00;
+    color: #000;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.intro-text button:hover {
+    background-color: #F4A900;
+}
+
+.intro-image img {
+    max-width: 300px;
+    height: auto;
+}
+
+.functions {
+    padding: 50px 20px;
+}
+
+.text-container {
+    
+    max-width: 100%;
+    margin-right: 20px;
+    
+}
+
+.text-container h2 {
+    font-size: 28px;
+    margin-bottom: 20px;
+}
+
+.text-container p {
+    font-size: 22px;
+    margin-bottom: 20px;
+}
+
+/*FOOTER*/
+
+.footer {
+    background-color: #00ACC1;
+    padding: 20px;
+    text-align: center;
+    border-top: 1px solid #ddd;
+    position: relative;
+    padding: 10px;
+    z-index: 0;
+}
+
+.footer-links p{
+	color: #000;
+}
