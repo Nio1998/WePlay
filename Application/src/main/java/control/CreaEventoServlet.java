@@ -1,6 +1,7 @@
 package control;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import javax.servlet.ServletException;
@@ -15,12 +16,17 @@ import model.evento.*;
 public class CreaEventoServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
-    public CreaEventoServlet() {
-        super();
-    }
+    private EventoService eventoService;
 
     @Override
+    public void init() throws ServletException{
+        super.init();
+        eventoService = new EventoService();
+    }
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    
+        try {
+
         String titolo = request.getParameter("titolo");
         String dataInizio = request.getParameter("data_inizio");
         String oraInizio = request.getParameter("ora_inizio");
@@ -32,28 +38,18 @@ public class CreaEventoServlet extends HttpServlet {
         double prezzo = Double.parseDouble(request.getParameter("prezzo"));
 
         String redirectedPage = "/creaEvento.jsp";
-
-        try {
-            Evento nuovoEvento = new Evento();
-            nuovoEvento.setTitolo(titolo);
-            nuovoEvento.setData_inizio(LocalDate.parse(dataInizio));
-            nuovoEvento.setOra_inizio(LocalTime.parse(oraInizio));
-            nuovoEvento.setCitta(citta);
-            nuovoEvento.setIndirizzo(indirizzo);
-            nuovoEvento.setMassimo_di_partecipanti(maxPartecipanti);
-            nuovoEvento.setSport(sport);
-            nuovoEvento.setStato(stato);
-            nuovoEvento.setPrezzo(prezzo);
-
-            EventoDao eventoDao = new EventoDao();
-            eventoDao.save(nuovoEvento);
-
-            redirectedPage = "/EventiCreati.jsp";
-        } catch (Exception e) {
-            e.printStackTrace();
-            request.setAttribute("errorMessage", "Errore nella creazione dell'evento. Riprova.");
+        boolean eventoSuccesso = eventoService.crea_evento(titolo, data_inizio, ora_inizio, citta, indirizzo, massimo_di_partecipanti, sport, stato, prezzo);
+        if (eventoSuccesso){
+            request.setAttribute("successo", "evento creato con successo.");
+            request.getRequestDispatcher("EventiCreati.jsp").forward(request, response);
+        } else{
+            request.setAttribute("errore");
+            request.getRequestDispatcher("errore.jsp").forward(request, response);
         }
-
-        response.sendRedirect(request.getContextPath() + redirectedPage);
+    }catch (SQLException e) {
+        e.printStackTrace();
+        response.sendRedirect("errore.jsp");
     }
+       
+   }
 }
