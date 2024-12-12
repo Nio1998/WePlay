@@ -30,7 +30,7 @@ public class ProfiloServlet extends HttpServlet {
         String username = (String) session.getAttribute("username");
 
         // Usa il servizio per ottenere i dati dell'utente
-        UtenteBean utente = UtenteService.findByUsername(username);
+        UtenteBean utente = UtenteService.findbyUsername(username);
 
         // Controlla se l'utente è stato trovato
         if (utente == null) {
