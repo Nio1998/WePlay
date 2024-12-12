@@ -6,8 +6,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import model.ConDB;
+import model.utente.UtenteBean;
 
 public class PrenotazioneDAO {
 	public synchronized void save(PrenotazioneBean p) throws SQLException {
@@ -94,4 +96,49 @@ public class PrenotazioneDAO {
 			ConDB.releaseConnection(conn);
 		}
 	}
+
+
+
+
+
+	public synchronized Collection<UtenteBean> getAllWhereEvento(int idEvento) throws SQLException {
+	    Connection conn = null;
+	    List<UtenteBean> utenti = new ArrayList<>();
+
+	    try {
+	        conn = ConDB.getConnection();
+
+	        String sql = """
+	            SELECT u.username, u.cognome, u.nome, u.email, u.data_di_nascita
+	            FROM prenotazione p
+	            JOIN utente u ON p.username_utente = u.username
+	            WHERE p.ID_evento = ?
+	        """;
+
+	        try (PreparedStatement query = conn.prepareStatement(sql)) {
+	            query.setInt(1, idEvento);
+
+	            try (ResultSet rs = query.executeQuery()) {
+	                while (rs.next()) {
+	                    UtenteBean utente = new UtenteBean();
+	                    utente.setUsername(rs.getString("username"));
+	                    utente.setCognome(rs.getString("cognome"));
+	                    utente.setNome(rs.getString("nome"));
+	                    utente.setEmail(rs.getString("email"));
+	                    utente.setDataDiNascita(rs.getDate("data_di_nascita").toLocalDate());
+	                    utenti.add(utente);
+	                }
+	            }
+	        }
+	    } catch (SQLException e) {
+	        throw new SQLException("Errore durante il recupero degli utenti per l'evento con ID " + idEvento, e);
+	    } finally {
+	        if (conn != null) {
+	            ConDB.releaseConnection(conn);
+	        }
+	    }
+
+	    return utenti;
+	}
 }
+
