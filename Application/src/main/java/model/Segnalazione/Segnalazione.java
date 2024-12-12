@@ -13,8 +13,7 @@ public class Segnalazione implements Serializable {
     private String utenteSegnalante;
     private int idEvento;
 
-    public Segnalazione(int id, String motivazione, String stato, String utenteSegnalato, String utenteSegnalante, int idEvento) {
-        this.id = id;
+    public Segnalazione( String motivazione, String stato, String utenteSegnalato, String utenteSegnalante, int idEvento) {
         this.motivazione = motivazione;
         this.stato = stato;
         this.utenteSegnalato = utenteSegnalato;
