@@ -16,7 +16,6 @@ import javax.servlet.http.HttpServletResponse;
 import model.ConDB;
 import model.evento.Evento;
 import model.evento.EventoService;
-//import model.OrderModel;
 import model.utente.*;
 
 @WebServlet("/DettagliEvento")
