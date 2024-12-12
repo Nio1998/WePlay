@@ -104,6 +104,11 @@ public class EventoService {
 			return null;
 		}
     }
+    
+    //Restituisce tutti gli eventi
+    public Collection <Evento> allEventi () throws SQLException{
+    	return filtra_eventi("", "", "", "");
+    }
 }
 
 
