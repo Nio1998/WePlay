@@ -23,7 +23,7 @@ public class TimeOutServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String username = request.getParameter("username");
+        String username = (String) request.getSession().getAttribute("username");
         String azione = request.getParameter("azione"); // azione specifica: "assegna" o "aggiorna"
 
         if (username == null || username.isEmpty()) {
@@ -33,7 +33,7 @@ public class TimeOutServlet extends HttpServlet {
 
         try {
             if ("assegna".equalsIgnoreCase(azione)) {
-                // Assegna timeout basato sul numero di timeout gi‡ ricevuti
+                // Assegna timeout basato sul numero di timeout gi√† ricevuti
                 utenteService.assegnaTimeout(username);
                 response.setStatus(HttpServletResponse.SC_OK);
                 response.getWriter().write("Timeout assegnato con successo per l'utente: " + username);
