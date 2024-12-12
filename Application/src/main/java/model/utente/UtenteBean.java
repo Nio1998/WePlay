@@ -183,4 +183,8 @@ public class UtenteBean {
     public void setNumValutazioniPositive(int numValutazioniPositive) {
         this.numValutazioniPositive = numValutazioniPositive;
     }
+    
+    public void incrementaNumeroTimeout() {
+        this.numTimeout++;
+    }
 }

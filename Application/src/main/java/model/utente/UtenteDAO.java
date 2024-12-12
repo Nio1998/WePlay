@@ -150,7 +150,7 @@ public class UtenteDAO {
         LocalDate data_di_nascita = LocalDate.parse(data, formatter);
         String datatimeout= resultSet.getString("data_ora_fine_timeout");
         DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        LocalDateTime data_timeout= LocalDateTime.parse(data, formatter);
+        LocalDateTime data_timeout= LocalDateTime.parse(datatimeout, formatter2);
         
         
         // Costruzione dell'oggetto Utente dai risultati del database
@@ -251,7 +251,7 @@ public class UtenteDAO {
 	            LocalDate data_di_nascita = LocalDate.parse(data, formatter);
 	            String datatimeout= resultSet.getString("data_ora_fine_timeout");
 	            DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-	            LocalDateTime data_timeout= LocalDateTime.parse(data, formatter);
+	            LocalDateTime data_timeout= LocalDateTime.parse(datatimeout, formatter2);
 	            
 	            
 	            // Costruzione dell'oggetto Utente dai risultati del database
@@ -319,7 +319,7 @@ public class UtenteDAO {
         LocalDate data_di_nascita = LocalDate.parse(data, formatter);
         String datatimeout= resultSet.getString("data_ora_fine_timeout");
         DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        LocalDateTime data_timeout= LocalDateTime.parse(data, formatter);
+        LocalDateTime data_timeout= LocalDateTime.parse(datatimeout, formatter2);
         
         
         // Costruzione dell'oggetto Utente dai risultati del database
@@ -359,4 +359,18 @@ public class UtenteDAO {
 	    }
 	    return utenti;
 	}
+	
+	public void aggiornaTimeout(String username, boolean isTimeout, LocalDateTime dataOraFineTimeout) throws SQLException {
+        String query = "UPDATE utente SET is_timeout = ?, data_ora_fine_timeout = ?, numero_timeout = numero_timeout + 1 WHERE username = ?";
+        try (Connection conn = ConDB.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setBoolean(1, isTimeout);
+            stmt.setTimestamp(2, Timestamp.valueOf(dataOraFineTimeout));
+            stmt.setString(3, username);
+
+            stmt.executeUpdate();
+        }
+	}
+	
 }

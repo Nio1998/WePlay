@@ -177,5 +177,65 @@ public class UtenteService {
         }
     }    
     
+    
+    public void aggiornaTimeoutUtente(String username, boolean isTimeout, LocalDateTime dataOraFineTimeout) {
+        if (username == null || username.isEmpty()) {
+            throw new IllegalArgumentException("Username non può essere nullo o vuoto.");
+        }
+        if (dataOraFineTimeout == null) {
+            throw new IllegalArgumentException("La data e ora di fine timeout non possono essere nulli.");
+        }
+
+        try {
+            // Chiamata al DAO per aggiornare i campi nel database
+            utenteDAO.aggiornaTimeout(username, isTimeout, dataOraFineTimeout);
+        } catch (Exception e) {
+            throw new RuntimeException("Errore durante l'aggiornamento del timeout dell'utente: " + username, e);
+        }
+    }
+    
+    public void assegnaTimeout(String username) {
+        if (username == null || username.isEmpty()) {
+            throw new IllegalArgumentException("Username non può essere nullo o vuoto.");
+        }
+
+        try {
+            // Recupera i dati dell'utente dal database
+            UtenteBean utente = utenteDAO.findByUsername(username);
+
+            if (utente == null) {
+                throw new IllegalArgumentException("Utente non trovato.");
+            }
+
+            // Ottieni il numero di timeout già ricevuti
+            int numeroTimeout = utente.getNumTimeout();
+
+            // Determina la durata del timeout (in ore) in base al numero di timeout ricevuti
+            int durataTimeout;
+            if (numeroTimeout == 0) {
+                durataTimeout = 24; // Primo timeout: 24 ore
+            } else if (numeroTimeout == 1) {
+                durataTimeout = 48; // Secondo timeout: 48 ore
+            } else if (numeroTimeout == 2) {
+                durataTimeout = 72; // Terzo timeout: 72 ore
+            } else if (numeroTimeout >=3 && numeroTimeout <=7){
+                durataTimeout = 168; // Timeout successivi: 7 giorni (168 ore)
+            }else {
+            	durataTimeout = 876600; //Timeout 100 anni
+            }
+
+            // Calcola la data e ora di fine timeout
+            LocalDateTime dataOraFineTimeout = LocalDateTime.now().plusHours(durataTimeout);
+
+            // Aggiorna i dati dell'utente nel database
+            utenteDAO.aggiornaTimeout(username, true, dataOraFineTimeout);
+
+            // Aggiorna il numero di timeout incrementandolo
+            utente.incrementaNumeroTimeout();
+
+        } catch (Exception e) {
+            throw new RuntimeException("Errore durante l'assegnazione del timeout all'utente: " + username, e);
+        }
+    }
 
 }
