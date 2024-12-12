@@ -267,7 +267,52 @@ public class SegnalazioneDAO {
 	    // Restituisce la lista delle segnalazioni
 	    return segnalazioni;
 	}
+	
+	
+	
+	public synchronized List<Segnalazione> getSegnalazioniRicevute(String username) throws SQLException {
+	    List<Segnalazione> segnalazioni = new ArrayList<>();
+	    Connection conn = null;
+	    PreparedStatement preparedStatement = null;
+	    ResultSet resultSet = null;
 
+	    try {
+	        // Ottieni la connessione al database
+	        conn = ConDB.getConnection();
+
+	        // Query per ottenere le segnalazioni ricevute da un determinato utente
+	        String query = """
+	            SELECT motivazione, stato, utente_segnalante, ID_evento
+	            FROM segnalazione
+	            WHERE utente_segnalato = ?
+	        """;
+
+	        preparedStatement = conn.prepareStatement(query);
+	        preparedStatement.setString(1, username);
+
+	        // Esegui la query ed elabora il ResultSet
+	        resultSet = preparedStatement.executeQuery();
+	        while (resultSet.next()) {
+	   
+	            String motivazione = resultSet.getString("motivazione");
+	            String stato = resultSet.getString("stato");
+	            String utenteSegnalante = resultSet.getString("utente_segnalante");
+	            int idEvento = resultSet.getInt("ID_evento");
+
+	            // Crea un oggetto Segnalazione e aggiungilo alla lista
+	            Segnalazione segnalazione = new Segnalazione(motivazione, stato, username, utenteSegnalante, idEvento);
+	       
+	            segnalazioni.add(segnalazione);
+	        }
+	    } finally {
+	        // Chiudi tutte le risorse aperte
+	        if (resultSet != null) try { resultSet.close(); } catch (SQLException e) { e.printStackTrace(); }
+	        if (preparedStatement != null) try { preparedStatement.close(); } catch (SQLException e) { e.printStackTrace(); }
+	        if (conn != null) ConDB.releaseConnection(conn);
+	    }
+
+	    return segnalazioni;
+	}
 
 }	
 

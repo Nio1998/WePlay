@@ -1,6 +1,7 @@
 package model.Segnalazione;
 
 import java.sql.SQLException;
+import java.util.List;
 
 import model.Segnalazione.*;
 
@@ -43,5 +44,12 @@ public class SegnalazioneService {
 			return false;
     	
     }
+    
+    public List<Segnalazione> listaSegnalazioni(String username) throws SQLException {
+        // Chiama il metodo DAO per ottenere le segnalazioni ricevute dall'utente
+        return segnalazioneDao.getSegnalazioniRicevute(username);
+    }
+    
+    
 }
 
