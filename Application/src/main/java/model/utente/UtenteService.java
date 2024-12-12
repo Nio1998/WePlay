@@ -35,7 +35,7 @@ public class UtenteService {
     
     public UtenteBean findbyUsername(String Username){
     	try {
-    		return utenteDAO.findByUsername(Username);
+	    return utenteDAO.findByUsername(Username);
     	} catch (SQLException e) {
             // Gestione dell'eccezione, ad esempio loggando l'errore
             e.printStackTrace(); 
@@ -141,7 +141,7 @@ public class UtenteService {
     
     public boolean is_organizzatore(String username, int eventoId) {
         	
-    		try {
+	try {
           return  utenteDAO.is_organizzatore(username, eventoId);
         } catch (SQLException e) {
           // TODO Auto-generated catch block
@@ -166,7 +166,7 @@ public class UtenteService {
             utente.setCognome(cognome);
             utente.setPw(pw); // hash gi� effettuato nel controller
             utente.setDataDiNascita(data_di_nascita); // Passa l'oggetto LocalDate
-			      utenteDAO.save(utente); // Assumi che sollevi un'eccezione se fallisce
+	    utenteDAO.save(utente); // Assumi che sollevi un'eccezione se fallisce
             return true;
         } catch (SQLException e) {
             e.printStackTrace(); // Log per debugging
