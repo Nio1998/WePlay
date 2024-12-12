@@ -23,7 +23,7 @@ public class CreaPrenotazioneServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("utente") == null) {
+        if (session == null || session.getAttribute("username") == null) {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Utente non autenticato.");
             return;
         }
