@@ -3,30 +3,32 @@ package model.Valutazione;
 public class ValutazioneBean {
     
     private int id; // ID univoco per la valutazione
-    private String esito; // Valori ammessi: "-1" (negativa), "0" (neutra), "1" (positiva)
+    private int esito; // Valori ammessi: "-1" (negativa), "0" (neutra), "1" (positiva)
     private String utenteValutato; // Utente che riceve la valutazione
     private String utenteValutante; // Utente che effettua la valutazione
     private int idEvento; // ID dell'evento associato
 
     // Costruttore
-    public ValutazioneBean(int id, String esito, String utenteValutato, String utenteValutante, int idEvento) {
+    public ValutazioneBean(int id, int esito, String utenteValutato, String utenteValutante, int idEvento) {
         this.id = id;
         this.esito = esito;
         this.utenteValutato = utenteValutato;
         this.utenteValutante = utenteValutante;
         this.idEvento = idEvento;
     }
+    
+    public ValutazioneBean() {};
 
     // Getter e Setter
     public int getId() {
         return id;
     }
 
-    public String getEsito() {
+    public int getEsito() {
         return esito;
     }
 
-    public void setEsito(String esito) {
+    public void setEsito(int esito) {
         this.esito = esito;
     }
 
