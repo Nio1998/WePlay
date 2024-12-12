@@ -69,7 +69,7 @@ CREATE TABLE segnalazione (
 DROP TABLE IF EXISTS valutazione;
 CREATE TABLE valutazione (
     ID INT AUTO_INCREMENT PRIMARY KEY,
-    esito INT, -- negativa, neutra, positiva
+    esito INT NOT NULL, -- negativa, neutra, positiva
     utente_segnalato VARCHAR(50),
     utente_segnalante VARCHAR(50),
     ID_evento INT,
