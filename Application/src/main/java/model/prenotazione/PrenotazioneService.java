@@ -2,6 +2,8 @@ package model.prenotazione;
 
 import java.sql.SQLException;
 
+import model.prenotazione.PrenotazioneBean;
+
 public class PrenotazioneService {
 
     private PrenotazioneDAO prenotazioneDAO;
@@ -10,10 +12,25 @@ public class PrenotazioneService {
         this.prenotazioneDAO = new PrenotazioneDAO();
     }
 
+    public boolean prenota_evento(String utenteUsername, int eventoID) {
+        try {
+            // Creazione di una nuova prenotazione con stato iniziale e posizione in coda
+            PrenotazioneBean prenotazione = new PrenotazioneBean(utenteUsername, eventoID, stato, posizioneInCoda);
+
+            // Salvataggio della prenotazione nel database
+            prenotazioneDAO.save(prenotazione);
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+            return false;
+    }
+
+
  
     public boolean cancella_prenotazione(String usernameUtente, int eventoID) {
         if (usernameUtente == null || usernameUtente.isEmpty()) {
-            throw new IllegalArgumentException("Il nome utente non può essere nullo o vuoto.");
+            throw new IllegalArgumentException("Il nome utente non puï¿½ essere nullo o vuoto.");
         }
 
         if (eventoID <= 0) {	
