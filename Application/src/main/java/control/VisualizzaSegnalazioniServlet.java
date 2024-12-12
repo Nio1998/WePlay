@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
-@WebServlet("/VisualizzaSegnalazioniServlet")
+@WebServlet("/VisualizzaSegnalazioni")
 public class VisualizzaSegnalazioniServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
