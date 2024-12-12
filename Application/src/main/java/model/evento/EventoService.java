@@ -13,7 +13,6 @@ public class EventoService {
     public EventoService() {
         this.eventoDAO = new EventoDao();  // Inizializza il DAO
     }
-
     
     public boolean esiste_evento(int eventoId) {
     	
@@ -88,6 +87,18 @@ public class EventoService {
     	try {
 			return eventoDAO.getByFilter(dataInizioDate, dataFineDate, sport, citta);
 		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+    }
+    
+    public Evento dettagli_evento(String id) {
+    	if (id == "" || id == null) return null;
+    	
+    	try {
+			return eventoDAO.get(Integer.valueOf(id));
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
