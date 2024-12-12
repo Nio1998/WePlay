@@ -14,6 +14,17 @@ public class EventoService {
         this.eventoDAO = new EventoDao();  // Inizializza il DAO
     }
     
+    public boolean crea_evento(String titolo, LocalDate data_inizio, LocalTime ora_inizio, String indirizzo, String citta, int massimo_di_partecipanti) {
+        try{
+            Evento evento = new Evento(titolo, data_inizio, ora_inizio, citta, indirizzo, massimo_di_partecipanti, sport, stato, prezzo);
+            eventoDAO.save(evento);
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
     public boolean esiste_evento(int eventoId) {
     	
         try {
@@ -25,7 +36,7 @@ public class EventoService {
             return false;  // Se c'è un errore nel database, considera che l'evento non esiste
         }
     }
-    
+
     
     public boolean modifica_evento(int eventoId, String titolo, LocalDate data, LocalTime ora, String indirizzo, String citta, int maxPartecipanti) {
         // Recupero l'evento tramite l'ID
@@ -105,5 +116,4 @@ public class EventoService {
 		}
     }
 }
-
 
