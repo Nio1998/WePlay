@@ -14,9 +14,9 @@ public class EventoService {
         this.eventoDAO = new EventoDao();  // Inizializza il DAO
     }
     
-    public boolean crea_evento(String titolo, LocalDate data_inizio, LocalTime ora_inizio, String indirizzo, String citta, int massimo_di_partecipanti) {
+    public boolean crea_evento(String titolo, LocalDate data_inizio, LocalTime ora_inizio, String indirizzo, String citta, int massimo_di_partecipanti, String sport, String stato, double prezzo) {
         try{
-            Evento evento = new Evento(titolo, data_inizio, ora_inizio, citta, indirizzo, massimo_di_partecipanti, sport, stato, prezzo);
+            Evento evento = new Evento(data_inizio, ora_inizio, prezzo, sport, titolo, indirizzo, massimo_di_partecipanti, citta, stato);
             eventoDAO.save(evento);
             return true;
         } catch (SQLException e) {
