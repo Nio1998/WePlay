@@ -8,9 +8,9 @@ CREATE TABLE utente (
     username VARCHAR(50) PRIMARY KEY,
     cognome VARCHAR(50) NOT NULL,
     nome VARCHAR(50) NOT NULL,
-    num_timeout INT DEFAULT 0, -- quanti timeout un utente ha ricevuto
-    is_timeout BOOLEAN DEFAULT false, -- se l'utente è in timeout
-    is_admin BOOLEAN DEFAULT false NOT NULL, -- se l'utente è un admin
+    num_timeout INT DEFAULT 0,
+    is_timeout BOOLEAN DEFAULT FALSE,
+    is_admin BOOLEAN DEFAULT FALSE NOT NULL,
     num_valutazioni_neutre INT DEFAULT 0,
     num_valutazioni_negative INT DEFAULT 0,
     num_valutazioni_positive INT DEFAULT 0,
@@ -69,7 +69,7 @@ CREATE TABLE segnalazione (
 DROP TABLE IF EXISTS valutazione;
 CREATE TABLE valutazione (
     ID INT AUTO_INCREMENT PRIMARY KEY,
-    esito ENUM('-1', '0', '1') NOT NULL, -- negativa, neutra, positiva
+    esito INT, -- negativa, neutra, positiva
     utente_segnalato VARCHAR(50),
     utente_segnalante VARCHAR(50),
     ID_evento INT,
@@ -77,3 +77,4 @@ CREATE TABLE valutazione (
     FOREIGN KEY (utente_segnalante) REFERENCES Utente(username),
     FOREIGN KEY (ID_evento) REFERENCES Evento(ID) 
 );
+
