@@ -1,3 +1,4 @@
+package control;
 import java.io.IOException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -14,7 +15,7 @@ import model.utente.UtenteService;
 public class ProfiloServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
-
+    UtenteService utenteService=new UtenteService();
 	@Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // Recupera la sessione esistente (se non esiste, ritorna null)
@@ -30,7 +31,7 @@ public class ProfiloServlet extends HttpServlet {
         String username = (String) session.getAttribute("username");
 
         // Usa il servizio per ottenere i dati dell'utente
-        UtenteBean utente = UtenteService.findbyUsername(username);
+        UtenteBean utente = utenteService.findbyUsername(username);
 
         // Controlla se l'utente è stato trovato
         if (utente == null) {
