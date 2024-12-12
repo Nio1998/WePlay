@@ -8,6 +8,9 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+
 public class UtenteService {
 
     private UtenteDAO utenteDAO;
@@ -175,7 +178,21 @@ public class UtenteService {
             e.printStackTrace(); // Log di errori generici
             return false;
         }
-    }    
+    }  
+    
+    //Restituisce tutti gli Utenti
+    public List<UtenteBean> allUtenti() {
+        try {
+            return utenteDAO.getAllUtenti();
+        } catch (SQLException e) {
+        	e.printStackTrace(); // Log per debugging
+            return new ArrayList<>();
+        } catch (Exception e) {
+        	e.printStackTrace(); // Log per debugging
+            return new ArrayList<>();
+        }
+    }
+
     
 
 }
