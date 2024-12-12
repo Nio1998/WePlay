@@ -91,7 +91,7 @@ public class DettagliEventoServlet extends HttpServlet {
                 Map<UtenteBean, Integer> utentiValutazioni = new HashMap<>();
 
                 for (UtenteBean u : utenti) {
-                    int esito = -1; // Default: nessuna valutazione
+                    int esito = -2; // Default: nessuna valutazione
                     for (ValutazioneBean v : valutazioni) {
                         if (v.getUtenteValutato().equals(u.getUsername())) {
                             esito = v.getEsito();
