@@ -1,6 +1,9 @@
 package model.utente;
 
 import java.sql.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +37,7 @@ public class UtenteDAO {
 	        preparedStatement.setString(1, utente.getUsername());
 	        preparedStatement.setString(2, utente.getCognome());
 	        preparedStatement.setString(3, utente.getNome());
-	        preparedStatement.setDate(4, new java.sql.Date(utente.getDataDiNascita().getTime()));
+	        preparedStatement.setDate(4, java.sql.Date.valueOf(utente.getDataDiNascita()));
 	        preparedStatement.setString(5, utente.getEmail());
 	        preparedStatement.setString(6, utente.getPw());
 
@@ -99,7 +102,7 @@ public class UtenteDAO {
 	        int rowsUpdated = preparedStatement.executeUpdate();
 	        connection.commit();
 
-	        // Verifica se Ã¨ stato aggiornato almeno un record
+	        // Verifica se è stato aggiornato almeno un record
 	        if (rowsUpdated == 0) {
 	            throw new SQLException("Update failed: no rows affected for username = " + utente.getUsername());
 	        }
@@ -142,18 +145,127 @@ public class UtenteDAO {
 	        resultSet = preparedStatement.executeQuery();
 
 	        if (resultSet.next()) {
+	        	String data = resultSet.getString("data_di_nascita");
+    			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate data_di_nascita = LocalDate.parse(data, formatter);
+        String datatimeout= resultSet.getString("data_ora_fine_timeout");
+        DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime data_timeout= LocalDateTime.parse(datatimeout, formatter2);
+        
+        
+        // Costruzione dell'oggetto Utente dai risultati del database
+        return new UtenteBean(
+            resultSet.getString("username"),
+            resultSet.getString("cognome"),
+            resultSet.getString("nome"),
+            data_di_nascita,
+            resultSet.getString("email"),
+            resultSet.getString("pw"),
+            resultSet.getInt("num_timeout"),
+            resultSet.getBoolean("is_timeout"),
+            resultSet.getBoolean("is_admin"),
+            data_timeout,
+            resultSet.getInt("num_valutazioni_neutre"),
+            resultSet.getInt("num_valutazioni_negative"),
+            resultSet.getInt("num_valutazioni_positive")    
+        );
+	        }
+	    } finally {
+	        // Chiude il ResultSet
+	        if (resultSet != null) {
+	            resultSet.close();
+	        }
+	        // Chiude il PreparedStatement
+	        if (preparedStatement != null) {
+	            preparedStatement.close();
+	        }
+	        // Rilascia la connessione
+	        if (connection != null) {
+	            ConDB.releaseConnection(connection);
+	        }
+	    }
+
+	    // Restituisce null se non viene trovato alcun utente
+	    return null;
+	}
+	
+	public boolean is_organizzatore(String username, int id_evento) throws SQLException {
+		
+		Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try {
+            con = ConDB.getConnection();
+            String query = "SELECT stato FROM prenotazione WHERE username_utente = ? AND ID_evento = ?";
+            ps = con.prepareStatement(query);
+
+            ps.setString(1, username);
+            ps.setInt(2, id_evento);
+
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                String stato = rs.getString("stato");
+                return "organizzatore".equals(stato);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // Puoi migliorare la gestione degli errori in produzione
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (ps != null) ps.close();
+                if (con != null) ConDB.releaseConnection(con);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return false;
+    }
+	   
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	public UtenteBean findByEmail(String email) throws SQLException {
+	    Connection connection = null;
+	    PreparedStatement preparedStatement = null;
+	    ResultSet resultSet = null;
+
+	    try {
+	        connection = ConDB.getConnection();
+	        String selectSQL = "SELECT * FROM utente WHERE email = ?";
+	        preparedStatement = connection.prepareStatement(selectSQL);
+	        preparedStatement.setString(1, email);
+	        resultSet = preparedStatement.executeQuery();
+
+	        if (resultSet.next()) {
+	        	String data = resultSet.getString("data_di_nascita");
+	        			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+	            LocalDate data_di_nascita = LocalDate.parse(data, formatter);
+	            String datatimeout= resultSet.getString("data_ora_fine_timeout");
+	            DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+	            LocalDateTime data_timeout= LocalDateTime.parse(datatimeout, formatter2);
+	            
+	            
 	            // Costruzione dell'oggetto Utente dai risultati del database
 	            return new UtenteBean(
 	                resultSet.getString("username"),
 	                resultSet.getString("cognome"),
 	                resultSet.getString("nome"),
-	                resultSet.getDate("data_di_nascita"),
+	                data_di_nascita,
 	                resultSet.getString("email"),
 	                resultSet.getString("pw"),
 	                resultSet.getInt("num_timeout"),
 	                resultSet.getBoolean("is_timeout"),
 	                resultSet.getBoolean("is_admin"),
-	                resultSet.getTimestamp("data_ora_fine_timeout"),
+	                data_timeout,
 	                resultSet.getInt("num_valutazioni_neutre"),
 	                resultSet.getInt("num_valutazioni_negative"),
 	                resultSet.getInt("num_valutazioni_positive")    
@@ -177,6 +289,11 @@ public class UtenteDAO {
 	    // Restituisce null se non viene trovato alcun utente
 	    return null;
 	}
+	
+	
+	
+	
+	
 
 	/**
      * Recupera tutti gli utenti presenti nel database.
@@ -197,21 +314,30 @@ public class UtenteDAO {
 	        resultSet = preparedStatement.executeQuery();
 
 	        while (resultSet.next()) {
-	            UtenteBean utente = new UtenteBean(
-	            		resultSet.getString("username"),
-		                resultSet.getString("cognome"),
-		                resultSet.getString("nome"),
-		                resultSet.getDate("data_di_nascita"),
-		                resultSet.getString("email"),
-		                resultSet.getString("pw"),
-		                resultSet.getInt("num_timeout"),
-		                resultSet.getBoolean("is_timeout"),
-		                resultSet.getBoolean("is_admin"),
-		                resultSet.getTimestamp("data_ora_fine_timeout"),
-		                resultSet.getInt("num_valutazioni_neutre"),
-		                resultSet.getInt("num_valutazioni_negative"),
-		                resultSet.getInt("num_valutazioni_positive")
-	            );
+	        	String data = resultSet.getString("data_di_nascita");
+    			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate data_di_nascita = LocalDate.parse(data, formatter);
+        String datatimeout= resultSet.getString("data_ora_fine_timeout");
+        DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime data_timeout= LocalDateTime.parse(datatimeout, formatter2);
+        
+        
+        // Costruzione dell'oggetto Utente dai risultati del database
+        UtenteBean utente = new UtenteBean(
+            resultSet.getString("username"),
+            resultSet.getString("cognome"),
+            resultSet.getString("nome"),
+            data_di_nascita,
+            resultSet.getString("email"),
+            resultSet.getString("pw"),
+            resultSet.getInt("num_timeout"),
+            resultSet.getBoolean("is_timeout"),
+            resultSet.getBoolean("is_admin"),
+            data_timeout,
+            resultSet.getInt("num_valutazioni_neutre"),
+            resultSet.getInt("num_valutazioni_negative"),
+            resultSet.getInt("num_valutazioni_positive")    
+        );
 	            utenti.add(utente);
 	        }
 	    } catch (SQLException e) {
@@ -233,4 +359,18 @@ public class UtenteDAO {
 	    }
 	    return utenti;
 	}
+	
+	public void aggiornaTimeout(String username, boolean isTimeout, LocalDateTime dataOraFineTimeout) throws SQLException {
+        String query = "UPDATE utente SET is_timeout = ?, data_ora_fine_timeout = ?, numero_timeout = numero_timeout + 1 WHERE username = ?";
+        try (Connection conn = ConDB.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setBoolean(1, isTimeout);
+            stmt.setTimestamp(2, Timestamp.valueOf(dataOraFineTimeout));
+            stmt.setString(3, username);
+
+            stmt.executeUpdate();
+        }
+	}
+	
 }

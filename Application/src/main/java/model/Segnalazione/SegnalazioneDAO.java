@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import model.ConDB;
+import model.evento.Evento;
 
 public class SegnalazioneDAO {
 	
@@ -154,7 +155,7 @@ public class SegnalazioneDAO {
 	            int idEvento = resultSet.getInt("ID_evento");
 
 	            // Crea l'oggetto Segnalazione con i dati ottenuti
-	            segnalazione = new Segnalazione(segnalazioneId, motivazione, stato, utenteSegnalato, utenteSegnalante, idEvento);
+	            segnalazione = new Segnalazione(motivazione, stato, utenteSegnalato, utenteSegnalante, idEvento);
 	        }
 
 	    } finally {
@@ -186,7 +187,26 @@ public class SegnalazioneDAO {
 	    return segnalazione;
 	}
 
-	
+	   public synchronized boolean get(String usernameSegnalante, String usernameSegnalato, int eventoId ) throws SQLException {
+	        Connection conn = null;
+	        try {
+	            conn = ConDB.getConnection();
+	            try (PreparedStatement query = conn.prepareStatement("SELECT * FROM segnalazione WHERE utente_segnalante = ? AND utente_segnalato = ? AND eventoId = ?")) {
+	                query.setString(1, usernameSegnalante);
+			query.setString(2, usernameSegnalato);	
+	                query.setInt(3, eventoId);
+	                try (ResultSet rs = query.executeQuery()) {
+	                    if (rs.next()) {
+	                        return true;
+	                    } else {
+	                        return false;
+	                    }
+	                }                
+	            }
+	        } finally {
+	            ConDB.releaseConnection(conn);
+	        }
+	    }
 	public synchronized List<Segnalazione> getAll() throws SQLException {
 	    // Usa ArrayList per istanziare una lista di segnalazioni
 	    List<Segnalazione> segnalazioni = new ArrayList<>();
@@ -207,7 +227,6 @@ public class SegnalazioneDAO {
 
 	        // Se ci sono risultati, prendi i dati nella tabella segnalazione
 	        while (resultSet.next()) {
-	            int segnalazioneId = resultSet.getInt("ID");
 	            String motivazione = resultSet.getString("motivazione");
 	            String stato = resultSet.getString("stato");
 	            String utenteSegnalato = resultSet.getString("utente_segnalato");
@@ -215,7 +234,7 @@ public class SegnalazioneDAO {
 	            int idEvento = resultSet.getInt("ID_evento");
 
 	            // Crea l'oggetto Segnalazione con i dati ottenuti
-	            Segnalazione segnalazione = new Segnalazione(segnalazioneId, motivazione, stato, utenteSegnalato, utenteSegnalante, idEvento);
+	            Segnalazione segnalazione = new Segnalazione(motivazione, stato, utenteSegnalato, utenteSegnalante, idEvento);
 
 	            // Aggiungi la segnalazione alla lista
 	            segnalazioni.add(segnalazione);

@@ -128,29 +128,29 @@ VALUES
 -- Valutazioni per eventi non iniziati
 INSERT INTO valutazione (esito, utente_segnalato, utente_segnalante, ID_evento)
 VALUES
-('1', 'giulia_verdi', 'mario_rossi', 1),  -- Positiva
-('0', 'giovanni_roma', 'anna_neri', 2),  -- Neutra
-('-1', 'paolo_toscano', 'maria_costa', 3), -- Negativa
-('1', 'alessandro_benetti', 'marco_ferrari', 4), -- Positiva
-('0', 'francesca_longo', 'giovanni_roma', 5), -- Neutra
-('-1', 'luigi_bianchi', 'giulia_verdi', 6), -- Negativa
-('1', 'maria_costa', 'paolo_toscano', 7), -- Positiva
-('0', 'alessandro_benetti', 'giovanni_roma', 8), -- Neutra
-('-1', 'giovanni_roma', 'mario_rossi', 9), -- Negativa
-('1', 'francesca_longo', 'luigi_bianchi', 10); -- Positiva
+(1, 'giulia_verdi', 'mario_rossi', 1),  -- Positiva
+(0, 'giovanni_roma', 'anna_neri', 2),  -- Neutra
+(-1, 'paolo_toscano', 'maria_costa', 3), -- Negativa
+(1, 'alessandro_benetti', 'marco_ferrari', 4), -- Positiva
+(0, 'francesca_longo', 'giovanni_roma', 5), -- Neutra
+(-1, 'luigi_bianchi', 'giulia_verdi', 6), -- Negativa
+(1, 'maria_costa', 'paolo_toscano', 7), -- Positiva
+(0, 'alessandro_benetti', 'giovanni_roma', 8), -- Neutra
+(-1, 'giovanni_roma', 'mario_rossi', 9), -- Negativa
+(1, 'francesca_longo', 'luigi_bianchi', 10); -- Positiva
 
 -- Valutazioni per eventi iniziati
 INSERT INTO valutazione (esito, utente_segnalato, utente_segnalante, ID_evento)
 VALUES
-('0', 'sara_netti', 'luca_rossi', 11), -- Neutra
-('1', 'stefano_mancini', 'sara_netti', 12), -- Positiva
-('-1', 'luca_rossi', 'stefano_mancini', 13); -- Negativa
+(0, 'sara_netti', 'luca_rossi', 11), -- Neutra
+(1, 'stefano_mancini', 'sara_netti', 12), -- Positiva
+(-1, 'luca_rossi', 'stefano_mancini', 13); -- Negativa
 
 -- Valutazioni per eventi finiti
 INSERT INTO valutazione (esito, utente_segnalato, utente_segnalante, ID_evento)
 VALUES
-('1', 'luigi_bianchi', 'giulia_verdi', 14), -- Positiva
-('0', 'giulia_verdi', 'mario_rossi', 15), -- Neutra
-('-1', 'mario_rossi', 'luigi_bianchi', 16); -- Negativa
+(1, 'luigi_bianchi', 'giulia_verdi', 14), -- Positiva
+(0, 'giulia_verdi', 'mario_rossi', 15), -- Neutra
+(-1, 'mario_rossi', 'luigi_bianchi', 16); -- Negativa
 
 
