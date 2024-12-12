@@ -73,8 +73,8 @@ CREATE TABLE valutazione (
     utente_valutato VARCHAR(50),
     utente_valutante VARCHAR(50),
     ID_evento INT,
-    FOREIGN KEY (utente_segnalato) REFERENCES Utente(username),
-    FOREIGN KEY (utente_segnalante) REFERENCES Utente(username),
+    FOREIGN KEY (utente_valutato) REFERENCES Utente(username),
+    FOREIGN KEY (utente_valutante) REFERENCES Utente(username),
     FOREIGN KEY (ID_evento) REFERENCES Evento(ID) 
 );
 
