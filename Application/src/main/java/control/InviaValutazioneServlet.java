@@ -25,7 +25,7 @@ public class InviaValutazioneServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String usernameValutante = request.getParameter("username_valutante");
+        String usernameValutante = (String) request.getSession().getAttribute("username");
         String usernameValutato = request.getParameter("username_valutato");
         String eventoIdParam = request.getParameter("evento_id");
         String esitoParam = request.getParameter("esito");
