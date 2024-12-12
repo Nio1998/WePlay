@@ -192,9 +192,9 @@ public class SegnalazioneDAO {
 	        try {
 	            conn = ConDB.getConnection();
 	            try (PreparedStatement query = conn.prepareStatement("SELECT * FROM segnalazione WHERE utente_segnalante = ? AND utente_segnalato = ? AND eventoId = ?")) {
-	                query.setInt(1,eventoId);
-	                query.setString(2,  usernameSegnalante);
-	                	query.setString(2,  usernameSegnalato);	
+	                query.setString(1, usernameSegnalante);
+			query.setString(2, usernameSegnalato);	
+	                query.setInt(3, eventoId);
 	                try (ResultSet rs = query.executeQuery()) {
 	                    if (rs.next()) {
 	                        return true;
