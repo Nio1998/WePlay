@@ -188,4 +188,28 @@ public class EventoDao {
 			ConDB.releaseConnection(conn);
 		}
 	}
+	
+	
+	public synchronized Evento findByID(int eventoID) {
+	    Evento evento = null;
+	    String query = "SELECT * FROM evento WHERE ID = ?";
+
+	    try (Connection conn = ConDB.getConnection();
+	         PreparedStatement stmt = conn.prepareStatement(query)) {
+
+	        stmt.setInt(1, eventoID);
+
+	        try (ResultSet rs = stmt.executeQuery()) {
+	            if (rs.next()) {
+	                evento = new Evento(rs);
+	            }
+	        }
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+
+	    return evento;
+	}
+	
 }

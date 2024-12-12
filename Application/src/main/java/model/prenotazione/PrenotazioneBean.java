@@ -62,4 +62,6 @@ public class PrenotazioneBean implements Serializable {
 				+ ", posizioneInCoda=" + posizioneInCoda + "]";
 	}
 	
+	
+	
 }
