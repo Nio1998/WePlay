@@ -33,6 +33,16 @@ public class UtenteService {
         return hashtext;
     }
     
+    public UtenteBean findbyUsername(String Username){
+    	try {
+	    return utenteDAO.findByUsername(Username);
+    	} catch (SQLException e) {
+            // Gestione dell'eccezione, ad esempio loggando l'errore
+            e.printStackTrace(); 
+            return null; 
+        }
+    }
+    
 
     // Metodo per controllare se un'email esiste già nel database
     public boolean controlla_email_esistente(String email) {
@@ -76,30 +86,69 @@ public class UtenteService {
         }
     }
     
+    // Metodo per incrementare le valutazioni positive di un utente
+    public void incrementaValutazioniPositive(String username) {
+        try {
+            UtenteBean utente = utenteDAO.findByUsername(username);
+            if (utente != null) {
+                utente.setNumValutazioniPositive(utente.getNumValutazioniPositive() + 1);
+                utenteDAO.update(utente);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // Gestisci l'errore in modo appropriato
+        }
+    }
+
+    // Metodo per incrementare le valutazioni neutre di un utente
+    public void incrementaValutazioniNeutre(String username) {
+        try {
+            UtenteBean utente = utenteDAO.findByUsername(username);
+            if (utente != null) {
+                utente.setNumValutazioniNeutre(utente.getNumValutazioniNeutre() + 1);
+                utenteDAO.update(utente);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // Gestisci l'errore in modo appropriato
+        }
+    }
+
+    // Metodo per incrementare le valutazioni negative di un utente
+    public void incrementaValutazioniNegative(String username) {
+        try {
+            UtenteBean utente = utenteDAO.findByUsername(username);
+            if (utente != null) {
+                utente.setNumValutazioniNegative(utente.getNumValutazioniNegative() + 1);
+                utenteDAO.update(utente);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // Gestisci l'errore in modo appropriato
+        }
+    }
+
     public boolean is_admin(String username) {
         UtenteBean utente;
-		try {
-			utente = utenteDAO.findByUsername(username);
-			return utente != null && utente.isAdmin();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		return false;
+        try {
+          utente = utenteDAO.findByUsername(username);
+          return utente != null && utente.isAdmin();
+        } catch (SQLException e) {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
+
+        return false;
         
     }
     
     public boolean is_organizzatore(String username, int eventoId) {
         	
-    		try {
-				return  utenteDAO.is_organizzatore(username, eventoId);
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-    		
-    		return false;
+	try {
+          return  utenteDAO.is_organizzatore(username, eventoId);
+        } catch (SQLException e) {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
+
+        return false;
     }
 
     
@@ -117,7 +166,7 @@ public class UtenteService {
             utente.setCognome(cognome);
             utente.setPw(pw); // hash gi� effettuato nel controller
             utente.setDataDiNascita(data_di_nascita); // Passa l'oggetto LocalDate
-			utenteDAO.save(utente); // Assumi che sollevi un'eccezione se fallisce
+	    utenteDAO.save(utente); // Assumi che sollevi un'eccezione se fallisce
             return true;
         } catch (SQLException e) {
             e.printStackTrace(); // Log per debugging

@@ -8,7 +8,6 @@ import java.util.Collection;
 import java.util.ArrayList;
 
 import model.ConDB;
-import model.evento.Evento;
 
 public class ValutazioneDAO {
 	
@@ -20,7 +19,7 @@ public class ValutazioneDAO {
         	conn = ConDB.getConnection();
         	
         	try (PreparedStatement query = conn.prepareStatement("INSERT INTO valutazione (esito, utente_valutato, utente_valutante, ID_evento) VALUES (?, ?, ?, ?)")) {
-            query.setString(1, valutazione.getEsito());
+            query.setInt(1, valutazione.getEsito());
             query.setString(2, valutazione.getUtenteValutato());
             query.setString(3, valutazione.getUtenteValutante());
             query.setInt(4, valutazione.getIdEvento());
@@ -41,7 +40,7 @@ public class ValutazioneDAO {
         	conn = ConDB.getConnection();
         	
         	try(PreparedStatement query = conn.prepareStatement("UPDATE valutazione SET esito = ?, utente_valutato = ?, utente_valutante = ?, ID_evento = ? WHERE ID = ?")) {
-            query.setString(1, valutazione.getEsito());
+            query.setInt(1, valutazione.getEsito());
             query.setString(2, valutazione.getUtenteValutato());
             query.setString(3, valutazione.getUtenteValutante());
             query.setInt(4, valutazione.getIdEvento());
@@ -91,7 +90,7 @@ public class ValutazioneDAO {
                 if (rs.next()) {
                     return new ValutazioneBean(
                     	rs.getInt("ID"),
-                        rs.getString("esito"),
+                        rs.getInt("esito"),
                         rs.getString("utente_valutato"),
                         rs.getString("utente_valutante"),
                         rs.getInt("ID_evento")
@@ -122,7 +121,7 @@ public class ValutazioneDAO {
                 while (rs.next()) {
                     valutazioni.add(new ValutazioneBean(
                     	rs.getInt("ID"),
-                        rs.getString("esito"),
+                        rs.getInt("esito"),
                         rs.getString("utente_valutato"),
                         rs.getString("utente_valutante"),
                         rs.getInt("ID_evento")

@@ -22,17 +22,15 @@ public class CreaPrenotazioneServlet extends HttpServlet {
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("username") == null) {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Utente non autenticato.");
+            return;
+        }
        try { // Otteniamo i parametri della prenotazione dalla richiesta
         String utenteUsername = request.getParameter("utenteUsername");
         int eventoID = Integer.parseInt(request.getParameter("eventoID"));
 
-       
-            // Controlliamo se l'utente è registrato
-            if (!PrenotazioneService.is_utente_registrato(utenteUsername)) {
-                request.setAttribute("errore", "l'utente non è registrato.");
-                request.getRequestDispatcher("dettaglioEvento.jsp").forward(request, response);
-                return;
-            }
             // Utilizziamo il service per prenotare l'evento
             boolean prenotazioneSuccesso = prenotazioneService.prenota_evento(utenteUsername, eventoID); // Chiamata al metodo prenota_evento
 
