@@ -23,6 +23,7 @@ public class DettagliEventoServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     
     private EventoService eventoService = new EventoService(); 
+    private PrenotazioneService prenotazioneService = new PrenotazioneService();
 
     public DettagliEventoServlet() {
         super();
@@ -34,6 +35,7 @@ public class DettagliEventoServlet extends HttpServlet {
         final String redirectedPage = "dettagliEvento.jsp";
         
         Evento e = eventoService.dettagli_evento(idEvento);
+        Collection<UtenteBean> utenti = prenotazioneService.calcola_partecipanti(Integer.valueOf(idEvento));
         
         if (e == null) {
         	response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Errore interno del server (Dettagli Evento).");
@@ -41,6 +43,7 @@ public class DettagliEventoServlet extends HttpServlet {
         }
         
         request.setAttribute("evento", e);
+        request.setAttribute("utenti", utenti);
         request.getRequestDispatcher(redirectedPage).forward(request, response);
     }
         
