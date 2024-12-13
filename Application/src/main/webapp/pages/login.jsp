@@ -7,9 +7,9 @@
     <title>WePlay - Login</title>
     <!-- CSS specifico per il contenuto centrale -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/CSS/login.css">
-    <!-- Script per le icone -->
-    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
-    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+     <!-- Inclusione del file JS per la validazione -->
+    <script src="${pageContext.request.contextPath}/JS/validateLogin.js" defer></script>
+    
 </head>
 <body>
     <!-- Import della navbar -->
@@ -30,7 +30,7 @@
                         <button type="submit">ACCEDI</button>
                     </div>
                 </form>
-                <p><strong>Non sei registrato? <a href="${pageContext.request.contextPath}/RegisterServlet">Registrati qui!</a></strong></p>
+                <p><strong>Non sei registrato? <a href="register.jsp">Registrati qui!</a></strong></p>
             </div>
         </section>
     </main>
