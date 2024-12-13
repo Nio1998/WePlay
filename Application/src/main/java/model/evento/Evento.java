@@ -58,8 +58,8 @@ public class Evento {
      */
     public Evento(ResultSet rs) throws SQLException {
         this.ID = rs.getInt("ID");
-        this.data_inizio = (LocalDate) rs.getObject("data_inizio");
-        this.ora_inizio = (LocalTime) rs.getObject("ora_inizio");
+        this.data_inizio = rs.getDate("data_inizio").toLocalDate();
+        this.ora_inizio = rs.getTime("ora_inizio").toLocalTime();
         this.prezzo = rs.getDouble("prezzo");
         this.sport = rs.getString("sport");
         this.titolo = rs.getString("titolo");
@@ -162,4 +162,9 @@ public class Evento {
     public int getID() {
         return ID;
     }
+
+	public void setID(int id) {
+		
+		this.ID=id;
+	}
 }

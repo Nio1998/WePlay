@@ -126,7 +126,7 @@ VALUES
 
 
 -- Valutazioni per eventi non iniziati
-INSERT INTO valutazione (esito, utente_segnalato, utente_segnalante, ID_evento)
+INSERT INTO valutazione (esito, utente_valutato, utente_valutante, ID_evento)
 VALUES
 (1, 'giulia_verdi', 'mario_rossi', 1),  -- Positiva
 (0, 'giovanni_roma', 'anna_neri', 2),  -- Neutra
@@ -140,14 +140,14 @@ VALUES
 (1, 'francesca_longo', 'luigi_bianchi', 10); -- Positiva
 
 -- Valutazioni per eventi iniziati
-INSERT INTO valutazione (esito, utente_segnalato, utente_segnalante, ID_evento)
+INSERT INTO valutazione (esito, utente_valutato, utente_valutante, ID_evento)
 VALUES
 (0, 'sara_netti', 'luca_rossi', 11), -- Neutra
 (1, 'stefano_mancini', 'sara_netti', 12), -- Positiva
 (-1, 'luca_rossi', 'stefano_mancini', 13); -- Negativa
 
 -- Valutazioni per eventi finiti
-INSERT INTO valutazione (esito, utente_segnalato, utente_segnalante, ID_evento)
+INSERT INTO valutazione (esito, utente_valutato, utente_valutante, ID_evento)
 VALUES
 (1, 'luigi_bianchi', 'giulia_verdi', 14), -- Positiva
 (0, 'giulia_verdi', 'mario_rossi', 15), -- Neutra

@@ -14,6 +14,17 @@ public class EventoService {
         this.eventoDAO = new EventoDao();  // Inizializza il DAO
     }
     
+    public boolean crea_evento(String titolo, LocalDate data_inizio, LocalTime ora_inizio, String indirizzo, String citta, int massimo_di_partecipanti, String sport, String stato, double prezzo) {
+        try{
+            Evento evento = new Evento(data_inizio, ora_inizio, prezzo, sport, titolo, indirizzo, massimo_di_partecipanti, citta, stato);
+            eventoDAO.save(evento);
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
     public boolean esiste_evento(int eventoId) {
     	
         try {
@@ -25,7 +36,7 @@ public class EventoService {
             return false;  // Se c'Ã¨ un errore nel database, considera che l'evento non esiste
         }
     }
-    
+
     
     public boolean modifica_evento(int eventoId, String titolo, LocalDate data, LocalTime ora, String indirizzo, String citta, int maxPartecipanti) {
         // Recupero l'evento tramite l'ID
@@ -64,17 +75,31 @@ public class EventoService {
     
 
     public boolean elimina_evento(int eventoId) {
-    	
         try {
+            Evento evento = eventoDAO.get(eventoId);
+
+            if (evento == null) {
+                return false;
+            }
+
+            LocalDate oggi = LocalDate.now();
+            LocalTime oraCorrente = LocalTime.now();
+
+            // Calcolo della data e ora minima per la cancellazione
+            LocalDate dataLimite = oggi.plusDays(1);
+
+            // Verifica se la cancellazione è entro 24 ore dall'inizio dell'evento
+            if (evento.getData_inizio().isBefore(dataLimite) || (evento.getData_inizio().isEqual(dataLimite) && evento.getOra_inizio().isBefore(oraCorrente))) {
+                return false;
+            }
+
             return eventoDAO.delete(eventoId);
         } catch (SQLException e) {
-        	
             e.printStackTrace();
             return false;
-            
         }
     }
-    
+
     
     public Collection<Evento> filtra_eventi(String dataInizio, String dataFine, String sport, String citta) {
     	LocalDate dataInizioDate = null;
@@ -104,6 +129,12 @@ public class EventoService {
 			return null;
 		}
     }
+    
+    //Restituisce tutti gli eventi
+    public Collection <Evento> allEventi () throws SQLException{
+    	return filtra_eventi("", "", "", "");
+    }
+    
+    
 }
-
 
