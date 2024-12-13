@@ -13,7 +13,7 @@ import model.utente.UtenteService;
 @WebServlet("/ApplicaBan")
 public class BanServlet extends HttpServlet {
 
-	private static final String ERROR_PAGE = "/ErrorPage.jsp";
+	private static final String ERROR_PAGE = "errore.jsp";
 	
     private static final long serialVersionUID = 1L;
     private UtenteService utenteService;
@@ -28,7 +28,7 @@ public class BanServlet extends HttpServlet {
         String username = request.getParameter("username");
 
         if (username == null || username.isEmpty()) {
-        	response.sendRedirect(request.getContextPath() + ERROR_PAGE);
+        	response.forward(request.getRequestDispatcher(ERROR_PAGE).forward(request, response));
             return;
         }
 
@@ -39,7 +39,7 @@ public class BanServlet extends HttpServlet {
             response.setStatus(HttpServletResponse.SC_OK);
             response.getWriter().write("Ban permanente assegnato con successo all'utente: " + username);
         } catch (IllegalArgumentException e) {
-        	response.sendRedirect(request.getContextPath() + ERROR_PAGE);
+        	response.forward(request.getRequestDispatcher(ERROR_PAGE).forward(request, response));
         } catch (RuntimeException e) {
         	response.sendRedirect(request.getContextPath() + ERROR_PAGE);
         }
