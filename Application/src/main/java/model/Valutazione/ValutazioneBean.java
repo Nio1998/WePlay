@@ -23,6 +23,13 @@ public class ValutazioneBean {
     public int getId() {
         return id;
     }
+    
+    
+    // Getter e Setter
+    public void setId(int id) {
+        this.id = id;
+    }
+
 
     public int getEsito() {
         return esito;

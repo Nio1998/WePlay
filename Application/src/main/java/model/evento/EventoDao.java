@@ -7,8 +7,6 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
-
 import model.ConDB;
 
 public class EventoDao {
@@ -18,26 +16,60 @@ public class EventoDao {
        @param e L'evento da salvare.
        @throws SQLException Se si verifica un errore durante l'interazione con il database.
      */
-    public synchronized void save(Evento e) throws SQLException {
-        Connection conn = null;
-        try {
-            conn = ConDB.getConnection();
-            try (PreparedStatement query = conn.prepareStatement("INSERT INTO evento (data_inizio, ora_inizio, prezzo, sport, titolo, indirizzo, massimo_di_partecipanti, citta, stato) VALUES (?, ?, ?, ?,?,?,?,?,?)")) {
-                query.setObject(1, e.getData_inizio());
-                query.setObject(2, e.getOra_inizio());
-                query.setDouble(3, e.getPrezzo());
-                query.setString(4, e.getSport());
-                query.setString(5, e.getTitolo());
-                query.setString(6, e.getIndirizzo());
-                query.setInt(7, e.getMassimo_di_partecipanti());
-                query.setString(8, e.getCitta());
-                query.setString(9, e.getStato());
-                query.executeUpdate();        
-            }
-        } finally {
-            ConDB.releaseConnection(conn);
-        }
-    }
+	public synchronized void save(Evento e) throws SQLException {
+	    Connection conn = null;
+	    try {
+	        conn = ConDB.getConnection();
+	        
+	        // Disabilita l'autocommit per gestire le transazioni manualmente
+	        conn.setAutoCommit(false);
+
+	        // Recupera il massimo ID attuale
+	        int nextId = 1; // Default se non ci sono righe
+	        try (PreparedStatement queryMax = conn.prepareStatement("SELECT MAX(ID) AS max_id FROM evento")) {
+	            try (ResultSet rs = queryMax.executeQuery()) {
+	                if (rs.next()) {
+	                    nextId = rs.getInt("max_id") + 1;
+	                }
+	            }
+	        }
+
+	        // Inserisci l'evento con il prossimo ID calcolato
+	        try (PreparedStatement query = conn.prepareStatement("INSERT INTO evento (ID, data_inizio, ora_inizio, prezzo, sport, titolo, indirizzo, massimo_di_partecipanti, citta, stato) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
+	            query.setInt(1, nextId); // Imposta manualmente l'ID
+	            query.setDate(2, java.sql.Date.valueOf(e.getData_inizio()));
+	            query.setTime(3, java.sql.Time.valueOf(e.getOra_inizio()));
+	            query.setDouble(4, e.getPrezzo());
+	            query.setString(5, e.getSport());
+	            query.setString(6, e.getTitolo());
+	            query.setString(7, e.getIndirizzo());
+	            query.setInt(8, e.getMassimo_di_partecipanti());
+	            query.setString(9, e.getCitta());
+	            query.setString(10, e.getStato());
+	            query.executeUpdate();
+	        }
+
+	        // Esegui il commit delle modifiche
+	        conn.commit();
+	    } catch (SQLException ex) {
+	        // In caso di errore, esegui il rollback per annullare le modifiche
+	        if (conn != null) {
+	            conn.rollback();
+	        }
+	        throw ex; // Rilancia l'eccezione
+	    } finally {
+	        if (conn != null) {
+	            try {
+	                // Ritorna alla modalità autocommit
+	                conn.setAutoCommit(true);
+	            } catch (SQLException e2) {
+	                // Ignora eventuali eccezioni qui, se il setAutoCommit fallisce
+	            }
+	            ConDB.releaseConnection(conn);
+	        }
+	    }
+	}
+
 
     /*
        Aggiorna i dettagli di un evento esistente nel database.
@@ -91,24 +123,43 @@ public class EventoDao {
        @return L'evento trovato o null se non esiste alcun evento con l'ID specificato.
        @throws SQLException Se si verifica un errore durante l'interazione con il database.
      */
-    public synchronized Evento get(int ID) throws SQLException {
-        Connection conn = null;
-        try {
-            conn = ConDB.getConnection();
-            try (PreparedStatement query = conn.prepareStatement("SELECT * FROM evento WHERE ID = ?")) {
-                query.setInt(1, ID);
-                try (ResultSet rs = query.executeQuery()) {
-                    if (rs.next()) {
-                        return new Evento(rs);
-                    } else {
-                        return null;
-                    }
-                }                
-            }
-        } finally {
-            ConDB.releaseConnection(conn);
-        }
-    }
+    /*
+    Recupera un evento dal database in base al suo identificatore.
+    @param ID L'identificatore dell'evento da recuperare.
+    @return L'evento trovato o null se non esiste alcun evento con l'ID specificato.
+    @throws SQLException Se si verifica un errore durante l'interazione con il database.
+ */
+ public synchronized Evento get(int ID) throws SQLException {
+     Connection conn = null;
+     try {
+         conn = ConDB.getConnection();
+         try (PreparedStatement query = conn.prepareStatement("SELECT * FROM evento WHERE ID = ?")) {
+             query.setInt(1, ID);
+             try (ResultSet rs = query.executeQuery()) {
+                 if (rs.next()) {
+                     Evento evento = new Evento(
+                         rs.getDate("data_inizio").toLocalDate(),
+                         rs.getTime("ora_inizio").toLocalTime(),
+                         rs.getDouble("prezzo"),
+                         rs.getString("sport"),
+                         rs.getString("titolo"),
+                         rs.getString("indirizzo"),
+                         rs.getInt("massimo_di_partecipanti"),
+                         rs.getString("citta"),
+                         rs.getString("stato")
+                     );
+                     evento.setID(rs.getInt("ID"));
+                     return evento;
+                 } else {
+                     return null;
+                 }
+             }
+         }
+     } finally {
+         ConDB.releaseConnection(conn);
+     }
+ }
+
 
     /*
        Recupera tutti gli eventi dal database.
@@ -123,7 +174,19 @@ public class EventoDao {
                 try (ResultSet rs = query.executeQuery()) {
                     ArrayList<Evento> prenotazioni = new ArrayList<>();
                     while (rs.next()) {
-                        prenotazioni.add(new Evento(rs));
+                    	Evento evento = new Evento(
+                                rs.getDate("data_inizio").toLocalDate(),
+                                rs.getTime("ora_inizio").toLocalTime(),
+                                rs.getDouble("prezzo"),
+                                rs.getString("sport"),
+                                rs.getString("titolo"),
+                                rs.getString("indirizzo"),
+                                rs.getInt("massimo_di_partecipanti"),
+                                rs.getString("citta"),
+                                rs.getString("stato")
+                            );
+                            evento.setID(rs.getInt("ID"));
+                        prenotazioni.add(evento);
                     }
                     return prenotazioni;
                 }                
@@ -147,11 +210,11 @@ public class EventoDao {
 			String queryString = "SELECT * FROM evento WHERE ";
 
 			if (dataInizio != null) {
-				queryConcat.add("data_inizio > ?");
+				queryConcat.add("data_inizio >= ?");
 				filtri.add(dataInizio);
 			}
 			if (dataFine != null) {
-				queryConcat.add("data_fine < ?");
+				queryConcat.add("data_inizio <= ?");
 				filtri.add(dataFine);
 			}
 			if (sport != null) {
@@ -171,9 +234,9 @@ public class EventoDao {
 			try (PreparedStatement query = conn.prepareStatement(queryString)) {
 				for (int i = 0; i < filtri.size(); i++) {
 					if (filtri.get(i) instanceof String) {
-						query.setString(i, (String)filtri.get(i));
+						query.setString(i+1, (String)filtri.get(i));
 					} else {
-						query.setObject(i, filtri.get(i));
+						query.setObject(i+1, filtri.get(i));
 					}
 				}
 				try (ResultSet rs = query.executeQuery()) {

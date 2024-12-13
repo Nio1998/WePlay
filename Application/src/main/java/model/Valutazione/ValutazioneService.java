@@ -4,6 +4,7 @@ import model.evento.*;
 import model.utente.*;
 
 import java.sql.SQLException;
+import java.util.List;
 
 public class ValutazioneService {
 
@@ -26,8 +27,8 @@ public class ValutazioneService {
                 throw new IllegalArgumentException("Valore di esito non valido");
             }
 
-            // Verifica se l'evento è terminato
-             if (eventoService.dettagli_evento(eventoId) == null || !"finito".equalsIgnoreCase(eventoService.dettagli_evento(eventoId).getStato())) {
+            // Verifica se l'evento ï¿½ terminato
+             if (eventoService.dettagli_evento(String.valueOf(eventoId)) == null || !"finito".equalsIgnoreCase(eventoService.dettagli_evento(String.valueOf(eventoId)).getStato())) {
                 throw new IllegalArgumentException("Evento non valido o non terminato");
             }
 
@@ -54,5 +55,13 @@ public class ValutazioneService {
             return false;
         }
     }
+    
+    public List<ValutazioneBean> calcola_valutazioni_da_utente(String usernameValutante, int eventoId) {
+      
+  
+    	return valutazioneDAO.findByUsernameEvent(usernameValutante, eventoId);
+    }
+    
+    
 }
 

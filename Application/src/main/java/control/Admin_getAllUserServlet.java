@@ -16,6 +16,10 @@ import model.utente.UtenteService;
 public class Admin_getAllUserServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
+    private static final String ACCESSO_VIETATO_PAGE = "/AccessoVietato/AccessoVietato.jsp";
+    private static final String ERROR_PAGE = "/ErrorPage.jsp";
+    private static final String ADMIN_USERS_PAGE = "admin_users.jsp";
+
     private UtenteService utenteService = new UtenteService();
 
     public Admin_getAllUserServlet() {
@@ -28,7 +32,7 @@ public class Admin_getAllUserServlet extends HttpServlet {
 
         // Controlla se la sessione esiste e contiene un utente loggato
         if (session == null || session.getAttribute("username") == null) {
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Accesso non autorizzato.");
+            response.sendRedirect(request.getContextPath() + ERROR_PAGE);
             return;
         }
 
@@ -36,26 +40,34 @@ public class Admin_getAllUserServlet extends HttpServlet {
 
         // Verifica se l'utente è un amministratore
         if (!utenteService.is_admin(username)) {
-            response.sendError(HttpServletResponse.SC_FORBIDDEN, "Accesso negato. Solo gli amministratori possono visualizzare questa pagina.");
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            response.sendRedirect(request.getContextPath() + ACCESSO_VIETATO_PAGE);
             return;
         }
 
-        // Recupera tutti gli utenti tramite il servizio UtenteService
-        List<UtenteBean> utenti = utenteService.allUtenti();
+        try {
+            // Recupera tutti gli utenti tramite il servizio UtenteService
+            List<UtenteBean> utenti = utenteService.allUtenti();
 
-        // Verifica se ci sono errori nel recupero degli utenti
-        if (utenti == null) {
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Errore interno del server (Recupero Utenti).");
-            return;
+            // Verifica se ci sono errori nel recupero degli utenti
+            if (utenti == null) {
+                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                response.sendRedirect(request.getContextPath() + ERROR_PAGE);
+                return;
+            }
+
+            // Imposta gli utenti come attributo della richiesta
+            request.setAttribute("utenti", utenti);
+
+            // Forward alla pagina JSP
+            request.getRequestDispatcher(ADMIN_USERS_PAGE).forward(request, response);
+        } catch (Exception e) {
+            // Log dell'errore per debug
+            System.err.println("Errore durante il recupero degli utenti: " + e.getMessage());
+            e.printStackTrace();
+
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            response.sendRedirect(request.getContextPath() + ERROR_PAGE);
         }
-
-        // Imposta gli utenti come attributo della richiesta
-        request.setAttribute("utenti", utenti);
-
-        // Pagina verso cui effettuare il forward
-        final String redirectedPage = "admin_users.jsp";
-        
-        // Forward della richiesta alla pagina JSP
-        request.getRequestDispatcher(redirectedPage).forward(request, response);
     }
 }
