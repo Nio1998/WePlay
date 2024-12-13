@@ -15,6 +15,7 @@
             <tr>
                 <th>Nome</th>
                 <th>Cognome</th>
+                <th>Username</th>
                 <th>Data di Nascita</th>
                 <th>Azioni</th>
             </tr>
@@ -26,8 +27,9 @@
                     for (UtenteBean utente : utenti) {
             %>
             <tr>
-                <td><%= utente.getUsername() %></td>
+                <td><%= utente.getNome() %></td>
                 <td><%= utente.getCognome() %></td>
+                <td><%= utente.getUsername() %></td>
                 <td><%= utente.getDataDiNascita() %></td>
                 <td>
                     <!-- Bottone per bannare l'utente -->
