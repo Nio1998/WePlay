@@ -5,13 +5,17 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Collection;
 
+import model.prenotazione.PrenotazioneService;
+
 public class EventoService {
 
     private EventoDao eventoDAO;
+    private PrenotazioneService prenotazioneService;
 
     
     public EventoService() {
-        this.eventoDAO = new EventoDao();  // Inizializza il DAO
+        this.eventoDAO = new EventoDao();
+        this.prenotazioneService = new PrenotazioneService();// Inizializza il DAO
     }
     
     public boolean crea_evento(String titolo, LocalDate data_inizio, LocalTime ora_inizio, String indirizzo, String citta, int massimo_di_partecipanti) {
@@ -120,5 +124,37 @@ public class EventoService {
     public Collection <Evento> allEventi () throws SQLException{
     	return filtra_eventi("", "", "", "");
     }
+    
+   
+    
+    
+ // Funzione che controlla se l'evento è pieno
+    public boolean evento_ha_posti_disponibili(int evento_id) {
+        Evento evento;
+        try {
+            evento = eventoDAO.get(evento_id);
+            
+            if (evento != null) {
+                // Otteniamo il massimo numero di partecipanti per l'evento
+                int maxPartecipanti = evento.getMassimo_di_partecipanti();
+
+                // Contiamo il numero di prenotazioni attive per quell'evento
+                // Si assume che calcola_partecipanti restituisca solo i partecipanti attivi
+                int prenotazioniAttive = prenotazioneService.calcola_partecipanti(evento_id).size();  // Ottieni il conteggio direttamente, se possibile
+
+                // Verifica se l'evento è pieno
+                return prenotazioniAttive < maxPartecipanti;
+            }
+            return false;  // Evento non trovato, non pieno
+            
+        } catch (SQLException e) {
+            // Log dell'errore
+            e.printStackTrace();
+            return false;  // In caso di errore, assumiamo che non ci siano posti disponibili
+        }
+    }
+
+    
+    
 }
 

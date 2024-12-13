@@ -140,5 +140,46 @@ public class PrenotazioneDAO {
 
 	    return utenti;
 	}
+	
+	public int newPosInCoda(int evento_Id) {
+	    int newPos = 1;  // Default a 1 se non ci sono prenotazioni in coda
+	    
+	    Connection conn = null;
+	    
+	    try {
+	    	conn = ConDB.getConnection();
+	        // SQL per ottenere la posizione massima in coda per l'evento
+	        String sql = "SELECT MAX(posizione_in_coda) AS max_posizione " +
+	                     "FROM prenotazione " +
+	                     "WHERE ID_evento = ? AND stato = 'in coda'";
+
+	        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+	            stmt.setInt(1, evento_Id);
+
+	            try (ResultSet rs = stmt.executeQuery()) {
+	                if (rs.next()) {
+	                    newPos = rs.getInt("max_posizione");
+	                    if (rs.wasNull()) {
+	                        newPos = 1; // Se non ci sono prenotazioni in coda, la posizione è 1
+	                    } else {
+	                        newPos++; // Altrimenti la nuova posizione è la massima + 1
+	                    }
+	                }
+	            }
+	        }
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();  // Gestire gli errori (es. log o rilanciare eccezione)
+	    }finally {
+	        if (conn != null) {
+	            ConDB.releaseConnection(conn);
+	        }
+	    }
+
+	    return newPos;  // Restituisce la nuova posizione in coda
+	}
+
+	
+	
 }
 
