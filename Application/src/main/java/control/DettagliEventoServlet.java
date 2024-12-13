@@ -13,9 +13,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import model.ConDB;
 import model.evento.Evento;
 import model.evento.EventoService;
+import model.prenotazione.PrenotazioneService;
 import model.utente.*;
 
 @WebServlet("/DettagliEvento")
