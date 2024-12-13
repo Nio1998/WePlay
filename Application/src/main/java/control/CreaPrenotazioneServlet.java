@@ -7,18 +7,25 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import model.PrenotazioneService;  // Importa la classe del service
+import javax.servlet.http.HttpSession;
+import model.prenotazione.PrenotazioneService;
+import model.utente.UtenteService;
+import model.evento.EventoService;
 
 @WebServlet("/CreaPrenotazione")
 public class CreaPrenotazioneServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     private PrenotazioneService prenotazioneService;
-    
+    private UtenteService utenteService;
+    private EventoService eventoService;
+
     @Override
     public void init() throws ServletException {
         super.init();
-        prenotazioneService = new PrenotazioneService(); // Inizializzazione della service
+        prenotazioneService = new PrenotazioneService();
+        utenteService = new UtenteService();  // Inizializza UtenteService
+        eventoService = new EventoService();  // Inizializza EventoService
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -27,25 +34,52 @@ public class CreaPrenotazioneServlet extends HttpServlet {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Utente non autenticato.");
             return;
         }
-       try { // Otteniamo i parametri della prenotazione dalla richiesta
-        String utenteUsername = request.getParameter("utenteUsername");
-        int eventoID = Integer.parseInt(request.getParameter("eventoID"));
 
-            // Utilizziamo il service per prenotare l'evento
-            boolean prenotazioneSuccesso = prenotazioneService.prenota_evento(utenteUsername, eventoID); // Chiamata al metodo prenota_evento
+        String username = (String) session.getAttribute("username");  // Prendi l'username dalla sessione
+        try {
+            int eventoID = Integer.parseInt(request.getParameter("eventoID"));
 
-            // Se la prenotazione è riuscita, facciamo il reindirizzamento alla pagina di successo
-            if (prenotazioneSuccesso) {
-              // Forward alla pagina di dettaglio
-              request.setAttribute("successo", "Prenotazione effettuatata con successo.");
-              request.getRequestDispatcher("dettaglioEvento.jsp").forward(request, response);   
-            } else {
-                request.setAttribute("errore");
-                request.getRequestDispatcher("dettaglioEvento.jsp").forward(request, response);
+            // Precondizioni per la prenotazione
+            if (username == null || username.isEmpty()) {
+                request.setAttribute("errore", "Username non valido.");
+                request.getRequestDispatcher("errore.jsp").forward(request, response);
+                return;
             }
-       } catch (SQLException e) {
+            if (utenteService.findbyUsername(username)==null) {
+                request.setAttribute("errore", "Utente non registrato.");
+                request.getRequestDispatcher("errore.jsp").forward(request, response);
+                return;
+            }
+            if (!eventoService.esiste_evento(eventoID)) {
+                request.setAttribute("errore", "Evento non esistente.");
+                request.getRequestDispatcher("errore.jsp").forward(request, response);
+                return;
+            }
+            
+            
+            // Prenotazione evento
+            boolean prenotazioneSuccesso = prenotazioneService.prenota_evento(username, eventoID);
+
+            // Se la prenotazione ha successo, controlliamo la lista di attesa
+            if (prenotazioneSuccesso) {
+                boolean inAttesa = !eventoService.evento_ha_posti_disponibili(eventoID);
+                if (inAttesa) {
+                    request.setAttribute("successo", "Inserimento nella coda effettuato con successo.");
+                } else {
+                    request.setAttribute("successo", "Prenotazione effettuata con successo.");
+                }
+                // Forward alla pagina di dettaglio evento
+                request.getRequestDispatcher("dettaglioEvento.jsp").forward(request, response);
+            } else {
+                // Gestione errore in caso di prenotazione fallita
+                request.setAttribute("errore", "Errore nella prenotazione dell'evento.");
+                request.getRequestDispatcher("errore.jsp").forward(request, response);
+            }
+        } catch (NumberFormatException e) {
+            // Gestione errore se il parametro eventoID non è valido
             e.printStackTrace();
-            response.sendRedirect("errore.jsp");  // Reindirizza alla pagina di errore in caso di eccezione
+            request.setAttribute("errore", "ID evento non valido.");
+            request.getRequestDispatcher("errore.jsp").forward(request, response);
         }
     }
 }

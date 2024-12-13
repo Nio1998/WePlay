@@ -250,5 +250,9 @@ public class EventoDao {
 		} finally {
 			ConDB.releaseConnection(conn);
 		}
+		
 	}
+	
+    
+    
 }

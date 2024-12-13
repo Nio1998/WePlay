@@ -5,13 +5,17 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Collection;
 
+import model.prenotazione.PrenotazioneService;
+
 public class EventoService {
 
     private EventoDao eventoDAO;
+    private PrenotazioneService prenotazioneService;
 
     
     public EventoService() {
-        this.eventoDAO = new EventoDao();  // Inizializza il DAO
+        this.eventoDAO = new EventoDao();
+        this.prenotazioneService = new PrenotazioneService();// Inizializza il DAO
     }
     
     public boolean crea_evento(String titolo, LocalDate data_inizio, LocalTime ora_inizio, String indirizzo, String citta, int massimo_di_partecipanti, String sport, String stato, double prezzo) {
@@ -29,11 +33,11 @@ public class EventoService {
     	
         try {
             Evento evento = eventoDAO.get(eventoId);  // Recupera l'evento usando il DAO
-            return evento != null;  // Se l'evento è null, non esiste, altrimenti esiste
+            return evento != null;  // Se l'evento Ã¨ null, non esiste, altrimenti esiste
         
         } catch (SQLException e) {
             e.printStackTrace();  // Stampa l'errore per il debug
-            return false;  // Se c'è un errore nel database, considera che l'evento non esiste
+            return false;  // Se c'Ã¨ un errore nel database, considera che l'evento non esiste
         }
     }
 
@@ -60,7 +64,7 @@ public class EventoService {
 		                return true; // Se l'update ha successo
 		            } catch (SQLException e) {
 		                e.printStackTrace(); // Gestisci l'errore, eventualmente con logging
-		                return false; // Se c'è un errore nella query
+		                return false; // Se c'Ã¨ un errore nella query
 		            }
 		        }
 			 
@@ -88,7 +92,7 @@ public class EventoService {
             // Calcolo della data e ora minima per la cancellazione
             LocalDate dataLimite = oggi.plusDays(1);
 
-            // Verifica se la cancellazione � entro 24 ore dall'inizio dell'evento
+            // Verifica se la cancellazione è entro 24 ore dall'inizio dell'evento
             if (evento.getData_inizio().isBefore(dataLimite) || (evento.getData_inizio().isEqual(dataLimite) && evento.getOra_inizio().isBefore(oraCorrente))) {
                 return false;
             }
@@ -135,6 +139,37 @@ public class EventoService {
     	return filtra_eventi("", "", "", "");
     }
     
+   
+    
+    
+ // Funzione che controlla se l'evento Ã¨ pieno
+    public boolean evento_ha_posti_disponibili(int evento_id) {
+        Evento evento;
+        try {
+            evento = eventoDAO.get(evento_id);
+            
+            if (evento != null) {
+                // Otteniamo il massimo numero di partecipanti per l'evento
+                int maxPartecipanti = evento.getMassimo_di_partecipanti();
+
+                // Contiamo il numero di prenotazioni attive per quell'evento
+                // Si assume che calcola_partecipanti restituisca solo i partecipanti attivi
+                int prenotazioniAttive = prenotazioneService.calcola_partecipanti(evento_id).size();  // Ottieni il conteggio direttamente, se possibile
+
+                // Verifica se l'evento Ã¨ pieno
+                return prenotazioniAttive < maxPartecipanti;
+            }
+            return false;  // Evento non trovato, non pieno
+            
+        } catch (SQLException e) {
+            // Log dell'errore
+            e.printStackTrace();
+            return false;  // In caso di errore, assumiamo che non ci siano posti disponibili
+        }
+    }
+
+    
+
     
 }
 
