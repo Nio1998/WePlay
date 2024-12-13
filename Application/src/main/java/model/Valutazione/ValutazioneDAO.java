@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.ResultSet;
 import java.util.Collection;
+import java.util.List;
 import java.util.ArrayList;
 
 import model.ConDB;
@@ -134,5 +135,44 @@ public class ValutazioneDAO {
             ConDB.releaseConnection(conn);
         }
     }
+    
+    public List<ValutazioneBean> findByUsernameEvent(String usernameValutante, int eventoId) {
+        List<ValutazioneBean> valutazioni = new ArrayList<>();
+        String query = "SELECT * FROM valutazione WHERE utente_segnalante = ? AND ID_evento = ?";
+        Connection conn = null;
+
+        try {
+            conn = ConDB.getConnection(); // Ottieni la connessione
+            try (PreparedStatement ps = conn.prepareStatement(query)) {
+                ps.setString(1, usernameValutante);
+                ps.setInt(2, eventoId);
+
+                try (ResultSet rs = ps.executeQuery()) {
+                    while (rs.next()) {
+                        ValutazioneBean valutazione = new ValutazioneBean();
+                        valutazione.setId(rs.getInt("ID"));
+                        valutazione.setEsito(rs.getInt("esito"));
+                        valutazione.setUtenteValutato(rs.getString("utente_segnalato"));
+                        valutazione.setUtenteValutante(rs.getString("utente_segnalante"));
+                        valutazione.setIdEvento(rs.getInt("ID_evento"));
+
+                        valutazioni.add(valutazione);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace(); // Gestisci l'errore in modo appropriato
+        } finally {
+            // Rilascia sempre la connessione
+            if (conn != null) {
+                ConDB.releaseConnection(conn);
+            }
+        }
+
+        return valutazioni; // Ritorna la lista, anche se vuota
+    }
+
+    
+    
 }
 
