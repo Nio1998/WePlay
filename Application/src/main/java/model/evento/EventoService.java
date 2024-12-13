@@ -64,17 +64,31 @@ public class EventoService {
     
 
     public boolean elimina_evento(int eventoId) {
-    	
         try {
+            Evento evento = eventoDAO.get(eventoId);
+
+            if (evento == null) {
+                return false;
+            }
+
+            LocalDate oggi = LocalDate.now();
+            LocalTime oraCorrente = LocalTime.now();
+
+            // Calcolo della data e ora minima per la cancellazione
+            LocalDate dataLimite = oggi.plusDays(1);
+
+            // Verifica se la cancellazione è entro 24 ore dall'inizio dell'evento
+            if (evento.getData_inizio().isBefore(dataLimite) || (evento.getData_inizio().isEqual(dataLimite) && evento.getOra_inizio().isBefore(oraCorrente))) {
+                return false;
+            }
+
             return eventoDAO.delete(eventoId);
         } catch (SQLException e) {
-        	
             e.printStackTrace();
             return false;
-            
         }
     }
-    
+
     
     public Collection<Evento> filtra_eventi(String dataInizio, String dataFine, String sport, String citta) {
     	LocalDate dataInizioDate = null;
@@ -109,6 +123,8 @@ public class EventoService {
     public Collection <Evento> allEventi () throws SQLException{
     	return filtra_eventi("", "", "", "");
     }
+    
+    
 }
 
 
