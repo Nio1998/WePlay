@@ -1,0 +1,296 @@
+/* Stile per la pagina di creazione evento */
+body, html {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.crea-evento-section {
+    text-align: center;
+    margin: 50px auto;
+}
+
+.crea-evento-section h1 {
+    font-size: 36px;
+    margin-bottom: 20px;
+    color: #00796B;
+}
+
+.crea-evento-box {
+    background-color: #FFFFFF;
+    border: 2px solid #00ACC1;
+    border-radius: 10px;
+    padding: 30px;
+    max-width: 500px;
+    margin: 0 auto;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #B0BEC5;
+    border-radius: 5px;
+    outline: none;
+}
+
+.form-group input:focus {
+    border-color: #00ACC1;
+    box-shadow: 0 0 5px rgba(0, 172, 193, 0.5);
+}
+
+.date-time-group {
+    display: flex;
+    gap: 10px;
+}
+
+.date-time-group input {
+    width: 48%;
+}
+
+.buttons {
+    display: flex;
+    justify-content: space-between;
+}
+
+button {
+    padding: 10px;
+    font-size: 16px;
+    background-color: #00ACC1;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    width: 48%;
+}
+
+button:hover {
+    transform: scale(1.05);
+}
+
+button:active {
+    transform: scale(0.95);
+}
+
+button[type="reset"] {
+    background-color: #FF7043;
+}
+
+button[type="reset"]:hover {
+    background-color: #FF5722;
+}
+
+button[type="reset"]:active {
+    background-color: #E64A19;
+}
+
+/* Dropdown sport */
+#sportOptions {
+    display: none;
+    position: absolute;
+    background-color: white;
+    border: 1px solid #00ACC1;
+    border-radius: 5px;
+    max-height: 150px;
+    overflow-y: auto;
+    width: 100%;
+    margin-top: 5px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.option {
+    padding: 10px;
+    cursor: pointer;
+}
+
+.option:hover {
+    background-color: #00ACC1;
+    color: white;
+}
+
+/* Add more styles as needed */
+/* Stile per la pagina di creazione evento */
+body, html {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.crea-evento-section {
+    text-align: center;
+    margin: 50px auto;
+}
+
+.crea-evento-section h1 {
+    font-size: 36px;
+    margin-bottom: 20px;
+    color: #00796B;
+}
+
+.crea-evento-box {
+    background-color: #FFFFFF;
+    border: 2px solid #00ACC1;
+    border-radius: 10px;
+    padding: 30px;
+    max-width: 500px;
+    margin: 0 auto;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #B0BEC5;
+    border-radius: 5px;
+    outline: none;
+}
+
+.form-group input:focus {
+    border-color: #00ACC1;
+    box-shadow: 0 0 5px rgba(0, 172, 193, 0.5);
+}
+
+.date-time-group {
+    display: flex;
+    gap: 10px;
+}
+
+.date-time-group input {
+    width: 48%;
+}
+
+.buttons {
+    display: flex;
+    justify-content: space-between;
+}
+
+button {
+    padding: 10px;
+    font-size: 16px;
+    background-color: #00ACC1;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    width: 48%;
+}
+
+button:hover {
+    transform: scale(1.05);
+}
+
+button:active {
+    transform: scale(0.95);
+}
+
+button[type="reset"] {
+    background-color: #FF7043;
+}
+
+button[type="reset"]:hover {
+    background-color: #FF5722;
+}
+
+button[type="reset"]:active {
+    background-color: #E64A19;
+}
+
+/* Dropdown sport */
+#sportOptions {
+    display: none;
+    position: absolute;
+    background-color: white;
+    border: 1px solid #00ACC1;
+    border-radius: 5px;
+    max-height: 150px;
+    overflow-y: auto;
+    width: calc(100% - 20px); /* Imposta la larghezza della tendina */
+    margin-top: 5px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    left: 0; /* Posiziona la tendina direttamente sotto il campo sport */
+    z-index: 10; /* Imposta un z-index alto per farla comparire sopra gli altri elementi */
+}
+
+.form-group {
+    position: relative; /* Necessario per il posizionamento della tendina */
+}
+
+
+
+
+.option {
+    padding: 10px;
+    cursor: pointer;
+}
+
+.option:hover {
+    background-color: #00ACC1;
+    color: white;
+}
+
+/* Add more styles as needed */
+.select-sport {
+    width: 100%; /* Impostiamo la larghezza al 100% del contenitore */
+    padding: 10px; /* Aggiungiamo un po' di padding per fare in modo che non sia troppo aderente ai bordi */
+    font-size: 16px;
+    border: 1px solid #B0BEC5;
+    border-radius: 5px;
+    outline: none;
+    box-sizing: border-box; /* Per fare in modo che il padding non aumenti la larghezza totale */
+}
+
+.select-sport option {
+    padding: 10px;
+}
+
+.select-sport:focus {
+    border-color: #00ACC1;
+    box-shadow: 0 0 5px rgba(0, 172, 193, 0.5);
+}
+
+
+
+/*new modifiche */
+
+
+
+/* Centra il box principale */
+.crea-evento-box {
+    background-color: #FFFFFF;
+    border: 2px solid #00ACC1;
+    border-radius: 10px;
+    padding: 30px;
+    max-width: 500px;
+    margin: 0 auto; /* Centro il box orizzontalmente */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Modifica per il gruppo data-ora */
+.date-time-group {
+    display: flex;
+    gap: 10px;
+    justify-content: space-between; /* Aggiungi per spaziatura simmetrica */
+    width: 100%; /* Imposta la larghezza al 100% */
+}
+
+.date-time-group input {
+    width: 48%; /* Imposta entrambi i campi con la stessa larghezza */
+}
+
+/* Rimuovi margini extra a destra su "ora" */
+.date-time-group input:last-child {
+    margin-right: 0; /* Assicura che "ora" non abbia spazio extra a destra */
+}
+
