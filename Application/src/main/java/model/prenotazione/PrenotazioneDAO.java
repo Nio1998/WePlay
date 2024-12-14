@@ -180,8 +180,10 @@ public class PrenotazioneDAO {
         List<PrenotazioneBean> prenotazioni = new ArrayList<>();
 
         String query = "SELECT * FROM Prenotazioni WHERE eventoID = ?";
-        try (Connection conn = ConDB.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(query)) {
+	Connection conn = null;
+        try {
+		conn = ConDB.getConnection();
+             try(PreparedStatement stmt = conn.prepareStatement(query)) {
 
             stmt.setInt(1, eventoID);
             try (ResultSet rs = stmt.executeQuery()) {
@@ -190,8 +192,9 @@ public class PrenotazioneDAO {
                     prenotazione.setEventoID(rs.getInt("eventoID"));
                     prenotazione.setUtenteUsername(rs.getString("usernameUtente"));
                     prenotazioni.add(prenotazione);
-                }
-            }
+             	   }
+           	 }
+	     }
         } catch (Exception e) {
             e.printStackTrace();
         }
