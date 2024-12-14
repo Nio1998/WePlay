@@ -28,7 +28,7 @@ public class BanServlet extends HttpServlet {
         String username = request.getParameter("username");
 
         if (username == null || username.isEmpty()) {
-        	response.forward(request.getRequestDispatcher(ERROR_PAGE).forward(request, response));
+        	request.getRequestDispatcher(ERROR_PAGE).forward(request, response);
             return;
         }
 
@@ -39,7 +39,7 @@ public class BanServlet extends HttpServlet {
             response.setStatus(HttpServletResponse.SC_OK);
             response.getWriter().write("Ban permanente assegnato con successo all'utente: " + username);
         } catch (IllegalArgumentException e) {
-        	response.forward(request.getRequestDispatcher(ERROR_PAGE).forward(request, response));
+        	request.getRequestDispatcher(ERROR_PAGE).forward(request, response);
         } catch (RuntimeException e) {
         	response.sendRedirect(request.getContextPath() + ERROR_PAGE);
         }
