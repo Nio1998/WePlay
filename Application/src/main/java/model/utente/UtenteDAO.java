@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import model.ConDB;
+import model.Segnalazione.Segnalazione;
 
 /**
  * La classe `UtenteDAO` gestisce le operazioni di accesso al database per la tabella `utente`.
@@ -42,13 +43,6 @@ public class UtenteDAO {
 	        preparedStatement.setString(6, utente.getPw());
 
 	        preparedStatement.executeUpdate();
-	        connection.commit();
-	    } catch (SQLException e) {
-	        if (connection != null) {
-	            connection.rollback();
-	        }
-	        e.printStackTrace();
-	        throw e;
 	    } finally {
 	        try {
 	            if (preparedStatement != null) {
@@ -100,18 +94,11 @@ public class UtenteDAO {
 
 	        // Esegue l'aggiornamento
 	        int rowsUpdated = preparedStatement.executeUpdate();
-	        connection.commit();
 
-	        // Verifica se è stato aggiornato almeno un record
+	        // Verifica se ï¿½ stato aggiornato almeno un record
 	        if (rowsUpdated == 0) {
 	            throw new SQLException("Update failed: no rows affected for username = " + utente.getUsername());
 	        }
-	    } catch (SQLException e) {
-	        if (connection != null) {
-	            connection.rollback();
-	        }
-	        e.printStackTrace();
-	        throw e;
 	    } finally {
 	        try {
 	            if (preparedStatement != null) {
@@ -124,6 +111,42 @@ public class UtenteDAO {
 	        }
 	    }
 	}
+	
+	
+	public synchronized boolean delete(UtenteBean utente) throws SQLException {
+	    Connection connection = null;
+	    PreparedStatement preparedStatement = null;
+	    try {
+        	// Ottieni la connessione al database
+	        connection = ConDB.getConnection();
+
+	        // Prepara la query di cancellazione
+	        preparedStatement = connection.prepareStatement("DELETE FROM utente WHERE username = ?");
+	        
+	        // Imposta i parametri della query
+	        preparedStatement.setString(1, utente.getUsername());
+
+	        // Esegui la query di cancellazione
+	        int rowsAffected = preparedStatement.executeUpdate();
+
+	        // Restituisce true se la cancellazione ha avuto successo (rowsAffected == 1)
+	        return rowsAffected > 0;
+	    } finally {
+	        // Chiudi il PreparedStatement se aperto
+	        if (preparedStatement != null) {
+	            try {
+	                preparedStatement.close();
+	            } catch (SQLException e) {
+	                e.printStackTrace();
+	            }
+        	}
+	        // Rilascia la connessione al pool se aperta
+	        if (connection != null) {
+	            ConDB.releaseConnection(connection);
+	        }
+	    }
+	}
+
 
 	/**
      * Trova un utente nel database in base al suo username.
@@ -147,28 +170,26 @@ public class UtenteDAO {
 	        if (resultSet.next()) {
 	        	String data = resultSet.getString("data_di_nascita");
     			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate data_di_nascita = LocalDate.parse(data, formatter);
-        String datatimeout= resultSet.getString("data_ora_fine_timeout");
-        DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        LocalDateTime data_timeout= LocalDateTime.parse(datatimeout, formatter2);
-        
-        
-        // Costruzione dell'oggetto Utente dai risultati del database
-        return new UtenteBean(
-            resultSet.getString("username"),
-            resultSet.getString("cognome"),
-            resultSet.getString("nome"),
-            data_di_nascita,
-            resultSet.getString("email"),
-            resultSet.getString("pw"),
-            resultSet.getInt("num_timeout"),
-            resultSet.getBoolean("is_timeout"),
-            resultSet.getBoolean("is_admin"),
-            data_timeout,
-            resultSet.getInt("num_valutazioni_neutre"),
-            resultSet.getInt("num_valutazioni_negative"),
-            resultSet.getInt("num_valutazioni_positive")    
-        );
+		        LocalDate data_di_nascita = LocalDate.parse(data, formatter);
+		        LocalDateTime data_timeout= (LocalDateTime) resultSet.getObject("data_ora_fine_timeout");
+		        
+		        
+		        // Costruzione dell'oggetto Utente dai risultati del database
+		        return new UtenteBean(
+		            resultSet.getString("username"),
+		            resultSet.getString("cognome"),
+		            resultSet.getString("nome"),
+		            data_di_nascita,
+		            resultSet.getString("email"),
+		            resultSet.getString("pw"),
+		            resultSet.getInt("num_timeout"),
+		            resultSet.getBoolean("is_timeout"),
+		            resultSet.getBoolean("is_admin"),
+		            data_timeout,
+		            resultSet.getInt("num_valutazioni_neutre"),
+		            resultSet.getInt("num_valutazioni_negative"),
+		            resultSet.getInt("num_valutazioni_positive")    
+		        );
 	        }
 	    } finally {
 	        // Chiude il ResultSet
@@ -187,51 +208,7 @@ public class UtenteDAO {
 
 	    // Restituisce null se non viene trovato alcun utente
 	    return null;
-	}
-	
-	public boolean is_organizzatore(String username, int id_evento) throws SQLException {
-		
-		Connection con = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-
-        try {
-            con = ConDB.getConnection();
-            String query = "SELECT stato FROM prenotazione WHERE username_utente = ? AND ID_evento = ?";
-            ps = con.prepareStatement(query);
-
-            ps.setString(1, username);
-            ps.setInt(2, id_evento);
-
-            rs = ps.executeQuery();
-
-            if (rs.next()) {
-                String stato = rs.getString("stato");
-                return "organizzatore".equals(stato);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace(); // Puoi migliorare la gestione degli errori in produzione
-        } finally {
-            try {
-                if (rs != null) rs.close();
-                if (ps != null) ps.close();
-                if (con != null) ConDB.releaseConnection(con);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-
-        return false;
-    }
-	   
-	
-	
-	
-	
-	
-	
-	
-	
+	}	
 	
 	public UtenteBean findByEmail(String email) throws SQLException {
 	    Connection connection = null;
@@ -249,9 +226,7 @@ public class UtenteDAO {
 	        	String data = resultSet.getString("data_di_nascita");
 	        			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 	            LocalDate data_di_nascita = LocalDate.parse(data, formatter);
-	            String datatimeout= resultSet.getString("data_ora_fine_timeout");
-	            DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-	            LocalDateTime data_timeout= LocalDateTime.parse(datatimeout, formatter2);
+	            LocalDateTime data_timeout= (LocalDateTime) resultSet.getObject("data_ora_fine_timeout");
 	            
 	            
 	            // Costruzione dell'oggetto Utente dai risultati del database
@@ -317,9 +292,7 @@ public class UtenteDAO {
 	        	String data = resultSet.getString("data_di_nascita");
     			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate data_di_nascita = LocalDate.parse(data, formatter);
-        String datatimeout= resultSet.getString("data_ora_fine_timeout");
-        DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        LocalDateTime data_timeout= LocalDateTime.parse(datatimeout, formatter2);
+        LocalDateTime data_timeout= (LocalDateTime) resultSet.getObject("data_ora_fine_timeout");
         
         
         // Costruzione dell'oggetto Utente dai risultati del database
@@ -361,10 +334,10 @@ public class UtenteDAO {
 	}
 	
 	public void aggiornaTimeout(String username, boolean isTimeout, LocalDateTime dataOraFineTimeout) throws SQLException {
-        String query = "UPDATE utente SET is_timeout = ?, data_ora_fine_timeout = ?, numero_timeout = numero_timeout + 1 WHERE username = ?";
+        String query = "UPDATE utente SET is_timeout = ?, data_ora_fine_timeout = ?, num_timeout = num_timeout + 1 WHERE username = ?";
         try (Connection conn = ConDB.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
-
+        	
             stmt.setBoolean(1, isTimeout);
             stmt.setTimestamp(2, Timestamp.valueOf(dataOraFineTimeout));
             stmt.setString(3, username);
