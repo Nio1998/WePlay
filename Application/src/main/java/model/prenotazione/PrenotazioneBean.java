@@ -23,6 +23,7 @@ public class PrenotazioneBean implements Serializable {
 		this.posizioneInCoda = posizioneInCoda;
 	}
 	
+	
 	public PrenotazioneBean(ResultSet rs) throws SQLException {
 		super();
 		this.utenteUsername = rs.getString("username_utente");
