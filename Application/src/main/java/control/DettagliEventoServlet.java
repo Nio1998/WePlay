@@ -58,11 +58,9 @@ public class DettagliEventoServlet extends HttpServlet {
             }
 
             // Recupera i dettagli dell'evento
-<<<<<<< Updated upstream
-            Evento e = eventoService.dettagli_evento(idEventoParam);
-=======
+
             Evento e = eventoService.dettagli_evento(idEvento);
->>>>>>> Stashed changes
+
             if (e == null) {
                 response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Errore interno del server (Dettagli Evento).");
                 return;

@@ -122,8 +122,8 @@ public class EventoService {
 		}
     }
     
-    public Evento dettagli_evento(String id) {
-    	if (id == "" || id == null) return null;
+    public Evento dettagli_evento(int id) {
+
     	
     	try {
 			return eventoDAO.get(Integer.valueOf(id));
@@ -168,7 +168,17 @@ public class EventoService {
         }
     }
 
-    
+    public String statoEvento(int eventoId) {
+        try{
+            Evento evento = eventoDAO.get(eventoId);
+
+        return evento.getStato();
+        } catch (SQLException e) {
+            // Log dell'errore
+            e.printStackTrace();
+            return null;  // In caso di errore, assumiamo che non ci siano posti disponibili
+        }
+    }
 
     
 }
