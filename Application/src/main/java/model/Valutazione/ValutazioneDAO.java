@@ -106,7 +106,7 @@ public class ValutazioneDAO {
 	    }
     }
 
-    public synchronized Collection<ValutazioneBean> getAll() throws SQLException {
+    public synchronized List<ValutazioneBean> getAll() throws SQLException {
         
         Connection conn = null;
         
@@ -118,7 +118,7 @@ public class ValutazioneDAO {
             try (PreparedStatement query = conn.prepareStatement("SELECT * FROM valutazione");
                  ResultSet rs = query.executeQuery()) {
                 
-                Collection<ValutazioneBean> valutazioni = new ArrayList<>();
+                List<ValutazioneBean> valutazioni = new ArrayList<>();
                 while (rs.next()) {
                     valutazioni.add(new ValutazioneBean(
                     	rs.getInt("ID"),
