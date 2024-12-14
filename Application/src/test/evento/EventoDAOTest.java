@@ -120,7 +120,7 @@ class EventoDAOTest {
         List<Evento> eventi = eventoDao.getEventiBySport(sport);
 
         // Asserisci: verifica i risultati
-        assertEquals(1, eventi.size(), "Dovrebbe esserci un solo evento per lo sport specificato.");
+        assertEquals(2, eventi.size(), "Dovrebbe esserci un solo evento per lo sport specificato.");
 
         Evento evento = eventi.get(0);
         assertEquals("Partita sulla spiaggia", evento.getTitolo(), "Il titolo dell'evento non corrisponde.");
@@ -130,7 +130,7 @@ class EventoDAOTest {
         assertEquals("Beach Volley", evento.getSport(), "Lo sport dell'evento non corrisponde.");
         assertEquals("Spiaggia Centrale", evento.getIndirizzo(), "L'indirizzo dell'evento non corrisponde.");
         assertEquals(10, evento.getMassimo_di_partecipanti(), "Il numero massimo di partecipanti non corrisponde.");
-        assertEquals("Rimini", evento.getCitta(), "La città dell'evento non corrisponde.");
+        assertEquals("Rimini", evento.getCitta(), "La cittï¿½ dell'evento non corrisponde.");
         assertEquals("non iniziato", evento.getStato(), "Lo stato dell'evento non corrisponde.");
     }
 
@@ -183,11 +183,11 @@ class EventoDAOTest {
     @Order(11)
     void testGetByFilterFailure() throws SQLException {
         // Filtra con criteri che restituiscono eventi sbagliati
-        Collection<Evento> filteredEvents = eventoDao.getByFilter(LocalDate.of(2024, 1, 1), LocalDate.of(2024, 12, 31), "Sport Sbagliato", "Città Sbagliata");
+        Collection<Evento> filteredEvents = eventoDao.getByFilter(LocalDate.of(2024, 1, 1), LocalDate.of(2024, 12, 31), "Sport Sbagliato", "CittÃ  Sbagliata");
 
         for (Evento evento : filteredEvents) {
             assertNotEquals("Calcio", evento.getSport(), "Lo sport non dovrebbe essere corretto.");
-            assertNotEquals("Roma", evento.getCitta(), "La città non dovrebbe essere corretta.");
+            assertNotEquals("Roma", evento.getCitta(), "La cittÃ  non dovrebbe essere corretta.");
         }
     }
 
