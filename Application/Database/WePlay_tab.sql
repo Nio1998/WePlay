@@ -1,9 +1,15 @@
 CREATE DATABASE IF NOT EXISTS weplay;
 USE weplay;
 
+-- Rimuovi tabelle se esistono
+DROP TABLE IF EXISTS valutazione;
+DROP TABLE IF EXISTS segnalazione;
+DROP TABLE IF EXISTS prenotazione;
+DROP TABLE IF EXISTS utente;
+DROP TABLE IF EXISTS evento;
+
 /*TABELLA UTENTE*/
 -- Tabella per gli utenti
-DROP TABLE IF EXISTS utente;
 CREATE TABLE utente (
     username VARCHAR(50) PRIMARY KEY,
     cognome VARCHAR(50) NOT NULL,
@@ -21,7 +27,6 @@ CREATE TABLE utente (
 );
 
 -- Tabella per gli eventi
-DROP TABLE IF EXISTS evento;
 CREATE TABLE evento (
     ID INT AUTO_INCREMENT PRIMARY KEY,
     data_inizio DATE NOT NULL,
@@ -36,7 +41,6 @@ CREATE TABLE evento (
 );
 
 -- Tabella per le prenotazioni
-DROP TABLE IF EXISTS prenotazione;
 CREATE TABLE prenotazione (
     username_utente VARCHAR(50),
     ID_evento INT,
@@ -51,7 +55,6 @@ CREATE TABLE prenotazione (
 );
 
 -- Tabella per le segnalazioni
-DROP TABLE IF EXISTS segnalazione;
 CREATE TABLE segnalazione (
     ID INT AUTO_INCREMENT PRIMARY KEY,
     motivazione ENUM('assenza', 'violenza fisica', 'discriminazione', 'violenza verbale', 'condotta antisportiva', 'non appropriato', 'ritardo') NOT NULL,    -- assenza quando l'utente partecipante non si presenta all'evento
@@ -66,7 +69,6 @@ CREATE TABLE segnalazione (
 );
 
 -- Tabella per le valutazioni
-DROP TABLE IF EXISTS valutazione;
 CREATE TABLE valutazione (
     ID INT AUTO_INCREMENT PRIMARY KEY,
     esito INT NOT NULL, -- negativa, neutra, positiva
