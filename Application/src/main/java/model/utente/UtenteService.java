@@ -85,7 +85,7 @@ public class UtenteService {
             UtenteBean utente = utenteDAO.findByUsername(username);
             // Modifica i dati dell'utente
             utente.setEmail(email);
-            utente.setPw(hash(password));
+            if(password != null) utente.setPw(hash(password));
             // Aggiorna i dati nel database tramite il DAO
             utenteDAO.update(utente);
         } catch (SQLException e) {
@@ -303,6 +303,53 @@ public class UtenteService {
         } catch (Exception e) {
             throw new RuntimeException("Errore durante l'assegnazione del ban all'utente: " + username, e);
         }
+    }
+    
+    
+    public int calcola_reputazione(String username) {
+        // Recupera l'utente dal database usando findByUsername
+        UtenteBean utente = null;
+		try {
+			utente = utenteDAO.findByUsername(username);
+			
+
+	        // Se l'utente non esiste, restituisce una reputazione di 0
+	        if (utente == null) {
+	        	
+	            return 0;
+	        }
+	        
+	       
+	        
+	        // Calcola la media delle valutazioni
+	        int totalValutazioni = utente.getNumValutazioniPositive() + utente.getNumValutazioniNegative() + utente.getNumValutazioniNeutre();
+	        
+	        if (totalValutazioni == 0) {
+	        	
+	            // Se non ci sono valutazioni, la reputazione è neutra (0)
+	            return 0;
+	        }
+	        
+	        
+	        
+	        // Calcola la somma ponderata delle valutazioni (positiva, neutra, negativa)
+	        double media = (utente.getNumValutazioniPositive() - utente.getNumValutazioniNegative()) / (double) totalValutazioni;
+	        
+	        
+	        // Approssima il valore: sotto 0.5 si arrotonda a 0, sopra si arrotonda a 1
+	        int reputazione = (int) Math.round(media); // Restituirà -1, 0, o 1
+	       
+			
+	        
+	        return reputazione;
+	        
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return -2;
+      
     }
 
 

@@ -1,0 +1,232 @@
+body, html {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.profilo-section {
+    text-align: center;
+    margin: 50px auto;
+}
+
+.profilo-section h1 {
+    font-size: 36px;
+    margin-bottom: 20px;
+    color: #00796B;  /* Colore corretto */
+}
+
+.profilo-box {
+    background-color: #FFFFFF;
+    border: 2px solid #00ACC1;
+    border-radius: 10px;
+    padding: 30px;
+    max-width: 500px;
+    margin: 0 auto;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+
+
+
+.profilo-box h2 {
+    font-size: 28px;
+    margin-bottom: 10px;
+    color: #00796B;
+    font-weight: 600;
+    color: #000000;
+}
+
+.profilo-box hr {
+    border: none;
+    border-top: 2px solid #B0BEC5;
+    width: 80%;
+    margin: 10px auto;
+}
+
+.campo-profilo {
+    margin: 8px 0;  /* Ridotto il margine verticale */
+    font-size: 16px;
+    text-align: left;
+    display: inline-block;
+    width: 100%;
+}
+
+
+.campo-profilo span {
+    font-weight: bold;
+    display: inline;  /* Allinea l'etichetta senza spazi */
+    margin-right: 10px; /* Distanza tra l'etichetta e il campo */
+}
+
+.campo-profilo input {
+    text-align: left;  /* Allineamento corretto per i campi di input */
+    display: inline;  /* Fa sì che il campo sia sulla stessa riga dell'etichetta */
+    padding: 5px;
+}
+
+#togglePassword {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    margin-left: auto;
+    transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+#togglePassword:hover {
+    transform: scale(1.2);
+    filter: brightness(1.5);
+}
+
+.campo-profilo .reputazione img {
+    margin-left: 10px;
+    vertical-align: middle;
+}
+
+
+button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #00ACC1;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+button:hover {
+    transform: scale(1.05);
+}
+
+button:active {
+    transform: scale(0.95);
+}
+
+/* Per input disabilitati/non modificabili */
+.input-disabilitato {
+    border: none;
+    background: transparent;
+    font-size: 16px;
+    color: #000; /* Colore coerente con il resto */
+    padding: 0;
+    margin: 0;
+    outline: none; /* Rimuove il bordo quando si clicca */
+}
+
+/* Per input abilitati/modificabili */
+.input-modificabile {
+    border: 1px solid #00ACC1;
+    border-radius: 4px;
+    padding: 5px;
+    font-size: 16px;
+    color: #000;
+    background: #FFF; /* Colore di sfondo */
+}
+
+/* Contenitore dei bottoni */
+.azioni {
+    display: flex;
+    justify-content: center; /* Centra i bottoni */
+    margin-top: 20px;
+}
+
+/* Spaziatura tra i bottoni Salva e Annulla */
+#modificaButtons button {
+    margin: 0 10px;
+}
+
+/* Pulsante singolo (es. Modifica Dati) centrato */
+#modificaDati {
+    display: block;
+    margin: 0 auto;
+}
+
+
+
+
+
+
+/* Stile per il pulsante di chiusura */
+.messaggi .close-btn {
+    background: none;
+    border: none;
+    color: #000;
+    font-size: 16px;
+    cursor: pointer;
+    font-weight: bold;
+    padding: 0;
+    margin-left: 10px;
+    transition: transform 0.2s;
+}
+
+.messaggi .close-btn:hover {
+    transform: scale(1.2); /* Animazione di ingrandimento */
+}
+
+
+.messaggi {
+    position: fixed;
+    top: 20%;
+    right: 10%; /* Spostato a destra del box */
+    z-index: 1000;
+    width: 300px;
+    padding: 20px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #E3F2FD; /* Azzurro chiaro */
+    border: 2px solid #00ACC1; /* Bordo azzurro */
+    color: #000000; /* Testo nero */
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    animation: pulsazione 1s infinite; /* Animazione pulsazione */
+}
+
+.messaggi .close-btn {
+    background: none;
+    border: none;
+    color: #000;
+    font-size: 18px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: transform 0.2s;
+}
+
+.messaggi .close-btn:hover {
+    transform: scale(1.2);
+}
+
+@keyframes pulsazione {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Dopo il click, rimuovi animazione */
+.messaggi.clicked {
+    animation: none;
+    transform: scale(1);
+}
+
+/* Stile per messaggi di errore */
+.messaggi.errore {
+    background-color: #E3F2FD; /* Azzurro chiaro */
+    border: 2px solid #00ACC1; /* Bordo azzurro */
+    color: #000000; /* Testo nero */
+}
+
+/* Stile per messaggi di successo */
+.messaggi.successo {
+    background-color: #E3F2FD; /* Azzurro chiaro */
+    border: 2px solid #00ACC1; /* Bordo azzurro */
+    color: #000000; /* Testo nero */
+}
+

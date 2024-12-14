@@ -34,18 +34,33 @@ public class LoginServlet extends HttpServlet {
      * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
      */
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    	
+    	
+    	
         String username = request.getParameter("username");
         String password = request.getParameter("password");
+        
+        
+        
         String redirectedPage = "/login.jsp";
         Boolean control = false;
         try {
+        	
+        	
         	List<UtenteBean> lista= utenteDAO.getAllUtenti();
+        	
+        	
+        	
+        	
             for(UtenteBean u: lista) {
             	
                 if (username.compareTo(u.getUsername()) == 0) {
                     String pw = checkPsw(password);
                     if (pw.compareTo(u.getPw()) == 0) {
                         control = true;
+                        
+                        
+                        
                         UtenteBean registeredUser = new UtenteBean(u.getUsername(), u.getCognome(),u.getNome(),u.getDataDiNascita(),u.getEmail(),u.getPw(),u.getNumTimeout(),u.isTimeout(),u.isAdmin(),u.getDataOraFineTimeout(),u.getNumValutazioniNeutre(),u.getNumValutazioniNegative(),u.getNumValutazioniPositive());
                         request.getSession().setAttribute("registeredUser", registeredUser);
                         request.getSession().setAttribute("role", registeredUser.isAdmin());
@@ -61,11 +76,13 @@ public class LoginServlet extends HttpServlet {
             redirectedPage = "/login.jsp";
         }
         if (!control) {
-            request.getSession().setAttribute("login-error", true);
+           request.getSession().setAttribute("login-error", true);
         } else {
-            request.getSession().setAttribute("login-error", false);
+           request.getSession().setAttribute("login-error", false);
         }
-        response.sendRedirect(request.getContextPath() + redirectedPage);
+        
+        
+        response.sendRedirect(request.getContextPath() + "/pages/index.jsp");
     }
         
     private String checkPsw(String psw) {
