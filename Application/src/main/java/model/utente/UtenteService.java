@@ -11,12 +11,17 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+import model.prenotazione.PrenotazioneDAO;
+import model.prenotazione.PrenotazioneService;
+
 public class UtenteService {
 
     private UtenteDAO utenteDAO;
+    private PrenotazioneDAO prenotazioneDAO;
 
     public UtenteService() {
         utenteDAO = new UtenteDAO(); // Inizializza il DAO
+        prenotazioneDAO = new PrenotazioneDAO();
     }
     
     private String hash(String password) {
@@ -158,8 +163,9 @@ public class UtenteService {
     
     public boolean is_organizzatore(String username, int eventoId) {
         	
-	try {
-          return  utenteDAO.is_organizzatore(username, eventoId);
+    	try {
+    	  String stato = prenotazioneDAO.get(username, eventoId).getStato();
+          return "organizzatore".equals(stato);
         } catch (SQLException e) {
           // TODO Auto-generated catch block
           e.printStackTrace();
@@ -211,7 +217,7 @@ public class UtenteService {
     
     public void aggiornaTimeoutUtente(String username, boolean isTimeout, LocalDateTime dataOraFineTimeout) {
         if (username == null || username.isEmpty()) {
-            throw new IllegalArgumentException("Username non può essere nullo o vuoto.");
+            throw new IllegalArgumentException("Username non puï¿½ essere nullo o vuoto.");
         }
         if (dataOraFineTimeout == null) {
             throw new IllegalArgumentException("La data e ora di fine timeout non possono essere nulli.");
@@ -227,7 +233,7 @@ public class UtenteService {
     
     public void assegnaTimeout(String username) {
         if (username == null || username.isEmpty()) {
-            throw new IllegalArgumentException("Username non può essere nullo o vuoto.");
+            throw new IllegalArgumentException("Username non puï¿½ essere nullo o vuoto.");
         }
 
         try {
@@ -238,7 +244,7 @@ public class UtenteService {
                 throw new IllegalArgumentException("Utente non trovato.");
             }
 
-            // Ottieni il numero di timeout già ricevuti
+            // Ottieni il numero di timeout giï¿½ ricevuti
             int numeroTimeout = utente.getNumTimeout();
 
             // Determina la durata del timeout (in ore) in base al numero di timeout ricevuti
@@ -271,7 +277,7 @@ public class UtenteService {
     
     public void assegnaBan(String username) {
         if (username == null || username.isEmpty()) {
-            throw new IllegalArgumentException("Username non può essere nullo o vuoto.");
+            throw new IllegalArgumentException("Username non puï¿½ essere nullo o vuoto.");
         }
 
         try {
