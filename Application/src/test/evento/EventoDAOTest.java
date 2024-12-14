@@ -130,7 +130,7 @@ class EventoDAOTest {
         assertEquals("Beach Volley", evento.getSport(), "Lo sport dell'evento non corrisponde.");
         assertEquals("Spiaggia Centrale", evento.getIndirizzo(), "L'indirizzo dell'evento non corrisponde.");
         assertEquals(10, evento.getMassimo_di_partecipanti(), "Il numero massimo di partecipanti non corrisponde.");
-        assertEquals("Rimini", evento.getCitta(), "La citt� dell'evento non corrisponde.");
+        assertEquals("Rimini", evento.getCitta(), "La città dell'evento non corrisponde.");
         assertEquals("non iniziato", evento.getStato(), "Lo stato dell'evento non corrisponde.");
     }
 

@@ -42,7 +42,7 @@ class SegnalazioneDAOTest {
         segnalazioneDAO.save(segnalazione);
 
         segnalazione.setStato("risolta");
-        segnalazione.setId(17);;
+        segnalazione.setId(17);
         segnalazioneDAO.update(segnalazione);
 
         Segnalazione updated = segnalazioneDAO.get(17);
