@@ -78,14 +78,14 @@ public class PrenotazioneDAO {
 		}
 	}
 	
-	public synchronized Collection<PrenotazioneBean> getAll() throws SQLException {
+	public synchronized List<PrenotazioneBean> getAll() throws SQLException {
 		Connection conn = null;
 		try {
 			conn = ConDB.getConnection();
 			try (PreparedStatement query = conn.prepareStatement("SELECT * FROM prenotazione")) {
 				try (ResultSet rs = query.executeQuery()) {
 					
-					ArrayList<PrenotazioneBean> prenotazioni = new ArrayList<>();
+					List<PrenotazioneBean> prenotazioni = new ArrayList<>();
 					while (rs.next()) {
 						prenotazioni.add(new PrenotazioneBean(rs));
 					}
@@ -101,7 +101,7 @@ public class PrenotazioneDAO {
 
 
 
-	public synchronized Collection<UtenteBean> getAllWhereEvento(int idEvento) throws SQLException {
+	public synchronized List<UtenteBean> getAllWhereEvento(int idEvento) throws SQLException {
 	    Connection conn = null;
 	    List<UtenteBean> utenti = new ArrayList<>();
 

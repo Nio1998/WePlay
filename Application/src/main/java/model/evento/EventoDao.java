@@ -7,6 +7,8 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+
 import model.ConDB;
 
 public class EventoDao {
@@ -60,7 +62,7 @@ public class EventoDao {
 	    } finally {
 	        if (conn != null) {
 	            try {
-	                // Ritorna alla modalità autocommit
+	                // Ritorna alla modalitï¿½ autocommit
 	                conn.setAutoCommit(true);
 	            } catch (SQLException e2) {
 	                // Ignora eventuali eccezioni qui, se il setAutoCommit fallisce
@@ -166,13 +168,13 @@ public class EventoDao {
        @return Una collezione di tutti gli eventi.
        @throws SQLException Se si verifica un errore durante l'interazione con il database.
      */
-    public synchronized Collection<Evento> getAll() throws SQLException {
+    public synchronized List<Evento> getAll() throws SQLException {
         Connection conn = null;
         try {
             conn = ConDB.getConnection();
             try (PreparedStatement query = conn.prepareStatement("SELECT * FROM evento")) {
                 try (ResultSet rs = query.executeQuery()) {
-                    ArrayList<Evento> prenotazioni = new ArrayList<>();
+                    List<Evento> prenotazioni = new ArrayList<>();
                     while (rs.next()) {
                     	Evento evento = new Evento(
                                 rs.getDate("data_inizio").toLocalDate(),
@@ -253,6 +255,38 @@ public class EventoDao {
 		
 	}
 	
+	public synchronized List<Evento> getEventiBySport(String sport) throws SQLException {
+	    Connection conn = null;
+	    try {
+	        conn = ConDB.getConnection();
+	        try (PreparedStatement query = conn.prepareStatement("SELECT * FROM evento WHERE sport = ?")) {
+	            query.setString(1, sport);
+	            try (ResultSet rs = query.executeQuery()) {
+	                List<Evento> eventi = new ArrayList<>();
+	                while (rs.next()) {
+	                    Evento evento = new Evento(
+	                        rs.getDate("data_inizio").toLocalDate(),
+	                        rs.getTime("ora_inizio").toLocalTime(),
+	                        rs.getDouble("prezzo"),
+	                        rs.getString("sport"),
+	                        rs.getString("titolo"),
+	                        rs.getString("indirizzo"),
+	                        rs.getInt("massimo_di_partecipanti"),
+	                        rs.getString("citta"),
+	                        rs.getString("stato")
+	                    );
+	                    evento.setID(rs.getInt("ID"));
+	                    eventi.add(evento);
+	                }
+	                return eventi;
+	            }
+	        }
+	    } finally {
+	        ConDB.releaseConnection(conn);
+	    }
+	}
+
+
     
     
 }

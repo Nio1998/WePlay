@@ -9,19 +9,10 @@
 </head>
 <body>
     <header class="header">
-        <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
-        <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
-        <nav class="navbar">
-            <a href="${pageContext.request.contextPath}/pages/index.jsp"><img src="${pageContext.request.contextPath}/IMG/logo_WePlay.png" alt="WePlay Logo"></a>
-            <a href="calcio.jsp"><ion-icon name="football-outline"></ion-icon></a>
-            <a href="tennis.jsp"><ion-icon name="tennisball-outline"></ion-icon></a>
-            <a href="esploraEventi.jsp"><h1>ESPLORA EVENTI</h1></a>
-            <a href="basket.jsp"><ion-icon name="basketball-outline"></ion-icon></a>
-            <a href="bocce.jsp"><ion-icon name="bowling-ball-outline"></ion-icon></a>
-            <a href="login.jsp"><ion-icon name="person-circle-outline"></ion-icon></a>
-        </nav>
+        <jsp:include page="/pages/navbar.jsp" />
     </header>
 
+    <!-- Contenitore principale -->
     <main class="main-content">
         <section class="intro-section">
             <div class="content-wrapper">
@@ -42,7 +33,7 @@
         <section class="functions">
             <div class="content-wrapper">
                 <div class="text-container">
-                <h2>Cosa fare su WePlay</h2>
+                    <h2>Cosa fare su WePlay</h2>
                     <p>Il sito offre strumenti intuitivi per la gestione degli eventi sportivi, tra cui un sistema di prenotazione semplice, la gestione delle iscrizioni e delle disponibilità,
                        oltre a funzionalità per facilitare l'interazione sociale tra i partecipanti e promuovere i valori di inclusione e rispetto.</p>
                 </div>
@@ -63,14 +54,7 @@
     </main>
 
     <footer class="footer">
-    	<div class="footer-links">
-            <a href="${pageContext.request.contextPath}/pages/index.jsp"><p>Informazioni</p></a>
-            <a href="${pageContext.request.contextPath}/pages/assistenza.jsp"><p>Assistenza</p></a>
-        </div>
-        <div class="footer-info">
-            <p>© 2024 WePlay, Tutti i diritti riservati.</p>
-            <p>Via di Prova, n. 123, Frosinone (FR)</p>
-        </div> 
+        <jsp:include page="/pages/footer.jsp" />
     </footer>
 </body>
 </html>
