@@ -40,9 +40,27 @@ class ValutazioneDAOTest {
         
        valutazioneDao.delete(17);
     }
- 
     @Test
     @Order(2)
+    void testSaveValutazioneFailure() throws SQLException {
+        ValutazioneBean valutazione = new ValutazioneBean();
+        valutazione.setEsito(1);
+        valutazione.setIdEvento(20);
+        valutazione.setUtenteValutante("mario_rossi");
+        valutazione.setUtenteValutato("giulia_verdi");
+        valutazioneDao.save(valutazione);
+        
+        ValutazioneBean retrieved = valutazioneDao.get(17);
+        assertNotNull(retrieved);
+        assertNotEquals(-1, retrieved.getEsito());
+        assertNotEquals("giacomo", retrieved.getUtenteValutante());
+        assertNotEquals("perino", retrieved.getUtenteValutato());
+        assertNotEquals(17, retrieved.getIdEvento());
+        
+       valutazioneDao.delete(17);
+    }
+    @Test
+    @Order(3)
     void testDeleteValutazione() throws SQLException {
     	ValutazioneBean valutazione = new ValutazioneBean(); 
     	valutazione.setEsito(1);
@@ -55,22 +73,47 @@ class ValutazioneDAOTest {
         assertNull(valutazioneDao.get(17));
     }
     @Test
-    @Order(3)
+    @Order(4)
+    void testDeleteValutazioneFailure() throws SQLException {
+        int invalidID = -1; // ID inesistente
+        assertFalse(valutazioneDao.delete(invalidID)); //"Dovrebbe restituire false per un ID inesistente."
+    }
+    @Test
+    @Order(5)
     void testGetAllValutazione() throws SQLException {
         Collection<ValutazioneBean> valutazione = valutazioneDao.getAll();
         assertNotNull(valutazione);
         assertEquals(16,valutazione.size());
     }
     @Test
-    @Order(4)
+    @Order(6)
+    void testGetAllValutazioneFailure() throws SQLException {
+        Collection<ValutazioneBean> valutazione = valutazioneDao.getAll();
+        assertNotNull(valutazione);
+        assertNotEquals(17,valutazione.size());
+    }
+    @Test
+    @Order(7)
     void testfindByUsernameEvent() throws SQLException{
     	String usernameValutante= "mario_rossi";
-    	int eventoid = 15;
+    	int eventoid = 20;
     	Collection<ValutazioneBean> valutazione = valutazioneDao.findByUsernameEvent(usernameValutante, eventoid);
     	assertNotNull(valutazione);
     	
     	for (ValutazioneBean valutazioni : valutazione) {
             assertEquals(usernameValutante, valutazioni.getUtenteValutante());
+        }
+    }
+    @Test
+    @Order(8)
+    void testfindByUsernameEventFailure() throws SQLException{
+    	String usernameValutante= "marioi";
+    	int eventoid = 20;
+    	Collection<ValutazioneBean> valutazione = valutazioneDao.findByUsernameEvent(usernameValutante, eventoid);
+    	assertNotNull(valutazione);
+    	
+    	for (ValutazioneBean valutazioni : valutazione) {
+            assertNotEquals(usernameValutante, valutazioni.getUtenteValutante());
         }
     }
 }
