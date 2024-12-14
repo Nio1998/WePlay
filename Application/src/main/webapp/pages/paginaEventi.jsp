@@ -18,7 +18,7 @@
     <div class="page-title">
         <h1>Eventi di <%= request.getParameter("sport") != null ? request.getParameter("sport") : "tutti gli sport" %></h1>
     </div>
-
+	<div class= "main-content">
     <!-- Contenitore degli eventi -->
     <div class="event-container">
         <% 
@@ -50,7 +50,7 @@
         </div>
         <% } %>
     </div>
-
+</div>
     <!-- Footer incluso -->
     <jsp:include page="/pages/footer.jsp" />
 </body>
