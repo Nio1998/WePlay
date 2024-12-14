@@ -24,6 +24,9 @@ class UtenteDAOTest {
         utenteDao = new UtenteDAO();
     }
 
+    /**
+     * Testa il salvataggio di un utente che non è ancora presente nel database.
+     */
     @Test
     @Order(1)
     void testSaveUtente_NonPresenteNelDatabase() throws SQLException {
@@ -55,6 +58,9 @@ class UtenteDAOTest {
         assertFalse(retrieved.isAdmin());
     }
 
+    /**
+     * Testa il comportamento quando si cerca di salvare un utente già presente nel database.
+     */
     @Test
     @Order(2)
     void testSaveUtente_GiaNelDatabase() {
@@ -79,6 +85,9 @@ class UtenteDAOTest {
         });
     }
 
+    /**
+     * Testa il comportamento quando si tenta di salvare un utente con attributi mancanti.
+     */
     @Test
     @Order(3)
     void testSaveUtente_AttributiMancanti() {
@@ -93,6 +102,9 @@ class UtenteDAOTest {
         });
     }
 
+    /**
+     * Testa il comportamento quando si tenta di salvare un utente nullo.
+     */
     @Test
     @Order(4)
     void testSaveUtente_UtenteNull() {
@@ -102,6 +114,9 @@ class UtenteDAOTest {
         });
     }
 
+    /**
+     * Testa l'aggiornamento dei dati di un utente esistente.
+     */
     @Test
     @Order(5)
     void testUpdateUtente() throws SQLException {
@@ -118,6 +133,9 @@ class UtenteDAOTest {
         assertEquals("newpassword123", updated.getPw());
     }
 
+    /**
+     * Testa la ricerca di un utente tramite username.
+     */
     @Test
     @Order(6)
     void testFindByUsername() throws SQLException {
@@ -128,6 +146,9 @@ class UtenteDAOTest {
         assertEquals("mario.rossi_updated@example.com", utente.getEmail());
     }
 
+    /**
+     * Testa il recupero di tutti gli utenti dal database.
+     */
     @Test
     @Order(7)
     void testGetAllUtenti() throws SQLException {
@@ -136,6 +157,9 @@ class UtenteDAOTest {
         assertTrue(utenti.size() > 0);
     }
 
+    /**
+     * Testa la ricerca di un utente tramite email quando l'utente esiste.
+     */
     @Test
     @Order(8)
     void testFindByEmail_UtenteEsistente() throws SQLException {
@@ -146,6 +170,9 @@ class UtenteDAOTest {
         assertEquals("Rossi", utente.getCognome());
     }
 
+    /**
+     * Testa la ricerca di un utente tramite email quando l'utente non esiste.
+     */
     @Test
     @Order(9)
     void testFindByEmail_UtenteNonEsistente() throws SQLException {
@@ -153,6 +180,9 @@ class UtenteDAOTest {
         assertNull(utenteNonEsistente);
     }
 
+    /**
+     * Testa l'aggiornamento dello stato di timeout di un utente.
+     */
     @Test
     @Order(10)
     void testAggiornaTimeout() throws SQLException {
@@ -172,6 +202,9 @@ class UtenteDAOTest {
         assertEquals(LocalDateTime.of(2024, 1, 5, 12, 30), updated.getDataOraFineTimeout());
     }
 
+    /**
+     * Testa la cancellazione di un utente presente nel database.
+     */
     @Test
     @Order(11)
     void testDelete_UtentePresenteNelDatabase() throws SQLException {
@@ -181,6 +214,9 @@ class UtenteDAOTest {
         assertNull(utenteDao.findByUsername("userTest"));
     }
 
+    /**
+     * Testa la cancellazione di un utente non presente nel database.
+     */
     @Test
     @Order(12)
     void testDelete_UtenteNonPresenteNelDatabase() throws SQLException {
