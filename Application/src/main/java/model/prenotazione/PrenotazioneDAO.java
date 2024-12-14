@@ -22,7 +22,8 @@ public class PrenotazioneDAO {
 				query.setString(3, p.getStato());
 				query.setInt(4, p.getPosizioneInCoda());
 				
-				query.executeUpdate();		
+				query.executeUpdate();	
+				
 			}
 		} finally {
 			ConDB.releaseConnection(conn);
@@ -49,12 +50,13 @@ public class PrenotazioneDAO {
 	public synchronized boolean delete(String utenteUsername, int eventoID) throws SQLException {
 		Connection conn = null;
 		try {
+			
 			conn = ConDB.getConnection();
 			try (PreparedStatement query = conn.prepareStatement("DELETE FROM prenotazione WHERE username_utente = ? AND ID_evento = ?")) {
 				query.setString(1, utenteUsername);
 				query.setInt(2, eventoID);
 				
-				return query.executeUpdate() != 0;		
+			 return (query.executeUpdate() != 0);	
 			}
 		} finally {
 			ConDB.releaseConnection(conn);
@@ -71,7 +73,10 @@ public class PrenotazioneDAO {
 				try (ResultSet rs = query.executeQuery()) {
 					rs.next();
 					return new PrenotazioneBean(rs);
-				}				
+				}
+				catch(SQLException e) {
+			        throw new SQLException("Errore durante il recupero dei dati dell' utente che si è prenotato per l'evento con ID " + eventoID, e);
+				}
 			}
 		} finally {
 			ConDB.releaseConnection(conn);
@@ -108,9 +113,9 @@ public class PrenotazioneDAO {
 	    try {
 	        conn = ConDB.getConnection();
 
-	        String sql = "SELECT u.username, u.cognome, u.nome, u.email, u.data_di_nascita"
-	            +"FROM prenotazione p"
-	            +"JOIN utente u ON p.username_utente = u.username"
+	        String sql = "SELECT u.username, u.cognome, u.nome, u.email, u.data_di_nascita "
+	            +"FROM prenotazione p "
+	            +"JOIN utente u ON p.username_utente = u.username "
 	            +"WHERE p.ID_evento = ?";
 
 	        try (PreparedStatement query = conn.prepareStatement(sql)) {
