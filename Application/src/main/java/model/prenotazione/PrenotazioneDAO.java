@@ -197,7 +197,10 @@ public class PrenotazioneDAO {
 	     }
         } catch (Exception e) {
             e.printStackTrace();
-        }
+        }finally {
+			ConDB.releaseConnection(conn);
+		}
+		
         return prenotazioni;
     }
 	
@@ -205,20 +208,25 @@ public class PrenotazioneDAO {
         String organizzatore = null;
         String query = "SELECT username_utente FROM Prenotazioni WHERE ID_evento = ? AND stato = 'organizzatore'";
 
-        try (Connection conn = ConDB.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(query)) {
+	Connection conn = null;
+        try{
+		 conn = ConDB.getConnection();
+             try(PreparedStatement stmt = conn.prepareStatement(query)) {
 
             stmt.setInt(1, eventoID);
 
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     organizzatore = rs.getString("username_utente");
-                }
-            }
+           	     }
+          	  }
+	     }
 
         } catch (Exception e) {
             e.printStackTrace();
-        }
+        }finally {
+			ConDB.releaseConnection(conn);
+		}
 
         return organizzatore;
     }
