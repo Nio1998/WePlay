@@ -8,10 +8,19 @@ import java.util.Collection;
 import java.util.List;
 import java.util.ArrayList;
 
+import model.Adapter;
+import model.AdapterTest;
 import model.ConDB;
 
 public class ValutazioneDAO {
+	Adapter ConDB;
 	
+	public ValutazioneDAO(AdapterTest ad) {
+		ConDB = ad;
+	}
+	public ValutazioneDAO() {
+		ConDB = new Adapter();
+	}
 	
     public synchronized void save(ValutazioneBean valutazione) throws SQLException {
     	
