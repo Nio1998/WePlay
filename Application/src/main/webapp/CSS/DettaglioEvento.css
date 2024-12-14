@@ -1,0 +1,134 @@
+/* DettagliEvento.css */
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+.event-details {
+    max-width: 800px;
+    margin: 20px auto;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    padding: 20px;
+}
+
+.event-details-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.event-details-grid div {
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+.sport-icon-container {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.sport-icon {
+    width: 100px;
+    height: auto;
+}
+
+.event-actions {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.edit-button {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.cancel-button {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+.join-button {
+    background-color: #28a745;
+    color: #fff;
+}
+
+.finish-button {
+    background-color: #6c757d;
+    color: #fff;
+}
+
+.warning-message {
+    font-size: 14px;
+    color: #dc3545;
+    margin-bottom: 10px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.participants-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.participant-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.participant-actions button {
+    margin-left: 5px;
+}
+
+.rate-button.disabled {
+    background-color: #e9ecef;
+    cursor: not-allowed;
+}
+
+.rate-button.enabled {
+    background-color: #ffc107;
+    cursor: pointer;
+}
+
+.report-button.disabled {
+    background-color: #e9ecef;
+    cursor: not-allowed;
+}
+
+.report-button.red {
+    background-color: #ff0000;
+    color: #fff;
+    cursor: pointer;
+}
+
+.flash-message {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #ffcc00;
+    color: #000;
+    padding: 10px 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    font-size: 14px;
+}
