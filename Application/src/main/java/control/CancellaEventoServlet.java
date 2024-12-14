@@ -3,6 +3,7 @@ package control;
 import java.io.IOException;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -11,6 +12,7 @@ import javax.servlet.http.HttpSession;
 import model.evento.EventoService;
 import model.utente.UtenteService;
 
+@WebServlet("/CancellaEventoServlet")
 public class CancellaEventoServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
@@ -46,22 +48,32 @@ public class CancellaEventoServlet extends HttpServlet {
                 request.getRequestDispatcher("errore.jsp").forward(request, response);
                 return;
             }
-
-            boolean eliminato = eventoService.elimina_evento(eventoId);
+            
+            boolean eliminato = false;
+            if(eventoService.statoEvento(eventoId) != "non iniziato") {
+            	request.setAttribute("errore", "Puoi eliminare un evento solo se non è ancora iniziato");
+            	if (isOrganizzatore) {
+                	request.getRequestDispatcher("EventiCreati.jsp").forward(request, response);
+                } else if (isAdmin) {
+                	request.getRequestDispatcher("ListaEventi.jsp").forward(request, response);
+                }
+            } else {
+            	eliminato = eventoService.elimina_evento(eventoId);
+            }
 
             if (eliminato) {
                 if (isOrganizzatore) {
-                    response.sendRedirect("eventiCreati.jsp");
+                    response.sendRedirect("EventiCreati.jsp");
                 } else if (isAdmin) {
-                    response.sendRedirect("listaEventi.jsp");
+                    response.sendRedirect("ListaEventi.jsp");
                 }
             } else {
-                request.setAttribute("errore", "Errore durante l'eliminazione dell'evento. Riprova più tardi.");
+                request.setAttribute("errore", "Errore durante l'eliminazione dell'evento. Riprova piÃ¹ tardi.");
                 
                 if (isOrganizzatore) {
                 	request.getRequestDispatcher("dettaglioEventoCreato.jsp").forward(request, response);
                 } else if (isAdmin) {
-                	request.getRequestDispatcher("dettaglioEventoAdmin.jsp").forward(request, response);
+                	request.getRequestDispatcher("ListaEventi.jsp").forward(request, response);
                 }
                 
             }
