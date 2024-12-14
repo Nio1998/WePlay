@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Gestione Utenti</title>
-    <link rel="stylesheet" type="text/css" href="styles.css">
+    <link rel="stylesheet" type="text/css" href="CSS/ListaUtenti.css">
 </head>
 <body>
     <h1>Elenco Utenti</h1>
