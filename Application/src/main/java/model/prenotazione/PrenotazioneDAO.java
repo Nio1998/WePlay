@@ -108,12 +108,10 @@ public class PrenotazioneDAO {
 	    try {
 	        conn = ConDB.getConnection();
 
-	        String sql = """
-	            SELECT u.username, u.cognome, u.nome, u.email, u.data_di_nascita
-	            FROM prenotazione p
-	            JOIN utente u ON p.username_utente = u.username
-	            WHERE p.ID_evento = ?
-	        """;
+	        String sql = "SELECT u.username, u.cognome, u.nome, u.email, u.data_di_nascita"
+	            +"FROM prenotazione p"
+	            +"JOIN utente u ON p.username_utente = u.username"
+	            +"WHERE p.ID_evento = ?";
 
 	        try (PreparedStatement query = conn.prepareStatement(sql)) {
 	            query.setInt(1, idEvento);

@@ -21,44 +21,45 @@ class SegnalazioneDAOTest {
     @Test
     @Order(1)
     void testSaveSegnalazione() throws SQLException {
-        Segnalazione segnalazione = new Segnalazione("MotivazioneTest", "In sospeso", "UtenteSegnalatoTest", "UtenteSegnalanteTest", 1);
+        Segnalazione segnalazione = new Segnalazione("assenza", "in attesa", "mario_rossi", "luigi_bianchi", 16);
         segnalazioneDAO.save(segnalazione);
         
-        Segnalazione retrieved = segnalazioneDAO.get(segnalazione.getId());
+        Segnalazione retrieved = segnalazioneDAO.get(16);
         assertNotNull(retrieved);
-        assertEquals("MotivazioneTest", retrieved.getMotivazione());
-        assertEquals("In sospeso", retrieved.getStato());
-        assertEquals("UtenteSegnalatoTest", retrieved.getUtenteSegnalato());
-        assertEquals("UtenteSegnalanteTest", retrieved.getUtenteSegnalante());
-        assertEquals(1, retrieved.getIdEvento());
+        assertEquals("assenza", retrieved.getMotivazione());
+        assertEquals("in attesa", retrieved.getStato());
+        assertEquals("mario_rossi", retrieved.getUtenteSegnalato());
+        assertEquals("luigi_bianchi", retrieved.getUtenteSegnalante());
+        assertEquals(16, retrieved.getIdEvento());
         
-        segnalazioneDAO.delete(segnalazione.getId());
+        segnalazioneDAO.delete(16);
     }
 
     @Test
     @Order(2)
     void testUpdateSegnalazione() throws SQLException {
-        Segnalazione segnalazione = new Segnalazione("MotivazioneTest", "In sospeso", "UtenteSegnalatoTest", "UtenteSegnalanteTest", 1);
+    	Segnalazione segnalazione = new Segnalazione("assenza", "in attesa", "mario_rossi", "luigi_bianchi", 16);
         segnalazioneDAO.save(segnalazione);
 
-        segnalazione.setStato("Risolto");
+        segnalazione.setStato("risolta");
+        segnalazione.setId(16);;
         segnalazioneDAO.update(segnalazione);
 
-        Segnalazione updated = segnalazioneDAO.get(segnalazione.getId());
+        Segnalazione updated = segnalazioneDAO.get(16);
         assertNotNull(updated);
-        assertEquals("Risolto", updated.getStato());
+        assertEquals("risolta", updated.getStato());
         
-        segnalazioneDAO.delete(segnalazione.getId());
+        segnalazioneDAO.delete(16);
     }
 
     @Test
     @Order(3)
     void testDeleteSegnalazione() throws SQLException {
-        Segnalazione segnalazione = new Segnalazione("MotivazioneTest", "In sospeso", "UtenteSegnalatoTest", "UtenteSegnalanteTest", 1);
+    	Segnalazione segnalazione = new Segnalazione("assenza", "in attesa", "mario_rossi", "luigi_bianchi", 16);
         segnalazioneDAO.save(segnalazione);
 
-        assertTrue(segnalazioneDAO.delete(segnalazione.getId()));
-        assertNull(segnalazioneDAO.get(segnalazione.getId()));
+        assertTrue(segnalazioneDAO.delete(16));
+        assertNull(segnalazioneDAO.get(16));
     }
 
     @Test
@@ -66,13 +67,13 @@ class SegnalazioneDAOTest {
     void testGetAllSegnalazioni() throws SQLException {
         Collection<Segnalazione> segnalazioni = segnalazioneDAO.getAll();
         assertNotNull(segnalazioni);
-        assertTrue(segnalazioni.size() > 0);
+        assertEquals(15,segnalazioni.size());
     }
 
     @Test
     @Order(5)
     void testGetSegnalazioniByRicevuta() throws SQLException {
-        String utenteRicevuto = "UtenteSegnalatoTest";
+        String utenteRicevuto = "luca_rossi";
         
         Collection<Segnalazione> segnalazioni = segnalazioneDAO.getSegnalazioniRicevute(utenteRicevuto);
         assertNotNull(segnalazioni);
