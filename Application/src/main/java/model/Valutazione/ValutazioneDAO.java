@@ -13,46 +13,60 @@ import model.ConDB;
 public class ValutazioneDAO {
 	
 	
-    public synchronized void save(ValutazioneBean valutazione) throws SQLException {
-    	
-    	Connection conn = null;
-        try {
-        	conn = ConDB.getConnection();
-        	
-        	try (PreparedStatement query = conn.prepareStatement("INSERT INTO valutazione (esito, utente_valutato, utente_valutante, ID_evento) VALUES (?, ?, ?, ?)")) {
-            query.setInt(1, valutazione.getEsito());
-            query.setString(2, valutazione.getUtenteValutato());
-            query.setString(3, valutazione.getUtenteValutante());
-            query.setInt(4, valutazione.getIdEvento());
-            
-            query.executeUpdate();
-             
-             }
-        } finally {
-            ConDB.releaseConnection(conn);
-        }
-    }
+	public synchronized void save(ValutazioneBean valutazione) throws SQLException {
+	    Connection conn = null;
+	    try {
+	        conn = ConDB.getConnection();
 
-    public synchronized void update(ValutazioneBean valutazione) throws SQLException {
-    	
-    	Connection conn = null;
-    	
-        try {
-        	conn = ConDB.getConnection();
-        	
-        	try(PreparedStatement query = conn.prepareStatement("UPDATE valutazione SET esito = ?, utente_valutato = ?, utente_valutante = ?, ID_evento = ? WHERE ID = ?")) {
-            query.setInt(1, valutazione.getEsito());
-            query.setString(2, valutazione.getUtenteValutato());
-            query.setString(3, valutazione.getUtenteValutante());
-            query.setInt(4, valutazione.getIdEvento());
-            query.setInt(5, valutazione.getId());
-            
-            query.executeUpdate();
+	        // Disabilita l'autocommit per gestire le transazioni manualmente
+	        conn.setAutoCommit(false);
+
+	        // Recupera il massimo ID attuale
+	        int nextId = 1; // Default se non ci sono righe
+	        try (PreparedStatement queryMax = conn.prepareStatement("SELECT MAX(ID) AS max_id FROM valutazione")) {
+	            try (ResultSet rs = queryMax.executeQuery()) {
+	                if (rs.next()) {
+	                    nextId = rs.getInt("max_id") + 1;
+	                }
+	            }
 	        }
-	    }finally {
-	        ConDB.releaseConnection(conn);
+
+	        // Inserisce una nuova valutazione
+	        try (PreparedStatement query = conn.prepareStatement(
+	                "INSERT INTO valutazione (ID, esito, utente_valutato, utente_valutante, ID_evento) VALUES (?, ?, ?, ?, ?)")) {
+	            query.setInt(1, nextId);
+	            query.setInt(2, valutazione.getEsito());
+	            query.setString(3, valutazione.getUtenteValutato());
+	            query.setString(4, valutazione.getUtenteValutante());
+	            query.setInt(5, valutazione.getIdEvento());
+
+	            query.executeUpdate();
+	            conn.commit();
+	        }
+	    } catch (SQLException ex) {
+	        // In caso di errore, esegui il rollback per annullare le modifiche
+	        if (conn != null) {
+	            try {
+	                conn.rollback();
+	            } catch (SQLException rollbackEx) {
+	                rollbackEx.printStackTrace();
+	            }
+	        }
+	        throw ex; // Rilancia l'eccezione
+	    } finally {
+	        if (conn != null) {
+	            try {
+	                // Ritorna alla modalità autocommit
+	                conn.setAutoCommit(true);
+	            } catch (SQLException e2) {
+	                e2.printStackTrace(); // Stampa eventuali errori durante il ripristino
+	            }
+	            ConDB.releaseConnection(conn);
+	        }
 	    }
-    }
+	}
+
+
 
     
     
@@ -97,7 +111,7 @@ public class ValutazioneDAO {
                         rs.getInt("ID_evento")
                     );
                 } else {
-                    throw new SQLException("Nessun risultato trovato per l'ID fornito.");
+                	return null;
                 	}
             	}
         	}
@@ -138,7 +152,7 @@ public class ValutazioneDAO {
     
     public List<ValutazioneBean> findByUsernameEvent(String usernameValutante, int eventoId) {
         List<ValutazioneBean> valutazioni = new ArrayList<>();
-        String query = "SELECT * FROM valutazione WHERE utente_segnalante = ? AND ID_evento = ?";
+        String query = "SELECT * FROM valutazione WHERE utente_valutante = ? AND ID_evento = ?";
         Connection conn = null;
 
         try {
@@ -152,8 +166,8 @@ public class ValutazioneDAO {
                         ValutazioneBean valutazione = new ValutazioneBean();
                         valutazione.setId(rs.getInt("ID"));
                         valutazione.setEsito(rs.getInt("esito"));
-                        valutazione.setUtenteValutato(rs.getString("utente_segnalato"));
-                        valutazione.setUtenteValutante(rs.getString("utente_segnalante"));
+                        valutazione.setUtenteValutato(rs.getString("utente_valutato"));
+                        valutazione.setUtenteValutante(rs.getString("utente_valutante"));
                         valutazione.setIdEvento(rs.getInt("ID_evento"));
 
                         valutazioni.add(valutazione);

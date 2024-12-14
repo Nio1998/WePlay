@@ -28,7 +28,9 @@ public class ValutazioneService {
             }
 
             // Verifica se l'evento � terminato
-             if (eventoService.dettagli_evento(String.valueOf(eventoId)) == null || !"finito".equalsIgnoreCase(eventoService.dettagli_evento(String.valueOf(eventoId)).getStato())) {
+
+             if (eventoService.dettagli_evento(eventoId) == null || !"finito".equalsIgnoreCase(eventoService.dettagli_evento(eventoId).getStato())) {
+
                 throw new IllegalArgumentException("Evento non valido o non terminato");
             }
 

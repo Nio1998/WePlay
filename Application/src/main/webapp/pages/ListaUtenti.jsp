@@ -13,10 +13,16 @@
     <table border="1">
         <thead>
             <tr>
+                <th>Username</th>
                 <th>Nome</th>
                 <th>Cognome</th>
-                <th>Username</th>
                 <th>Data di Nascita</th>
+                <th>Numero Timeout</th>
+                <th>In Timeout</th>
+                <th>Valutazioni Positive</th>
+                <th>Valutazioni Neutre</th>
+                <th>Valutazioni Negative</th>
+                <th>Data Fine Timeout</th>
                 <th>Azioni</th>
             </tr>
         </thead>
@@ -27,10 +33,16 @@
                     for (UtenteBean utente : utenti) {
             %>
             <tr>
+                <td><%= utente.getUsername() %></td>
                 <td><%= utente.getNome() %></td>
                 <td><%= utente.getCognome() %></td>
-                <td><%= utente.getUsername() %></td>
                 <td><%= utente.getDataDiNascita() %></td>
+                <td><%= utente.getNumTimeout() %></td>
+                <td><%= utente.isTimeout() ? "Sì" : "No" %></td>
+                <td><%= utente.getNumValutazioniPositive() %></td>
+                <td><%= utente.getNumValutazioniNeutre() %></td>
+                <td><%= utente.getNumValutazioniNegative() %></td>
+                <td><%= utente.getDataOraFineTimeout() != null ? utente.getDataOraFineTimeout() : "N/A" %></td>
                 <td>
                     <!-- Bottone per bannare l'utente -->
                     <form action="ApplicaBan" method="post" style="display:inline;">
@@ -51,7 +63,7 @@
                 } else { 
             %>
             <tr>
-                <td colspan="4">Nessun utente trovato.</td>
+                <td colspan="11">Nessun utente trovato.</td>
             </tr>
             <% 
                 } 

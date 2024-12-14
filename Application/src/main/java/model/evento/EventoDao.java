@@ -83,8 +83,8 @@ public class EventoDao {
         try {
             conn = ConDB.getConnection();
             try (PreparedStatement query = conn.prepareStatement("UPDATE evento SET data_inizio = ?, ora_inizio = ?, prezzo = ?, sport = ?, titolo = ?, indirizzo = ?, massimo_di_partecipanti = ?, citta = ?, stato = ? WHERE ID = ?")) {
-                query.setObject(1, e.getData_inizio());
-                query.setObject(2, e.getOra_inizio());
+            	 query.setDate(1, java.sql.Date.valueOf(e.getData_inizio()));
+ 	            query.setTime(2, java.sql.Time.valueOf(e.getOra_inizio()));
                 query.setDouble(3, e.getPrezzo());
                 query.setString(4, e.getSport());
                 query.setString(5, e.getTitolo());
@@ -93,7 +93,8 @@ public class EventoDao {
                 query.setString(8, e.getCitta());
                 query.setString(9, e.getStato());
                 query.setInt(10, e.getID());
-                query.executeUpdate();        
+                query.executeUpdate();  
+           
             }
         } finally {
             ConDB.releaseConnection(conn);

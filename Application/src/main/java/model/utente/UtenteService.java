@@ -11,12 +11,17 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+import model.prenotazione.PrenotazioneDAO;
+import model.prenotazione.PrenotazioneService;
+
 public class UtenteService {
 
     private UtenteDAO utenteDAO;
+    private PrenotazioneDAO prenotazioneDAO;
 
     public UtenteService() {
         utenteDAO = new UtenteDAO(); // Inizializza il DAO
+        prenotazioneDAO = new PrenotazioneDAO();
     }
     
     private String hash(String password) {
@@ -158,8 +163,9 @@ public class UtenteService {
     
     public boolean is_organizzatore(String username, int eventoId) {
         	
-	try {
-          return  utenteDAO.is_organizzatore(username, eventoId);
+    	try {
+    	  String stato = prenotazioneDAO.get(username, eventoId).getStato();
+          return "organizzatore".equals(stato);
         } catch (SQLException e) {
           // TODO Auto-generated catch block
           e.printStackTrace();

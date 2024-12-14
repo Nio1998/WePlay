@@ -18,7 +18,7 @@
     <div class="page-title">
         <h1>Esplora tutti gli eventi</h1>
     </div>
-
+	<div class= "main-content">
     <!-- Contenitore degli eventi -->
     <div class="event-container">
         <% 
@@ -44,7 +44,7 @@
         </div>
         <% } %>
     </div>
-
+</div>
     <!-- Footer incluso -->
     <jsp:include page="/pages/footer.jsp" />
 </body>

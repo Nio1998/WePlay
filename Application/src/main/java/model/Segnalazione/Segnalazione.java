@@ -7,8 +7,9 @@ public class Segnalazione implements Serializable {
     private static final long serialVersionUID = 1L;
 	
     private int id;
-    private String motivazione; // Enum per motivazione
-    private String stato;             // Enum per stato
+    
+	private String motivazione; // Enum per motivazione: 'assenza', 'violenza fisica', 'discriminazione', 'violenza verbale', 'condotta antisportiva', 'non appropriato', 'ritardo'
+    private String stato;             // Enum per stato: in attesa, risolta   
     private String utenteSegnalato;
     private String utenteSegnalante;
     private int idEvento;
@@ -25,6 +26,10 @@ public class Segnalazione implements Serializable {
     public int getId() {
         return id;
     }
+    public void setId(int id) {
+		this.id = id;
+	}
+
 
     public String getMotivazione() {
         return motivazione;

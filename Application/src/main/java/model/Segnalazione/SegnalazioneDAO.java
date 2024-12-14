@@ -8,42 +8,57 @@ import java.util.ArrayList;
 import java.util.List;
 
 import model.ConDB;
-import model.evento.Evento;
 
 public class SegnalazioneDAO {
 	
 	public synchronized void save(Segnalazione segnalazione) throws SQLException {
 	    Connection conn = null;
-	    PreparedStatement preparedStatement = null;
 	    try {
-	        // Ottieni la connessione al database
 	        conn = ConDB.getConnection();
 
-	        // Prepara la query di inserimento
-	        preparedStatement = conn.prepareStatement(
-	                "INSERT INTO segnalazione (motivazione, stato, utente_segnalato, utente_segnalante, ID_evento) VALUES (?, ?, ?, ?, ?)");
-	        
-	        // Imposta i parametri della query
-	        preparedStatement.setString(1, segnalazione.getMotivazione());  
-	        preparedStatement.setString(2, segnalazione.getStato());       
-	        preparedStatement.setString(3, segnalazione.getUtenteSegnalato());  
-	        preparedStatement.setString(4, segnalazione.getUtenteSegnalante());
-	        preparedStatement.setInt(5, segnalazione.getIdEvento());        
+	        // Disabilita l'autocommit per gestire le transazioni manualmente
+	        conn.setAutoCommit(false);
 
-	        // Esegui la query di inserimento
-	        preparedStatement.executeUpdate();
-
-	    } finally {
-	        // Chiudi il PreparedStatement se aperto
-	        if (preparedStatement != null) {
-	            try {
-	                preparedStatement.close();
-	            } catch (SQLException e) {
-	                e.printStackTrace();
+	        // Recupera il massimo ID attuale
+	        int nextId = 1; // Default se non ci sono righe
+	        try (PreparedStatement queryMax = conn.prepareStatement("SELECT MAX(ID) AS max_id FROM segnalazione")) {
+	            try (ResultSet rs = queryMax.executeQuery()) {
+	                if (rs.next()) {
+	                    nextId = rs.getInt("max_id") + 1;
+	                }
 	            }
 	        }
-	        // Rilascia la connessione se aperta
+
+	        // Inserisci la segnalazione con il prossimo ID calcolato
+	        try (PreparedStatement query = conn.prepareStatement(
+	                "INSERT INTO segnalazione (ID, motivazione, stato, utente_segnalato, utente_segnalante, ID_evento) " +
+	                        "VALUES (?, ?, ?, ?, ?, ?)")
+	        ) {
+	            query.setInt(1, nextId); // Imposta manualmente l'ID
+	            query.setString(2, segnalazione.getMotivazione());
+	            query.setString(3, segnalazione.getStato());
+	            query.setString(4, segnalazione.getUtenteSegnalato());
+	            query.setString(5, segnalazione.getUtenteSegnalante());
+	            query.setInt(6, segnalazione.getIdEvento());
+	            query.executeUpdate();
+	        }
+
+	        // Esegui il commit delle modifiche
+	        conn.commit();
+	    } catch (SQLException ex) {
+	        // In caso di errore, esegui il rollback per annullare le modifiche
 	        if (conn != null) {
+	            conn.rollback();
+	        }
+	        throw ex; // Rilancia l'eccezione
+	    } finally {
+	        if (conn != null) {
+	            try {
+	                // Ritorna alla modalità autocommit
+	                conn.setAutoCommit(true);
+	            } catch (SQLException e2) {
+	                // Ignora eventuali eccezioni qui, se il setAutoCommit fallisce
+	            }
 	            ConDB.releaseConnection(conn);
 	        }
 	    }
@@ -71,6 +86,7 @@ public class SegnalazioneDAO {
 	        
 	        // Esegui la query di aggiornamento
 	        preparedStatement.executeUpdate();
+	        
 	    } finally {
 	        // Chiudi il PreparedStatement se aperto
 	        if (preparedStatement != null) {
@@ -89,7 +105,7 @@ public class SegnalazioneDAO {
 
 
 	
-	public synchronized boolean delete(Segnalazione segnalazione) throws SQLException {
+	public synchronized boolean delete(int id) throws SQLException {
 	    Connection connection = null;
 	    PreparedStatement preparedStatement = null;
 	    try {
@@ -101,11 +117,11 @@ public class SegnalazioneDAO {
 		                "DELETE FROM segnalazione WHERE ID = ?");
 		        
 		        // Imposta i parametri della query
-		        preparedStatement.setInt(1, segnalazione.getId());
+		        preparedStatement.setInt(1, id);
 	
 		        // Esegui la query di cancellazione
 		        int rowsAffected = preparedStatement.executeUpdate();
-	
+		     
 		        // Restituisce true se la cancellazione ha avuto successo (rowsAffected == 1)
 		        return rowsAffected > 0;
 	    } finally {
@@ -147,7 +163,7 @@ public class SegnalazioneDAO {
 
 	        // Se ci sono risultati, mappa i dati nella segnalazione
 	        if (resultSet.next()) {
-	            int segnalazioneId = resultSet.getInt("ID");
+	           
 	            String motivazione = resultSet.getString("motivazione");
 	            String stato = resultSet.getString("stato");
 	            String utenteSegnalato = resultSet.getString("utente_segnalato");
@@ -281,11 +297,11 @@ public class SegnalazioneDAO {
 	        conn = ConDB.getConnection();
 
 	        // Query per ottenere le segnalazioni ricevute da un determinato utente
-	        String query = """
-	            SELECT motivazione, stato, utente_segnalante, ID_evento
-	            FROM segnalazione
-	            WHERE utente_segnalato = ?
-	        """;
+	        String query = 
+	        	    "SELECT motivazione, stato, utente_segnalante, ID_evento "
+	        	    + "FROM segnalazione "
+	        	    + "WHERE utente_segnalato = ?";
+
 
 	        preparedStatement = conn.prepareStatement(query);
 	        preparedStatement.setString(1, username);

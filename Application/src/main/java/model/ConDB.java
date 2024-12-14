@@ -49,15 +49,15 @@ public class ConDB {
      */
     private static synchronized Connection createDBConnection() throws SQLException {
         Connection newConnection;
-        String ip = "127.0.0.2";
+        String ip = "127.0.0.1";
         String port = "3306";
         String db = "WePlay";
         String username = "root";
-        String password = "Password01";
+        String password = "12345";
 
         // Crea una connessione al database con i parametri specificati
         newConnection = DriverManager.getConnection("jdbc:mysql://" + ip + ":" + port + "/" + db, username, password);
-        newConnection.setAutoCommit(false);
+        newConnection.setAutoCommit(true);
         return newConnection;
     }
 
