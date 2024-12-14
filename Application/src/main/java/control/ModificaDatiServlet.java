@@ -23,35 +23,62 @@ public class ModificaDatiServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+    	
+    	 
         HttpSession session = request.getSession();
         String username = (String) session.getAttribute("username");
+        
+      
+        
 
         if (username == null) {
-            response.sendRedirect("login.jsp"); // Se non loggato, rimanda al login.
+        	
+            response.sendRedirect("/pages/login.jsp"); // Se non loggato, rimanda al login.
             return;
         }
-
+        
+       
         String nuovaEmail = request.getParameter("email");
+       
         String nuovaPassword = request.getParameter("password");
-
+       
+        
+        String emailChangedFlag = request.getParameter("emailChanged");
+        String passwordChangedFlag = request.getParameter("passwordChanged");
+        
         try {
             // Controllo se l'email è già esistente
-            if (utenteService.controlla_email_esistente(nuovaEmail)) {
-                request.setAttribute("errore", "L'email è già in uso da un altro utente.");
-                request.getRequestDispatcher("profilo.jsp").forward(request, response);
-                return;
-            }
+        	
+        	
+        	if ("true".equals(emailChangedFlag) && utenteService.controlla_email_esistente(nuovaEmail)) {
+        	    System.out.println("Email già in uso.");
+        	    request.setAttribute("errore", "L'email è già in uso da un altro utente.");
+        	    request.getRequestDispatcher("/ProfiloServlet").forward(request, response);
+        	    return;
+        	} else if ("true".equals(passwordChangedFlag) && nuovaPassword != null && !nuovaPassword.isEmpty()) {
+        	    System.out.println("Cambio sia email che password.");
+        	    utenteService.modifica_dati(username, nuovaEmail, nuovaPassword);
+        	} else if ("true".equals(emailChangedFlag)) {
+        	    System.out.println("Cambio solo email.");
+        	    utenteService.modifica_dati(username, nuovaEmail, null);
+        	}
 
-            // Aggiorna i dati dell'utente
-            utenteService.modifica_dati(username, nuovaEmail, nuovaPassword);
+
 
             // Aggiorna la sessione con la nuova email
             session.setAttribute("email", nuovaEmail);
 
             request.setAttribute("successo", "Modifica effettuata con successo.");
-            request.getRequestDispatcher("profilo.jsp").forward(request, response);
+            
+            
+            request.getRequestDispatcher("/ProfiloServlet").forward(request, response);
+            
+            
+            
         } catch (Exception e) {
+        	
             e.printStackTrace();
+           
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Errore interno del server.");
         }
     }

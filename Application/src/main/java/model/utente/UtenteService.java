@@ -80,7 +80,7 @@ public class UtenteService {
             UtenteBean utente = utenteDAO.findByUsername(username);
             // Modifica i dati dell'utente
             utente.setEmail(email);
-            utente.setPw(hash(password));
+            if(password != null) utente.setPw(hash(password));
             // Aggiorna i dati nel database tramite il DAO
             utenteDAO.update(utente);
         } catch (SQLException e) {
@@ -211,7 +211,7 @@ public class UtenteService {
     
     public void aggiornaTimeoutUtente(String username, boolean isTimeout, LocalDateTime dataOraFineTimeout) {
         if (username == null || username.isEmpty()) {
-            throw new IllegalArgumentException("Username non può essere nullo o vuoto.");
+            throw new IllegalArgumentException("Username non puï¿½ essere nullo o vuoto.");
         }
         if (dataOraFineTimeout == null) {
             throw new IllegalArgumentException("La data e ora di fine timeout non possono essere nulli.");
@@ -227,7 +227,7 @@ public class UtenteService {
     
     public void assegnaTimeout(String username) {
         if (username == null || username.isEmpty()) {
-            throw new IllegalArgumentException("Username non può essere nullo o vuoto.");
+            throw new IllegalArgumentException("Username non puï¿½ essere nullo o vuoto.");
         }
 
         try {
@@ -238,7 +238,7 @@ public class UtenteService {
                 throw new IllegalArgumentException("Utente non trovato.");
             }
 
-            // Ottieni il numero di timeout già ricevuti
+            // Ottieni il numero di timeout giï¿½ ricevuti
             int numeroTimeout = utente.getNumTimeout();
 
             // Determina la durata del timeout (in ore) in base al numero di timeout ricevuti
@@ -271,7 +271,7 @@ public class UtenteService {
     
     public void assegnaBan(String username) {
         if (username == null || username.isEmpty()) {
-            throw new IllegalArgumentException("Username non può essere nullo o vuoto.");
+            throw new IllegalArgumentException("Username non puï¿½ essere nullo o vuoto.");
         }
 
         try {
@@ -297,6 +297,53 @@ public class UtenteService {
         } catch (Exception e) {
             throw new RuntimeException("Errore durante l'assegnazione del ban all'utente: " + username, e);
         }
+    }
+    
+    
+    public int calcola_reputazione(String username) {
+        // Recupera l'utente dal database usando findByUsername
+        UtenteBean utente = null;
+		try {
+			utente = utenteDAO.findByUsername(username);
+			
+
+	        // Se l'utente non esiste, restituisce una reputazione di 0
+	        if (utente == null) {
+	        	
+	            return 0;
+	        }
+	        
+	       
+	        
+	        // Calcola la media delle valutazioni
+	        int totalValutazioni = utente.getNumValutazioniPositive() + utente.getNumValutazioniNegative() + utente.getNumValutazioniNeutre();
+	        
+	        if (totalValutazioni == 0) {
+	        	
+	            // Se non ci sono valutazioni, la reputazione Ã¨ neutra (0)
+	            return 0;
+	        }
+	        
+	        
+	        
+	        // Calcola la somma ponderata delle valutazioni (positiva, neutra, negativa)
+	        double media = (utente.getNumValutazioniPositive() - utente.getNumValutazioniNegative()) / (double) totalValutazioni;
+	        
+	        
+	        // Approssima il valore: sotto 0.5 si arrotonda a 0, sopra si arrotonda a 1
+	        int reputazione = (int) Math.round(media); // RestituirÃ  -1, 0, o 1
+	       
+			
+	        
+	        return reputazione;
+	        
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return -2;
+      
     }
 
 

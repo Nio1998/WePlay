@@ -102,7 +102,7 @@ public class UtenteDAO {
 	        int rowsUpdated = preparedStatement.executeUpdate();
 	        connection.commit();
 
-	        // Verifica se è stato aggiornato almeno un record
+	        // Verifica se ï¿½ stato aggiornato almeno un record
 	        if (rowsUpdated == 0) {
 	            throw new SQLException("Update failed: no rows affected for username = " + utente.getUsername());
 	        }
@@ -149,8 +149,13 @@ public class UtenteDAO {
     			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate data_di_nascita = LocalDate.parse(data, formatter);
         String datatimeout= resultSet.getString("data_ora_fine_timeout");
-        DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        LocalDateTime data_timeout= LocalDateTime.parse(datatimeout, formatter2);
+    
+        LocalDateTime data_timeout = null;
+        
+        if (datatimeout != null) {
+            DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            data_timeout = LocalDateTime.parse(datatimeout, formatter2);
+        }
         
         
         // Costruzione dell'oggetto Utente dai risultati del database
@@ -250,9 +255,13 @@ public class UtenteDAO {
 	        			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 	            LocalDate data_di_nascita = LocalDate.parse(data, formatter);
 	            String datatimeout= resultSet.getString("data_ora_fine_timeout");
-	            DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-	            LocalDateTime data_timeout= LocalDateTime.parse(datatimeout, formatter2);
 	            
+	            LocalDateTime data_timeout = null;
+	            
+	            if (datatimeout != null) {
+	                DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+	                data_timeout = LocalDateTime.parse(datatimeout, formatter2);
+	            }
 	            
 	            // Costruzione dell'oggetto Utente dai risultati del database
 	            return new UtenteBean(
@@ -302,6 +311,8 @@ public class UtenteDAO {
      * @throws SQLException se si verifica un errore durante l'operazione
      */
 	public List<UtenteBean> getAllUtenti() throws SQLException {
+	   
+	    
 	    Connection connection = null;
 	    PreparedStatement preparedStatement = null;
 	    ResultSet resultSet = null;
@@ -314,30 +325,38 @@ public class UtenteDAO {
 	        resultSet = preparedStatement.executeQuery();
 
 	        while (resultSet.next()) {
-	        	String data = resultSet.getString("data_di_nascita");
-    			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate data_di_nascita = LocalDate.parse(data, formatter);
-        String datatimeout= resultSet.getString("data_ora_fine_timeout");
-        DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        LocalDateTime data_timeout= LocalDateTime.parse(datatimeout, formatter2);
-        
-        
-        // Costruzione dell'oggetto Utente dai risultati del database
-        UtenteBean utente = new UtenteBean(
-            resultSet.getString("username"),
-            resultSet.getString("cognome"),
-            resultSet.getString("nome"),
-            data_di_nascita,
-            resultSet.getString("email"),
-            resultSet.getString("pw"),
-            resultSet.getInt("num_timeout"),
-            resultSet.getBoolean("is_timeout"),
-            resultSet.getBoolean("is_admin"),
-            data_timeout,
-            resultSet.getInt("num_valutazioni_neutre"),
-            resultSet.getInt("num_valutazioni_negative"),
-            resultSet.getInt("num_valutazioni_positive")    
-        );
+
+	          
+
+	            // Gestione della data di nascita
+	            String data = resultSet.getString("data_di_nascita");
+	            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+	            LocalDate data_di_nascita = LocalDate.parse(data, formatter);
+
+	            // Gestione della data di fine timeout (puÃ² essere null)
+	            String datatimeout = resultSet.getString("data_ora_fine_timeout");
+	            LocalDateTime data_timeout = null;  // Inizializza a null
+	            if (datatimeout != null) {
+	                DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+	                data_timeout = LocalDateTime.parse(datatimeout, formatter2);
+	            }
+
+	            // Costruzione dell'oggetto Utente dai risultati del database
+	            UtenteBean utente = new UtenteBean(
+	                resultSet.getString("username"),
+	                resultSet.getString("cognome"),
+	                resultSet.getString("nome"),
+	                data_di_nascita,
+	                resultSet.getString("email"),
+	                resultSet.getString("pw"),
+	                resultSet.getInt("num_timeout"),
+	                resultSet.getBoolean("is_timeout"),
+	                resultSet.getBoolean("is_admin"),
+	                data_timeout,  // Invia null se non presente
+	                resultSet.getInt("num_valutazioni_neutre"),
+	                resultSet.getInt("num_valutazioni_negative"),
+	                resultSet.getInt("num_valutazioni_positive")
+	            );
 	            utenti.add(utente);
 	        }
 	    } catch (SQLException e) {
@@ -359,6 +378,7 @@ public class UtenteDAO {
 	    }
 	    return utenti;
 	}
+
 	
 	public void aggiornaTimeout(String username, boolean isTimeout, LocalDateTime dataOraFineTimeout) throws SQLException {
         String query = "UPDATE utente SET is_timeout = ?, data_ora_fine_timeout = ?, numero_timeout = numero_timeout + 1 WHERE username = ?";
