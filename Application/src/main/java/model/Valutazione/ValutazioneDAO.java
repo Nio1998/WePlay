@@ -18,9 +18,6 @@ public class ValutazioneDAO {
 	    try {
 	        conn = ConDB.getConnection();
 
-	        // Disabilita l'autocommit per gestire le transazioni manualmente
-	        conn.setAutoCommit(false);
-
 	        // Recupera il massimo ID attuale
 	        int nextId = 1; // Default se non ci sono righe
 	        try (PreparedStatement queryMax = conn.prepareStatement("SELECT MAX(ID) AS max_id FROM valutazione")) {
@@ -41,26 +38,9 @@ public class ValutazioneDAO {
 	            query.setInt(5, valutazione.getIdEvento());
 
 	            query.executeUpdate();
-	            conn.commit();
 	        }
-	    } catch (SQLException ex) {
-	        // In caso di errore, esegui il rollback per annullare le modifiche
-	        if (conn != null) {
-	            try {
-	                conn.rollback();
-	            } catch (SQLException rollbackEx) {
-	                rollbackEx.printStackTrace();
-	            }
-	        }
-	        throw ex; // Rilancia l'eccezione
 	    } finally {
 	        if (conn != null) {
-	            try {
-	                // Ritorna alla modalità autocommit
-	                conn.setAutoCommit(true);
-	            } catch (SQLException e2) {
-	                e2.printStackTrace(); // Stampa eventuali errori durante il ripristino
-	            }
 	            ConDB.releaseConnection(conn);
 	        }
 	    }

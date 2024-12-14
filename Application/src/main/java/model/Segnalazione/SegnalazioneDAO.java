@@ -16,9 +16,6 @@ public class SegnalazioneDAO {
 	    try {
 	        conn = ConDB.getConnection();
 
-	        // Disabilita l'autocommit per gestire le transazioni manualmente
-	        conn.setAutoCommit(false);
-
 	        // Recupera il massimo ID attuale
 	        int nextId = 1; // Default se non ci sono righe
 	        try (PreparedStatement queryMax = conn.prepareStatement("SELECT MAX(ID) AS max_id FROM segnalazione")) {
@@ -42,23 +39,8 @@ public class SegnalazioneDAO {
 	            query.setInt(6, segnalazione.getIdEvento());
 	            query.executeUpdate();
 	        }
-
-	        // Esegui il commit delle modifiche
-	        conn.commit();
-	    } catch (SQLException ex) {
-	        // In caso di errore, esegui il rollback per annullare le modifiche
-	        if (conn != null) {
-	            conn.rollback();
-	        }
-	        throw ex; // Rilancia l'eccezione
 	    } finally {
 	        if (conn != null) {
-	            try {
-	                // Ritorna alla modalità autocommit
-	                conn.setAutoCommit(true);
-	            } catch (SQLException e2) {
-	                // Ignora eventuali eccezioni qui, se il setAutoCommit fallisce
-	            }
 	            ConDB.releaseConnection(conn);
 	        }
 	    }
