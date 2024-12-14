@@ -176,7 +176,49 @@ public class PrenotazioneDAO {
 
 	    return newPos;  // Restituisce la nuova posizione in coda
 	}
+	public List<PrenotazioneBean> findPrenotazioniByEvento(int eventoID) {
+        List<PrenotazioneBean> prenotazioni = new ArrayList<>();
 
+        String query = "SELECT * FROM Prenotazioni WHERE eventoID = ?";
+        try (Connection conn = ConDB.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setInt(1, eventoID);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    PrenotazioneBean prenotazione = new PrenotazioneBean();
+                    prenotazione.setEventoID(rs.getInt("eventoID"));
+                    prenotazione.setUtenteUsername(rs.getString("usernameUtente"));
+                    prenotazioni.add(prenotazione);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return prenotazioni;
+    }
+	
+	public String findOrganizzatoreByEventoID(int eventoID) {
+        String organizzatore = null;
+        String query = "SELECT username_utente FROM Prenotazioni WHERE ID_evento = ? AND stato = 'organizzatore'";
+
+        try (Connection conn = ConDB.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setInt(1, eventoID);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    organizzatore = rs.getString("username_utente");
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return organizzatore;
+    }
 	
 	
 }
