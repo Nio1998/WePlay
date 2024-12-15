@@ -18,41 +18,29 @@
         <h1>Esplora tutti gli eventi</h1>
     </div>
 
-    <div class="main-content">
-        <!-- Contenitore degli eventi -->
-        <div class="event-container">
-            <%
-                EventoDao eventoDao = new EventoDao();
-                List<Evento> eventi = eventoDao.getAll();
+	<div class= "main-content">
+    <!-- Contenitore degli eventi -->
+    <div class="event-container">
+        <% 
+            String sport = request.getParameter("sport");
+            EventoDao eventoDao = new EventoDao();
+            List<Evento> eventi = eventoDao.getAll();
 
-                // Paginazione
-                int eventiPerPagina = 15; // 3 colonne x 5 righe
-                int currentPage;
-                try {
-                    currentPage = request.getParameter("page") != null ? Integer.parseInt(request.getParameter("page")) : 1;
-                } catch (NumberFormatException e) {
-                    currentPage = 1;
-                }
+            for (Evento evento : eventi) {
+        %>
+        <div class="card event-card">
+            <div class="card-header">
+                <h2><%= evento.getTitolo() %></h2>
+            </div>
+            <div class="card-body">
+                <p class="event-description"><%= evento.getCitta() %></p>
+                <p class="event-location">Luogo: <%= evento.getIndirizzo() %></p>
+                <p class="event-date">Data: <%= evento.getData_inizio() %></p>
+            </div>
+            <div class="card-footer">
+                <p>Posti disponibili: <%= evento.getMassimo_di_partecipanti() %></p>
+                <a href="${pageContext.request.contextPath}/pages/DettaglioEvento.jsp?id=<%= evento.getID() %>" class="details-link">Dettagli</a>
 
-                int start = (currentPage - 1) * eventiPerPagina;
-                int end = Math.min(start + eventiPerPagina, eventi.size());
-
-                for (int i = start; i < end; i++) {
-                    Evento evento = eventi.get(i);
-            %>
-            <div class="card event-card">
-                <div class="card-header">
-                    <h2><%= evento.getTitolo() %></h2>
-                </div>
-                <div class="card-body">
-                    <p class="event-description"><%= evento.getCitta() %></p>
-                    <p class="event-location">Luogo: <%= evento.getIndirizzo() %></p>
-                    <p class="event-date">Data: <%= evento.getData_inizio() %></p>
-                </div>
-                <div class="card-footer">
-                    <p>Posti disponibili: <%= evento.getMassimo_di_partecipanti() %></p>
-                    <a href="${pageContext.request.contextPath}/pages/dettagliEvento.jsp?id=<%= evento.getID() %>" class="details-link">Dettagli</a>
-                </div>
             </div>
             <% } %>
         </div>
