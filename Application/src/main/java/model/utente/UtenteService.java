@@ -24,7 +24,7 @@ public class UtenteService {
         prenotazioneDAO = new PrenotazioneDAO();
     }
     
-    private String hash(String password) {
+    public String hash(String password) {
         MessageDigest md = null;
         try {
             md = MessageDigest.getInstance("SHA-256");
@@ -275,7 +275,7 @@ public class UtenteService {
         }
     }
     
-    public void assegnaBan(String username) {
+    public boolean assegnaBan(String username) {
         if (username == null || username.isEmpty()) {
             throw new IllegalArgumentException("Username non può essere nullo o vuoto.");
         }
@@ -288,17 +288,22 @@ public class UtenteService {
                 throw new IllegalArgumentException("Utente non trovato.");
             }
 
+            if(!utente.isTimeout()) {
             // Imposta lo stato di timeout come equivalente al ban
             utente.setTimeout(true);
 
             // Imposta dataOraFineTimeout a null per indicare un ban permanente
             utente.setDataOraFineTimeout(null);
+            
 
             // Aggiorna i dati dell'utente nel database
             utenteDAO.aggiornaTimeout(username, utente.isTimeout(), utente.getDataOraFineTimeout());
 
-            // Facoltativo: Log dell'azione di ban
+            //Log dell'azione di ban
             System.out.println("Utente " + username + " bannato con successo (ban permanente).");
+            return true;
+            
+            } else return false;
 
         } catch (Exception e) {
             throw new RuntimeException("Errore durante l'assegnazione del ban all'utente: " + username, e);

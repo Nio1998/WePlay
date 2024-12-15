@@ -111,41 +111,6 @@ public class UtenteDAO {
 	        }
 	    }
 	}
-	
-	
-	public synchronized boolean delete(UtenteBean utente) throws SQLException {
-	    Connection connection = null;
-	    PreparedStatement preparedStatement = null;
-	    try {
-        	// Ottieni la connessione al database
-	        connection = ConDB.getConnection();
-
-	        // Prepara la query di cancellazione
-	        preparedStatement = connection.prepareStatement("DELETE FROM utente WHERE username = ?");
-	        
-	        // Imposta i parametri della query
-	        preparedStatement.setString(1, utente.getUsername());
-
-	        // Esegui la query di cancellazione
-	        int rowsAffected = preparedStatement.executeUpdate();
-
-	        // Restituisce true se la cancellazione ha avuto successo (rowsAffected == 1)
-	        return rowsAffected > 0;
-	    } finally {
-	        // Chiudi il PreparedStatement se aperto
-	        if (preparedStatement != null) {
-	            try {
-	                preparedStatement.close();
-	            } catch (SQLException e) {
-	                e.printStackTrace();
-	            }
-        	}
-	        // Rilascia la connessione al pool se aperta
-	        if (connection != null) {
-	            ConDB.releaseConnection(connection);
-	        }
-	    }
-	}
 
 
 	/**
@@ -371,10 +336,17 @@ public class UtenteDAO {
              PreparedStatement stmt = conn.prepareStatement(query)) {
         	
             stmt.setBoolean(1, isTimeout);
+            if(dataOraFineTimeout != null) {
             stmt.setTimestamp(2, Timestamp.valueOf(dataOraFineTimeout));
+            } else stmt.setNull(2,java.sql.Types.TIMESTAMP);
             stmt.setString(3, username);
 
-            stmt.executeUpdate();
+            int rowsUpdated = stmt.executeUpdate();
+            
+            // Verifica se � stato aggiornato almeno un record
+	        if (rowsUpdated == 0) {
+	            throw new SQLException("Update failed: no rows affected for username = " + username);
+	        }
         }
 	}
 	

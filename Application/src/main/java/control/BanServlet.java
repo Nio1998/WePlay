@@ -28,20 +28,26 @@ public class BanServlet extends HttpServlet {
         String username = request.getParameter("username");
 
         if (username == null || username.isEmpty()) {
-        	request.getRequestDispatcher(ERROR_PAGE).forward(request, response);
+            request.getRequestDispatcher(ERROR_PAGE).forward(request, response);
             return;
         }
 
         try {
-            // Assegna un ban permanente all'utente
-            utenteService.assegnaBan(username);
-
-            response.setStatus(HttpServletResponse.SC_OK);
-            response.getWriter().write("Ban permanente assegnato con successo all'utente: " + username);
+            if(utenteService.assegnaBan(username)) {
+            request.setAttribute("successMessage", "Ban permanente assegnato con successo all'utente: " + username);
+            request.getRequestDispatcher("/Admin_getAllUser").forward(request, response);
+            } else {
+            	request.setAttribute("failureMessage", "L'utente " + username + " è già in stato di ban");
+                request.getRequestDispatcher("/Admin_getAllUser").forward(request, response);
+            }
         } catch (IllegalArgumentException e) {
-        	request.getRequestDispatcher(ERROR_PAGE).forward(request, response);
+            e.printStackTrace();
+            request.getRequestDispatcher(ERROR_PAGE).forward(request, response);
         } catch (RuntimeException e) {
-        	response.sendRedirect(request.getContextPath() + ERROR_PAGE);
+            e.printStackTrace();
+            response.sendRedirect(request.getContextPath() + ERROR_PAGE);
         }
+
     }
+
 }

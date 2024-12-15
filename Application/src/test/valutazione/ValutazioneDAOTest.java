@@ -1,5 +1,6 @@
 package valutazione;
 
+import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.sql.SQLException;
@@ -45,19 +46,11 @@ class ValutazioneDAOTest {
     void testSaveValutazioneFailure() throws SQLException {
         ValutazioneBean valutazione = new ValutazioneBean();
         valutazione.setEsito(1);
-        valutazione.setIdEvento(20);
-        valutazione.setUtenteValutante("mario_rossi");
-        valutazione.setUtenteValutato("giulia_verdi");
-        valutazioneDao.save(valutazione);
-        
-        ValutazioneBean retrieved = valutazioneDao.get(17);
-        assertNotNull(retrieved);
-        assertNotEquals(-1, retrieved.getEsito());
-        assertNotEquals("giacomo", retrieved.getUtenteValutante());
-        assertNotEquals("perino", retrieved.getUtenteValutato());
-        assertNotEquals(17, retrieved.getIdEvento());
-        
-       valutazioneDao.delete(17);
+        valutazione.setIdEvento(2);
+        valutazione.setUtenteValutante("anna_neri");
+        valutazione.setUtenteValutato("giovanni_roma");
+        assertThrows(java.sql.SQLIntegrityConstraintViolationException.class,() ->valutazioneDao.save(valutazione));
+        valutazioneDao.delete(17);
     }
     @Test
     @Order(3)
