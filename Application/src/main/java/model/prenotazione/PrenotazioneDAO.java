@@ -181,48 +181,79 @@ public class PrenotazioneDAO {
 
 	    return newPos;  // Restituisce la nuova posizione in coda
 	}
+	
+	
+	
+	
 	public List<PrenotazioneBean> findPrenotazioniByEvento(int eventoID) {
-        List<PrenotazioneBean> prenotazioni = new ArrayList<>();
-
-        String query = "SELECT * FROM Prenotazioni WHERE eventoID = ?";
-	Connection conn = null;
-        try {
-		conn = ConDB.getConnection();
-             try(PreparedStatement stmt = conn.prepareStatement(query)) {
-
-            stmt.setInt(1, eventoID);
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    PrenotazioneBean prenotazione = new PrenotazioneBean();
-                    prenotazione.setEventoID(rs.getInt("eventoID"));
-                    prenotazione.setUtenteUsername(rs.getString("usernameUtente"));
-                    prenotazioni.add(prenotazione);
-             	   }
-           	 }
-	     }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }finally {
-			ConDB.releaseConnection(conn);
-		}
 		
-        return prenotazioni;
-    }
+		 
+	    List<PrenotazioneBean> prenotazioni = new ArrayList<>();
+	    String query = "SELECT * FROM prenotazione WHERE ID_evento = ?";
+	    Connection conn = null;
+
+	    
+	    	
+	   
+	    try {
+	        // Ottieni la connessione
+	        conn = ConDB.getConnection();
+	      
+	        
+	        // Prepara la query
+	        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+	            stmt.setInt(1, eventoID);
+
+	            // Esegui la query e ottieni il risultato
+	            try (ResultSet rs = stmt.executeQuery()) {
+	                while (rs.next()) {
+	                	
+	                    PrenotazioneBean prenotazione = new PrenotazioneBean();
+	                    prenotazione.setEventoID(rs.getInt("ID_evento"));
+	                    prenotazione.setUtenteUsername(rs.getString("username_utente"));
+	                    prenotazioni.add(prenotazione);
+	                }
+	            }
+	        }
+
+	    } catch (SQLException e) {
+	        // Log dell'errore in caso di problemi con la query o la connessione
+	        e.printStackTrace();
+	    } finally {
+	        // Rilascia la connessione al DB
+	        ConDB.releaseConnection(conn);
+	    }
+	    
+	   
+	    return prenotazioni;
+	}
+
+	
 	
 	public String findOrganizzatoreByEventoID(int eventoID) {
+		
+		 
         String organizzatore = null;
-        String query = "SELECT username_utente FROM Prenotazioni WHERE ID_evento = ? AND stato = 'organizzatore'";
+        String query = "SELECT username_utente FROM prenotazione WHERE ID_evento = ? AND stato = 'organizzatore'";
 
 	Connection conn = null;
         try{
+        	
+        	 
 		 conn = ConDB.getConnection();
+		 
+		
              try(PreparedStatement stmt = conn.prepareStatement(query)) {
+            	 
+            
 
             stmt.setInt(1, eventoID);
 
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
+                	
                     organizzatore = rs.getString("username_utente");
+                   
            	     }
           	  }
 	     }
@@ -232,7 +263,8 @@ public class PrenotazioneDAO {
         }finally {
 			ConDB.releaseConnection(conn);
 		}
-
+        
+       
         return organizzatore;
     }
 	
