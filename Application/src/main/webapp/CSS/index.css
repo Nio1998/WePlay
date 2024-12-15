@@ -102,6 +102,7 @@ body {
 
 .intro-text button:hover {
     background-color: #F4A900;
+    color: #fff;
 }
 
 .intro-image img {

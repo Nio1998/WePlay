@@ -46,7 +46,7 @@
             <a href="#" id="accountLink" class="user-icon">
                 <ion-icon name="person-circle-outline"></ion-icon>
             </a>
-            <% if (isLoggedIn) { %>
+            <% if (isLoggedIn && !isAdmin) { %>
                 <!-- Menu a tendina per utente loggato -->
                 <div class="dropdown-menu">
                     <a href="${pageContext.request.contextPath}/pages/profilo.jsp">Profilo</a>
@@ -54,7 +54,11 @@
                     <a href="${pageContext.request.contextPath}/pages/eventiCreati.jsp">Eventi creati</a>
                     <a href="${pageContext.request.contextPath}/logout">Logout</a>
                 </div>
-            <% } else { %>
+            <% } else if(isLoggedIn && isAdmin){ %>
+            <script>
+                    document.getElementById("accountLink").setAttribute("href", "${pageContext.request.contextPath}/pages/adminDashboard.jsp");
+                </script>
+            <% } else{ %>
                 <!-- Se non loggato, reindirizza alla pagina di login -->
                 <script>
                     document.getElementById("accountLink").setAttribute("href", "${pageContext.request.contextPath}/pages/login.jsp");

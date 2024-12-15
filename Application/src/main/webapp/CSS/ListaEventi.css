@@ -1,87 +1,131 @@
-/* Stile per la pagina di gestione eventi */
-
+/* Stile generale */
 body, html {
     font-family: 'Roboto', sans-serif;
     margin: 0;
     padding: 0;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    background-color: #f4f4f4;
+    background-color: #f2f6fc;
+    color: #333;
 }
 
 h1 {
     text-align: center;
-    color: #00796B;
-    font-size: 36px;
-    margin: 40px 0;
+    font-size: 28px;
+    margin-bottom: 20px;
+    color: #00ACC1;
 }
 
+/* Bottone Torna alla Dashboard */
+.dashboard-button {
+    position: absolute;
+    margin: 30px 0px;
+    background-color: #FFBF00;
+    color: black;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.dashboard-button:hover {
+    background-color: #F4A900;
+    color: #fff;
+}
+
+/* Tabella */
+/* Aggiungi uno spazio ai lati della pagina */
+.container {
+    margin: 20px auto; /* Spazio verticale e centratura orizzontale */
+    padding: 20px; /* Spazio interno al contenitore */
+    max-width: 95%; /* Limita la larghezza massima del contenitore */
+    box-sizing: border-box; /* Assicura che padding non allarghi il contenitore */
+}
+
+/* Stile per la tabella */
 table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 20px;
+    background-color: white;
+    border-radius: 10px; /* Bordi curvi */
+    overflow: hidden; /* Nasconde eventuali contenuti che superano i bordi */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15); /* Effetto ombra */
 }
 
+/* Spaziatura per le celle */
 th, td {
-    padding: 12px;
-    text-align: left;
-    border: 1px solid #B0BEC5;
-    font-size: 14px;
+    white-space: nowrap;
+    padding: 10px; /* Spaziatura interna per celle */
+    text-align: center;
+    border-bottom: 1px solid #e0e0e0;
 }
 
-th {
-    background-color: #00796B;
-    color: white;
-}
-
-tr:nth-child(even) {
-    background-color: #f9f9f9;
-}
-
-tr:hover {
-    background-color: #e0f2f1;
-}
-
-td form {
-    display: inline;
-}
-
-button {
-    padding: 8px 16px;
-    font-size: 14px;
+thead th {
     background-color: #00ACC1;
     color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: transform 0.2s ease;
-    margin-right: 10px;
-}
-
-button:hover {
-    transform: scale(1.05);
-}
-
-button:active {
-    transform: scale(0.95);
-}
-
-form input[type="hidden"] {
-    display: none;
-}
-
-/* Stile per la gestione del messaggio quando non ci sono eventi */
-td[colspan="10"] {
+    padding: 12px 15px;
     text-align: center;
     font-size: 16px;
-    color: #B0BEC5;
-    padding: 20px;
 }
 
-/* Miglioramenti per la disposizione e la visibilit� */
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
+tbody td {
+    padding: 10px;
+    text-align: center;
+    font-size: 14px;
+    border-bottom: 1px solid #e0e0e0;
+}
+/* Riga alternata */
+tr:nth-child(even) {
+    background-color: #f2f9ff;
+}
+
+/* Rimuovi margine inferiore */
+tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Effetto hover */
+tbody tr:hover {
+    background-color: #E0F2F1;
+    transition: background-color 0.3s ease;
+}
+
+/* Bottoni */
+button {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+button.modifica {
+    background-color: #009000;
+}
+
+button.modifica:hover {
+    background-color: #0a5c0a;
+    color: #fff;
+}
+
+button.elimina {
+    background-color: #e61919;
+}
+
+button.elimina:hover {
+    background-color: #b81414;
+    color: #fff;
+}
+
+i.fas.fa-clipboard-list {
+    font-size: 2em;
+    color: #FFBF00;
+}
+
+/* Aggiungi spazio ai lati in modalità responsive */
+@media screen and (max-width: 768px) {
+    .container {
+        padding: 10px; /* Riduci padding su schermi più piccoli */
+        max-width: 100%;
+    }
 }

@@ -25,13 +25,8 @@
 </head>
 <body>
 
-	
-	
-    <%@ include file="navbar.jsp" %>
-	    
-	    
-
-
+    <jsp:include page="navbar.jsp" />
+    
     <div class="profilo-section">
     
     			
