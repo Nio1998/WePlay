@@ -24,7 +24,7 @@
             <div class="login-box">
                 <form action="${pageContext.request.contextPath}/LoginServlet" method="post">
                     <div class="form-group">
-                        <input type="text" name="username" id="username" placeholder="Username o Email" required>
+                        <input type="text" name="username" id="username" placeholder="Username" required>
                     </div>
                     <div class="form-group">
                         <input type="password" name="password" id="password" placeholder="Password" required>
