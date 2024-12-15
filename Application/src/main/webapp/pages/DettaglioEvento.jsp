@@ -1,5 +1,5 @@
 <%@ page language="java" pageEncoding="utf-8" contentType="text/html; charset=utf-8" %>
-<%@ page import="java.util.*, java.time.ZoneId,java.util.Date, java.time.LocalDateTime, model.evento.Evento, model.evento.EventoDao, model.prenotazione.PrenotazioneDAO, model.prenotazione.PrenotazioneBean" %>
+<%@ page import="java.util.*, java.time.ZoneId,java.util.Date, java.time.ZonedDateTime, java.time.LocalDateTime, model.evento.Evento, model.evento.EventoDao, model.prenotazione.PrenotazioneDAO, model.prenotazione.PrenotazioneBean" %>
 <!DOCTYPE html>
 <html lang="it">
 <head>
@@ -7,40 +7,79 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- CSS -->
-    <link rel="stylesheet" href="<%= request.getContextPath() %>/evento/DettagliEvento.css">
-    <link rel="stylesheet" href="<%= request.getContextPath() %>/styles.css">
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/CSS/DettaglioEvento.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
+	<link rel="stylesheet" href="CSS/alert.css">
+	<script src="JS/alert.js" defer></script>
+	
     <title>Dettagli Evento</title>
 </head>
 <body>
 
-<jsp:include page="../pages/navbar.jsp" />
+ <!-- Import della navbar -->
+    <jsp:include page="navbar.jsp" />
+    
+  
+    	 <% if (request.getAttribute("errore") != null || request.getAttribute("successo") != null) { %>
+        <div class="messaggi <% if (request.getAttribute("errore") != null) { %>errore<% } else if (request.getAttribute("successo") != null) { %>successo<% } %>" id="messaggio">
+            <span>
+                <% if (request.getAttribute("errore") != null) { %>
+                    <%= request.getAttribute("errore") %>
+                <% } else if (request.getAttribute("successo") != null) { %>
+                    <%= request.getAttribute("successo") %>
+                <% } %>
+            </span>
+            <button class="close-btn" onclick="chiudiMessaggio()">×</button>
+        </div>
+        <% } %>
+
+   
 <div class="event-details">
     <% 
         Evento evento = null;
         int eventoId = -1;
-        String currentUser = (String) session.getAttribute("username");
+        
+        HttpSession userSession = request.getSession(false);
+        String currentUser = null;
+        if (userSession != null) {
+            currentUser = (String) userSession.getAttribute("username");
+            // altre logiche
+        }
+
         try {
             eventoId = Integer.parseInt(request.getParameter("id"));
+           
+            
             EventoDao eventoDao = new EventoDao();
             evento = eventoDao.get(eventoId);
 
             PrenotazioneDAO prenotazioneDAO = new PrenotazioneDAO();
+            
             List<PrenotazioneBean> partecipanti = prenotazioneDAO.findPrenotazioniByEvento(eventoId);
-            String organizzatore = prenotazioneDAO.findOrganizzatoreByEventoID(eventoId);
+            
+            String organizzatore = prenotazioneDAO.findOrganizzatoreByEventoID(eventoId); 
+            
             boolean isPartecipante = false;
-            for (PrenotazioneBean p : partecipanti) {
-                if (p.getUtenteUsername().equals(currentUser)) {
-                    isPartecipante = true;
-                    break;
-                }
+            
+            boolean isOrganizzatore = false;
+            
+            if(currentUser!=null){
+            		
+            	 for (PrenotazioneBean p : partecipanti) {
+                     if (p.getUtenteUsername().equals(currentUser)) {
+                         isPartecipante = true;
+                         break;
+                     }
+                 } 
+            	 
+            	 isOrganizzatore = organizzatore.equals(currentUser);
+            	 
             }
-
-            boolean isOrganizzatore = organizzatore.equals(currentUser);
+            
             boolean isTerminato = "terminato".equals(evento.getStato());
 
             long currentTimeMillis = System.currentTimeMillis();
+            
             boolean isWithin24HoursAfterEnd = false;
             boolean isLessThan24HoursBeforeStart = false;
 
@@ -53,20 +92,29 @@
 
                 isLessThan24HoursBeforeStart = eventStartMillis - currentTimeMillis <= 24 * 60 * 60 * 1000;
             }
-
+            
+            
+            
             if (evento.getData_inizio() != null) {
-                // Converte LocalDate in ZonedDateTime con il fuso orario di sistema
-                long eventEndMillis = evento.getData_inizio()
-                                             .atStartOfDay(ZoneId.systemDefault())
-                                             .toInstant()
-                                             .toEpochMilli();
+                // Converte la data inizio evento in ZonedDateTime con il fuso orario di sistema
+                long eventStartMillis = evento.getData_inizio()
+                                              .atStartOfDay(ZoneId.systemDefault())
+                                              .toInstant()
+                                              .toEpochMilli();
 
+                // Aggiungi la durata dell'evento (es. 2 ore) al millisecondo di inizio
+                long eventEndMillis = eventStartMillis + (2 * 60 * 60 * 1000); // 2 ore in millisecondi
+
+                // Verifica se sono passate meno di 24 ore dalla fine dell'evento
                 isWithin24HoursAfterEnd = currentTimeMillis - eventEndMillis <= 24 * 60 * 60 * 1000;
             }
+            
+           
 
 
             if (evento != null) {
     %>
+    
     <div class="event-info">
         <div class="event-details-grid">
             <div><strong>Titolo:</strong> <%= evento.getTitolo() %></div>
@@ -116,7 +164,10 @@
                         break;
                 }
             %>
+            
+            <!-- 
             <img src="<%= request.getContextPath() %>/<%= iconPath %>" alt="<%= sport %>" class="sport-icon">
+            -->
         </div>
 
         <div class="event-actions">
@@ -127,9 +178,22 @@
                     <% if (isLessThan24HoursBeforeStart) { %>
                         <div class="warning-message">Se procedi alla cancellazione subirai una penalizzazione!</div>
                     <% } %>
-                    <button class="cancel-button">Cancella Prenotazione</button>
+                    
+                    <form action="${pageContext.request.contextPath}/CancellaPrenotazioneServlet" method="post">
+					    <!-- Usa il valore di eventoId che è già presente nella JSP -->
+					    <input type="hidden" name="eventoID" value="<%= eventoId %>">
+					    <button class="cancel-button" type="submit">Cancella Prenotazione</button>
+					  </form>
+					  
                 <% } else { %>
-                    <button class="join-button">Partecipa</button>
+                
+				     <form action="${pageContext.request.contextPath}/CreaPrenotazioneServlet" method="post">
+					    <!-- Usa il valore di eventoId che è già presente nella JSP -->
+					    <input type="hidden" name="eventoID" value="<%= eventoId %>">
+					    <button class="join-button" type="submit">Partecipa</button>
+					</form>
+
+
                 <% } %>
             <% } else { %>
                 <% if (isOrganizzatore) { %>
@@ -172,8 +236,10 @@
     %>
 </div>
 
-<jsp:include page="../pages/footer.jsp" />
+	<jsp:include page="footer.jsp" />
 
-<div id="flashMessage" class="flash-message"></div>
+			<!--  
+				 <div id="flashMessage" class="flash-message"></div>
+			-->
 </body>
 </html>
