@@ -34,7 +34,7 @@ public class CreaPrenotazioneServlet extends HttpServlet {
     	
     	HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("username") == null) {
-        	  System.out.println("err session");
+        	  
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Utente non autenticato.");
             return;
         }
@@ -43,27 +43,23 @@ public class CreaPrenotazioneServlet extends HttpServlet {
         try {
             int eventoID = Integer.parseInt(request.getParameter("eventoID"));
             	
-            System.out.println("ev id" + eventoID);
-            System.out.println("username: " + username);
             
             // Precondizioni per la prenotazione
             if (username == null || username.isEmpty()) {
             	
-            	System.out.println("1 ok ");
+            	
             	
                 request.setAttribute("errore", "Username non valido.");
                 request.getRequestDispatcher("/pages/ErrorPage.jsp").forward(request, response);
                 return;
             }
             if (utenteService.findbyUsername(username)==null) {
-            	System.out.println("2 ok ");
             	
                 request.setAttribute("errore", "Utente non registrato.");
                 request.getRequestDispatcher("/pages/ErrorPage.jsp").forward(request, response);
                 return;
             }
             if (!eventoService.esiste_evento(eventoID)) {
-            	System.out.println("3 ok ");
             	
                 request.setAttribute("errore", "Evento non esistente.");
                 request.getRequestDispatcher("/pages/ErrorPage.jsp").forward(request, response);
@@ -73,16 +69,13 @@ public class CreaPrenotazioneServlet extends HttpServlet {
             
             // Prenotazione evento
             boolean prenotazioneSuccesso = prenotazioneService.prenota_evento(username, eventoID);
-            
-            System.out.println("succ: "  + prenotazioneSuccesso);
-            
+                        
 
             // Se la prenotazione ha successo, controlliamo la lista di attesa
             if (prenotazioneSuccesso) {
             	
                 boolean inAttesa = !eventoService.evento_ha_posti_disponibili(eventoID);
                 
-                System.out.println("coda: "  + inAttesa);
                 
                 if (inAttesa) {
                     request.setAttribute("successo", "Inserimento nella coda effettuato con successo.");
