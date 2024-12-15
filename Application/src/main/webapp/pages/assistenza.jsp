@@ -18,7 +18,7 @@
 
     <!-- Contenitore del modulo -->
     <div class="crea-evento-box">
-        <form action="${pageContext.request.contextPath}/processaAssistenza" method="post">
+        <form action="${pageContext.request.contextPath}/GestioneAssistenza" method="post">
             <div class="form-group">
                 <label for="email">Email</label>
                 <input type="email" id="email" name="email" required placeholder="Inserisci la tua email">
