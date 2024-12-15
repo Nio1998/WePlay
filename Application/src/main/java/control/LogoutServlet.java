@@ -23,7 +23,7 @@ public class LogoutServlet extends HttpServlet {
         }
         
         // Reindirizza alla pagina di login
-        response.sendRedirect("login.jsp");
+        response.sendRedirect("/WePlay/pages/index.jsp");
     }
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 			doPost(request,response);

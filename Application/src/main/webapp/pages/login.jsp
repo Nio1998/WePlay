@@ -1,23 +1,26 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
+<%
+    Boolean loginError = (Boolean) session.getAttribute("login-error");
+    if (loginError == null) {
+        loginError = false;
+    }
+%>
 <!DOCTYPE html>
 <html lang="it">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WePlay - Login</title>
-    <!-- CSS specifico per il contenuto centrale -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/CSS/login.css">
-     <!-- Inclusione del file JS per la validazione -->
-    <script src="${pageContext.request.contextPath}/JS/validateLogin.js" defer></script>
-    
 </head>
 <body>
-    <!-- Import della navbar -->
     <jsp:include page="navbar.jsp" />
-
     <main class="main-content">
         <section class="login-section">
             <h1>LOGIN</h1>
+            <% if (loginError) { %>
+                <p class="error-message">Credenziali non valide. Riprova.</p>
+            <% } %>
             <div class="login-box">
                 <form action="${pageContext.request.contextPath}/LoginServlet" method="post">
                     <div class="form-group">
@@ -34,8 +37,6 @@
             </div>
         </section>
     </main>
-
-    <!-- Import del footer -->
     <jsp:include page="footer.jsp" />
 </body>
 </html>
