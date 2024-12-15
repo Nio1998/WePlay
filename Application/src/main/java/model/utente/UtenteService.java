@@ -24,7 +24,7 @@ public class UtenteService {
         prenotazioneDAO = new PrenotazioneDAO();
     }
     
-    private String hash(String password) {
+    public String hash(String password) {
         MessageDigest md = null;
         try {
             md = MessageDigest.getInstance("SHA-256");
