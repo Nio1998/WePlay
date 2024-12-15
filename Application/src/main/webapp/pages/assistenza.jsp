@@ -6,6 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Modulo di Assistenza - WePlay</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/CSS/assistenza.css">
+    <script>
+        function disableSubmitButton(button) {
+            button.disabled = true;
+            button.textContent = "Invio in corso..."; // Cambia il testo del pulsante
+            document.getElementById("assistenzaForm").submit(); // Invio del form
+        }
+    </script>
 </head>
 <body>
     <!-- Navbar inclusa -->
@@ -16,19 +23,9 @@
         <h1>Modulo di Assistenza</h1>
     </div>
 
-    <!-- Mostra eventuali messaggi di successo o errore -->
-    <div class="messages">
-        <c:if test="${not empty error}">
-            <div class="error">${error}</div>
-        </c:if>
-        <c:if test="${not empty message}">
-            <div class="success">${message}</div>
-        </c:if>
-    </div>
-
     <!-- Contenitore del modulo -->
     <div class="crea-evento-box">
-        <form action="${pageContext.request.contextPath}/GestioneAssistenza" method="post">
+        <form id="assistenzaForm" action="${pageContext.request.contextPath}/GestioneAssistenza" method="post">
             <div class="form-group">
                 <label for="email">Email</label>
                 <input type="email" id="email" name="email" required placeholder="Inserisci la tua email">
@@ -42,7 +39,7 @@
                 <textarea id="descrizione" name="descrizione" required placeholder="Scrivi qui il tuo messaggio"></textarea>
             </div>
             <div class="buttons">
-                <button type="submit">Invia</button>
+                <button type="button" onclick="disableSubmitButton(this)">Invia</button>
                 <button type="reset">Cancella</button>
             </div>
         </form>
