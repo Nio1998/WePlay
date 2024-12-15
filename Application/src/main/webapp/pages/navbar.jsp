@@ -50,7 +50,7 @@
                 <!-- Menu a tendina per utente loggato -->
                 <div class="dropdown-menu">
                     <a href="${pageContext.request.contextPath}/pages/profilo.jsp">Profilo</a>
-                    <a href="${pageContext.request.contextPath}/pages/eventiSottoscritti.jsp">Eventi sottoscritti</a>
+                    <a href="${pageContext.request.contextPath}/EsploraEventiServlet?attributo=sottoscritto">Eventi sottoscritti</a>
                     <a href="${pageContext.request.contextPath}/pages/eventiCreati.jsp">Eventi creati</a>
                     <a href="${pageContext.request.contextPath}/logout">Logout</a>
                 </div>
