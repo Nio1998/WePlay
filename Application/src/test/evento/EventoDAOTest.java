@@ -1,5 +1,6 @@
 package evento;
 
+import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
@@ -134,16 +135,17 @@ class EventoDAOTest {
         assertEquals("non iniziato", evento.getStato(), "Lo stato dell'evento non corrisponde.");
     }
 
+    
     @Test
     @Order(7)
-    void testSaveEventoFailure() throws SQLException {
-        Evento evento = new Evento(LocalDate.of(2024, 1, 10), LocalTime.of(10, 0), 20.50, "Calcio", "Titolo Errato", "Via Roma 10", 22, "Roma", "non iniziato");
-        eventoDao.save(evento);
-
-        Evento retrieved = eventoDao.get(21); // Supponiamo che l'ID assegnato sia 21
-        assertNotEquals("Titolo Correto", retrieved.getTitolo(), "Il titolo non dovrebbe corrispondere.");
-        eventoDao.delete(21); // Pulisce il database
-    }
+    void testSaveEventoGiaPresenteFailure() throws SQLException {
+        Evento evento = new Evento(LocalDate.of(2024, 1, 10), LocalTime.of(10, 0), 20.50, "Calc", "Titolo Errato", "Via Roma 10", 22, "Roma", "non iniziato");
+       
+        assertThrows(SQLException.class, () -> {
+            eventoDao.save(evento);
+        });
+    } 
+    
 
     @Test
     @Order(8)
@@ -152,11 +154,12 @@ class EventoDAOTest {
         eventoDao.save(evento);
 
         evento.setID(21);
-        evento.setPrezzo(30.00); // Aggiornamento errato
-        eventoDao.update(evento);
-
-        Evento updated = eventoDao.get(21);
-        assertNotEquals(20.50, updated.getPrezzo(), "Il prezzo non dovrebbe corrispondere al valore originale.");
+        evento.setSport("Calc"); // Aggiornamento errato
+        
+        
+        assertThrows(SQLException.class, () -> {
+        	 eventoDao.update(evento);
+        });
         eventoDao.delete(21); // Pulisce il database
     }
 
@@ -165,22 +168,14 @@ class EventoDAOTest {
     void testDeleteEventoFailure() throws SQLException {
         int invalidID = -1; // ID inesistente
         assertFalse(eventoDao.delete(invalidID), "Dovrebbe restituire false per un ID inesistente.");
-
+        
         Evento retrieved = eventoDao.get(invalidID);
         assertNotEquals(1, retrieved, "L'evento non dovrebbe esistere nel database.");
     }
 
+
     @Test
     @Order(10)
-    void testGetAllFailureDataMismatch() throws SQLException {
-        Collection<Evento> eventi = eventoDao.getAll();
-
-        // Supponiamo che ci siano 20 eventi, ma controlliamo un valore sbagliato
-        assertNotEquals(25, eventi.size(), "Il numero di eventi non dovrebbe corrispondere al valore errato.");
-    }
-
-    @Test
-    @Order(11)
     void testGetByFilterFailure() throws SQLException {
         // Filtra con criteri che restituiscono eventi sbagliati
         Collection<Evento> filteredEvents = eventoDao.getByFilter(LocalDate.of(2024, 1, 1), LocalDate.of(2024, 12, 31), "Sport Sbagliato", "Città Sbagliata");
@@ -192,7 +187,7 @@ class EventoDAOTest {
     }
 
     @Test
-    @Order(12)
+    @Order(11)
     void testGetEventiBySportFailure() throws SQLException {
         // Sport inesistente
         String sport = "Sport Inesistente";
