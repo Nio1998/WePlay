@@ -45,12 +45,8 @@ public class LoginServlet extends HttpServlet {
         String redirectedPage = "/login.jsp";
         Boolean control = false;
         try {
-        	
-        	
+        	       	
         	List<UtenteBean> lista= utenteDAO.getAllUtenti();
-        	
-        	
-        	
         	
             for(UtenteBean u: lista) {
             	
