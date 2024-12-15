@@ -1,6 +1,6 @@
 <%@ page session="true" %>
 <%@ page contentType="text/html; charset=UTF-8" %>
-<%@ page import="java.util.*, model.utente.UtenteBean, java.sql.SQLException, model.utente.UtenteDAO" %>
+<%@ page import="java.util.*, model.utente.UtenteBean" %>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/CSS/navbar.css">
 
 <%
@@ -20,33 +20,46 @@
 
 <header class="header">
     <nav class="navbar">
+        <!-- Logo -->
         <a href="${pageContext.request.contextPath}/pages/index.jsp">
             <img src="${pageContext.request.contextPath}/IMG/logo_WePlay.png" alt="WePlay Logo">
         </a>
-        <a href="${pageContext.request.contextPath}/pages/paginaEventi.jsp?sport=calcio"><ion-icon name="football-outline"></ion-icon></a>
-        <a href="${pageContext.request.contextPath}/pages/paginaEventi.jsp?sport=tennis"><ion-icon name="tennisball-outline"></ion-icon></a>
-        <a href="esploraEventi.jsp"><h1>ESPLORA EVENTI</h1></a>
-        <a href="${pageContext.request.contextPath}/pages/paginaEventi.jsp?sport=basket"><ion-icon name="basketball-outline"></ion-icon></a>
-        <a href="${pageContext.request.contextPath}/pages/paginaEventi.jsp?sport=bocce"><ion-icon name="bowling-ball-outline"></ion-icon></a>
-        <a href="#" id="accountLink"><ion-icon name="person-circle-outline"></ion-icon></a>
+        <!-- Icone Sport -->
+        <a href="${pageContext.request.contextPath}/pages/paginaEventi.jsp?sport=calcio">
+            <ion-icon name="football-outline"></ion-icon>
+        </a>
+        <a href="${pageContext.request.contextPath}/pages/paginaEventi.jsp?sport=tennis">
+            <ion-icon name="tennisball-outline"></ion-icon>
+        </a>
+        <a href="esploraEventi.jsp">
+            <h1>ESPLORA EVENTI</h1>
+        </a>
+        <a href="${pageContext.request.contextPath}/pages/paginaEventi.jsp?sport=basket">
+            <ion-icon name="basketball-outline"></ion-icon>
+        </a>
+        <a href="${pageContext.request.contextPath}/pages/paginaEventi.jsp?sport=bocce">
+            <ion-icon name="bowling-ball-outline"></ion-icon>
+        </a>
+        
+        <!-- Icona Utente -->
+        <div class="dropdown">
+            <a href="#" id="accountLink" class="user-icon">
+                <ion-icon name="person-circle-outline"></ion-icon>
+            </a>
+            <% if (isLoggedIn) { %>
+                <!-- Menu a tendina per utente loggato -->
+                <div class="dropdown-menu">
+                    <a href="${pageContext.request.contextPath}/pages/profilo.jsp">Profilo</a>
+                    <a href="${pageContext.request.contextPath}/pages/eventiSottoscritti.jsp">Eventi sottoscritti</a>
+                    <a href="${pageContext.request.contextPath}/pages/eventiCreati.jsp">Eventi creati</a>
+                    <a href="${pageContext.request.contextPath}/logout">Logout</a>
+                </div>
+            <% } else { %>
+                <!-- Se non loggato, reindirizza alla pagina di login -->
+                <script>
+                    document.getElementById("accountLink").setAttribute("href", "${pageContext.request.contextPath}/pages/login.jsp");
+                </script>
+            <% } %>
+        </div>
     </nav>
 </header>
-
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-    // Verifica se l'utente è loggato e il ruolo
-    var isLoggedIn = <%= isLoggedIn %>;
-    var isAdmin = <%= isAdmin %>;
-    var accountLink = document.getElementById("accountLink");
-
-    if (!isLoggedIn) {
-        // Se non è loggato, reindirizza alla pagina di login
-        accountLink.href = "${pageContext.request.contextPath}/pages/login.jsp";
-    } else {
-        // Se è loggato, reindirizza alla dashboard corretta in base al ruolo
-        accountLink.href = isAdmin 
-            ? "${pageContext.request.contextPath}/pages/adminDashboard.jsp" 
-            : "${pageContext.request.contextPath}/pages/userDashboard.jsp";
-    }
-});
-</script>
