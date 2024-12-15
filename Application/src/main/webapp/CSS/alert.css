@@ -1,0 +1,106 @@
+/* Stile generale per il messaggio di alert */
+
+
+
+.messaggi {
+    position: fixed;
+    top: 20%;
+    right: 10%; /* Spostato a destra del box */
+    z-index: 1000;
+    width: 300px;
+    padding: 20px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #E3F2FD; /* Azzurro chiaro */
+    border: 2px solid #00ACC1; /* Bordo azzurro */
+    color: #000000; /* Testo nero */
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    animation: pulsazione 1s infinite; /* Animazione pulsazione */
+}
+
+/* Pulsante di chiusura */
+.messaggi .close-btn {
+    background: none;
+    border: none;
+    color: #000;
+    font-size: 16px;
+    cursor: pointer;
+    font-weight: bold;
+    padding: 0;
+    margin-left: 10px;
+    transition: transform 0.2s;
+}
+
+.messaggi .close-btn:hover {
+    transform: scale(1.2); /* Animazione di ingrandimento */
+}
+
+/* Animazione di pulsazione */
+@keyframes pulsazione {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Dopo il click, rimuovi animazione */
+.messaggi.clicked {
+    animation: none;
+    transform: scale(1);
+}
+
+/* Stile per messaggi di errore */
+.messaggi.errore {
+    background-color: #FFCDD2; /* Rosso chiaro */
+    border: 2px solid #D32F2F; /* Bordo rosso */
+    color: #D32F2F; /* Testo rosso */
+}
+
+/* Stile per messaggi di successo */
+.messaggi.successo {
+    background-color: #C8E6C9; /* Verde chiaro */
+    border: 2px solid #388E3C; /* Bordo verde */
+    color: #388E3C; /* Testo verde */
+}
+
+
+
+.flash-message {
+    display: none; /* Inizialmente nascosto */
+    position: fixed;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #4CAF50; /* Verde per il messaggio di successo */
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.5s ease, transform 0.5s ease; /* Animazione di fade e movimento */
+}
+
+.flash-message.errore {
+    background-color: #f44336; /* Rosso per il messaggio di errore */
+}
+
+.flash-message button.close-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.flash-message button.close-btn:hover {
+    color: #ccc;
+}
