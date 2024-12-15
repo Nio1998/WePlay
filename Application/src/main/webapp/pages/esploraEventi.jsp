@@ -51,7 +51,7 @@
                 </div>
                 <div class="card-footer">
                     <p>Posti disponibili: <%= evento.getMassimo_di_partecipanti() %></p>
-                    <a href="${pageContext.request.contextPath}/pages/dettagliEvento.jsp?id=<%= evento.getID() %>" class="details-link">Dettagli</a>
+                    <a href="${pageContext.request.contextPath}/pages/DettaglioEvento.jsp?id=<%= evento.getID() %>" class="details-link">Dettagli</a>
                 </div>
             </div>
             <% } %>
