@@ -1,87 +1,127 @@
-/* Stile per la pagina di gestione utenti */
-
+/* Stile generale */
 body, html {
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Arial', sans-serif;
     margin: 0;
     padding: 0;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    background-color: #f4f4f4;
+    background-color: #f4f8ff; /* Sfondo chiaro */
+    color: #333;
 }
 
+/* Contenitore principale */
+.container {
+    max-width: 98%; /* Quasi tutta la larghezza dello schermo */
+    margin: 20px auto;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+/* Titolo */
 h1 {
     text-align: center;
-    color: #00796B;
-    font-size: 36px;
-    margin: 40px 0;
+    color: #17a2b8; /* Blu acceso */
+    font-size: 28px;
+    margin-bottom: 20px;
 }
 
+/* Bottone Torna alla Dashboard */
+.dashboard-button {
+    position: absolute;
+    margin: 30px 0px;
+    background-color: #FFBF00;
+    color: black;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.dashboard-button:hover {
+    background-color: #F4A900;
+    color: #fff;
+}
+
+/* Tabella */
 table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 20px;
+    background-color: white;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
 }
 
-th, td {
-    padding: 12px;
-    text-align: left;
-    border: 1px solid #B0BEC5;
+/* Intestazione della tabella */
+th {
+    background-color: #17a2b8; /* Colore azzurro */
+    color: white;
+    padding: 10px;
+    text-align: center;
+    font-weight: bold;
     font-size: 14px;
 }
 
-th {
-    background-color: #00796B;
-    color: white;
+/* Celle della tabella */
+td {
+    padding: 10px;
+    text-align: center;
+    font-size: 13px;
+    border-bottom: 1px solid #ddd;
 }
 
+/* Riga alternata */
 tr:nth-child(even) {
-    background-color: #f9f9f9;
+    background-color: #f2f9ff;
 }
 
+/* Hover effetto */
 tr:hover {
-    background-color: #e0f2f1;
+    background-color: #e8f4fc;
+    transition: background-color 0.3s;
 }
 
-td form {
-    display: inline;
+/* Pulsanti di Azione */
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
 }
 
 button {
-    padding: 8px 16px;
-    font-size: 14px;
-    background-color: #00ACC1;
-    color: white;
+    padding: 6px 10px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    font-size: 12px;
+    font-weight: bold;
     transition: transform 0.2s ease;
 }
 
-button:hover {
-    transform: scale(1.05);
+button.modifica {
+    background-color: #009000;
 }
 
-button:active {
-    transform: scale(0.95);
+button.modifica:hover {
+    background-color: #0a5c0a;
+    color: #fff;
 }
 
-form input[type="hidden"] {
-    display: none;
+button.elimina {
+    background-color: #e61919;
 }
 
-/* Stile per la gestione del messaggio quando non ci sono utenti */
-td[colspan="11"] {
-    text-align: center;
-    font-size: 16px;
-    color: #B0BEC5;
-    padding: 20px;
+button.elimina:hover {
+    background-color: #b81414;
+    color: #fff;
 }
 
-/* Miglioramenti per la disposizione e la visibilità */
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
+i.fas.fa-user {
+    font-size: 2em;
+    color: #FFBF00;
 }
-
+/* Colore per lo stato */
+td.stato {
+    font-weight: bold;
+    color: #007bff;
+}

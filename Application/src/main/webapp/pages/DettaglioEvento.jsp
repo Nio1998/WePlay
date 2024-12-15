@@ -33,7 +33,7 @@
         </div>
         <% } %>
 
-   
+<div class= main-content>  
 <div class="event-details">
     <% 
         Evento evento = null;
@@ -235,7 +235,7 @@
         }
     %>
 </div>
-
+</div>
 	<jsp:include page="footer.jsp" />
 
 			<!--  
