@@ -7,18 +7,48 @@
     <title>Gestione Utenti</title>
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/CSS/ListaUtenti.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script type="text/javascript">
+        // Mostra un alert con il messaggio passato
+        function showAlert(message) {
+            alert(message);
+        }
+    </script>
 </head>
 <body>
     <div class="container">
         <a href="${pageContext.request.contextPath}/pages/adminDashboard.jsp">
-        	<button class="dashboard-button">Torna alla Dashboard</button>
-    	</a>
+            <button class="dashboard-button">Torna alla Dashboard</button>
+        </a>
         <h1>Lista Utenti</h1>
+
+        <%-- Verifica se c'è un messaggio di successo e mostra l'alert --%>
+        <%
+            String successMessage = (String) request.getAttribute("successMessage");
+            if (successMessage != null) {
+        %>
+            <script type="text/javascript">
+                showAlert("<%= successMessage %>");
+            </script>
+        <%
+            }
+        %>
+        
+        <%-- Verifica se c'è un messaggio di fallimento e mostra l'alert --%>
+        <%
+            String failureMessage = (String) request.getAttribute("failureMessage");
+            if (failureMessage != null) {
+        %>
+            <script type="text/javascript">
+                showAlert("<%= failureMessage %>");
+            </script>
+        <%
+            }
+        %>
 
         <table>
             <thead>
                 <tr>
-                	<th></th>
+                    <th></th>
                     <th>ID</th>
                     <th>Username</th>
                     <th>Nome</th>
@@ -40,7 +70,7 @@
                         for (UtenteBean utente : utenti) {
                 %>
                 <tr>
-                	<td><i class="fas fa-user"></i></td>
+                    <td><i class="fas fa-user"></i></td>
                     <td><%= id++ %></td>
                     <td><%= utente.getUsername() %></td>
                     <td><%= utente.getNome() %></td>
@@ -57,7 +87,7 @@
                                 <input type="hidden" name="username" value="<%= utente.getUsername() %>">
                                 <button type="submit" class="modifica">Timeout</button>
                             </form>
-                            <form action="EliminaUtente" method="post" style="display:inline;">
+                            <form action="ApplicaBan" method="post" style="display:inline;">
                                 <input type="hidden" name="username" value="<%= utente.getUsername() %>">
                                 <button type="submit" class="elimina">Ban</button>
                             </form>
@@ -69,13 +99,11 @@
                     } else { 
                 %>
                 <tr>
-                    <td colspan="11">Nessun utente trovato.</td>
+                    <td colspan="12">Nessun utente trovato.</td>
                 </tr>
                 <% } %>
             </tbody>
         </table>
     </div>
 </body>
-
-
 </html>

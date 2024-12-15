@@ -336,7 +336,9 @@ public class UtenteDAO {
              PreparedStatement stmt = conn.prepareStatement(query)) {
         	
             stmt.setBoolean(1, isTimeout);
+            if(dataOraFineTimeout != null) {
             stmt.setTimestamp(2, Timestamp.valueOf(dataOraFineTimeout));
+            } else stmt.setNull(2,java.sql.Types.TIMESTAMP);
             stmt.setString(3, username);
 
             int rowsUpdated = stmt.executeUpdate();
