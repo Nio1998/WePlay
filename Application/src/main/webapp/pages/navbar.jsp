@@ -31,7 +31,7 @@
         <a href="${pageContext.request.contextPath}/pages/paginaEventi.jsp?sport=tennis">
             <ion-icon name="tennisball-outline"></ion-icon>
         </a>
-        <a href="esploraEventi.jsp">
+        <a href="${pageContext.request.contextPath}/pages/esploraEventi.jsp">
             <h1>ESPLORA EVENTI</h1>
         </a>
         <a href="${pageContext.request.contextPath}/pages/paginaEventi.jsp?sport=basket">
