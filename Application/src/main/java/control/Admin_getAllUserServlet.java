@@ -70,4 +70,9 @@ public class Admin_getAllUserServlet extends HttpServlet {
             response.sendRedirect(request.getContextPath() + ERROR_PAGE);
         }
     }
+    
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        doGet(request, response);
+    }
 }
