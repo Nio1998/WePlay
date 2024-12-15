@@ -35,16 +35,18 @@
     <div class="profilo-section">
     
     			
-	<div class="messaggi <% if (request.getAttribute("errore") != null) { %>errore<% } else if (request.getAttribute("successo") != null) { %>successo<% } %>" id="messaggio">
-    <span>
-        <% if (request.getAttribute("errore") != null) { %>
-            <%= request.getAttribute("errore") %>
-        <% } else if (request.getAttribute("successo") != null) { %>
-            <%= request.getAttribute("successo") %>
-        <% } %>
-    </span>
-    <button class="close-btn" onclick="chiudiMessaggio()">×</button>
-</div>
+			<% if (request.getAttribute("errore") != null || request.getAttribute("successo") != null) { %>
+		    <div class="messaggi <% if (request.getAttribute("errore") != null) { %>errore<% } else if (request.getAttribute("successo") != null) { %>successo<% } %>" id="messaggio">
+		        <span>
+		            <% if (request.getAttribute("errore") != null) { %>
+		                <%= request.getAttribute("errore") %>
+		            <% } else if (request.getAttribute("successo") != null) { %>
+		                <%= request.getAttribute("successo") %>
+		            <% } %>
+		        </span>
+		        <button class="close-btn" onclick="chiudiMessaggio()">×</button>
+		    </div>
+		<% } %>
 		
         <h1>Ciao, <%= utente.getUsername() %>!</h1>
         <div class="profilo-box">

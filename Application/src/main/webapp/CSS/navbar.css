@@ -4,41 +4,89 @@ body, html {
     padding: 0;
 }
 
+.navbar-container {
+    width: 100%;
+    background-color: #00ACC1;
+}
 
 .navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 10px 20px;
-    background-color: #00ACC1;
 }
 
 .navbar a {
     text-decoration: none;
-    color: #000;
+    color: #000; /* Nero statico per i link */
     margin: 0 30px;
 }
 
-.navbar h1 {
-    color: #000;
-    text-align: center;
+.navbar h1 a {
+    text-decoration: none;
+    color: #000 !important; /* Forziamo il colore nero staticamente */
+}
+
+.navbar h1 a:hover {
+    color: #fff !important; /* Cambia a bianco solo all'hover */
 }
 
 .navbar img {
     height: 80px;
-    margin: 0px;
+    margin: 0;
 }
 
 .navbar a ion-icon {
     font-size: 50px;
     margin-right: 5px;
-    color: #000;
+    color: #000; /* Nero statico per le icone */
 }
 
 .navbar a:hover ion-icon {
-    color: #fff;
+    color: #fff; /* Bianco all'hover per le icone */
 }
 
-.navbar a, .navbar h1:hover {
-    color: #fff;
+.navbar a:hover {
+    color: #fff; /* Bianco all'hover per i link */
+}
+
+/* Stile per la sezione dropdown */
+.user-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    cursor: pointer;
+    color: black;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: white;
+    border: 1px solid #ccc;
+    min-width: 160px;
+    z-index: 1000;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.dropdown-menu a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-menu a:hover {
+    background-color: #f1f1f1;
+}
+
+.dropdown:hover .dropdown-menu {
+    display: block;
 }

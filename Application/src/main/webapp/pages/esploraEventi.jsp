@@ -5,8 +5,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Eventi Sportivi</title>
-    <!-- Collegamento ai file CSS -->
+    <title>Esplora Eventi</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/CSS/paginaEventi.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/CSS/card.css">
 </head>
@@ -18,6 +17,7 @@
     <div class="page-title">
         <h1>Esplora tutti gli eventi</h1>
     </div>
+
 	<div class= "main-content">
     <!-- Contenitore degli eventi -->
     <div class="event-container">
@@ -40,11 +40,24 @@
             <div class="card-footer">
                 <p>Posti disponibili: <%= evento.getMassimo_di_partecipanti() %></p>
                 <a href="${pageContext.request.contextPath}/pages/DettaglioEvento.jsp?id=<%= evento.getID() %>" class="details-link">Dettagli</a>
+
             </div>
+            <% } %>
         </div>
-        <% } %>
+
+        <!-- Navigazione tra le pagine -->
+        <div class="pagination">
+            <% 
+                int totalPages = (int) Math.ceil((double) eventi.size() / eventiPerPagina);
+
+                for (int i = 1; i <= totalPages; i++) { 
+                    String linkClass = (i == currentPage) ? "active-page" : "";
+            %>
+            <a href="${pageContext.request.contextPath}/pages/esploraEventi.jsp?page=<%= i %>" class="<%= linkClass %>"><%= i %></a>
+            <% } %>
+        </div>
     </div>
-</div>
+
     <!-- Footer incluso -->
     <jsp:include page="/pages/footer.jsp" />
 </body>
