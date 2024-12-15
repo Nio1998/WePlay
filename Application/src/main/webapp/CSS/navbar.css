@@ -4,41 +4,48 @@ body, html {
     padding: 0;
 }
 
+.navbar-container {
+    width: 100%;
+    background-color: #00ACC1;
+}
 
 .navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 10px 20px;
-    background-color: #00ACC1;
 }
 
 .navbar a {
     text-decoration: none;
-    color: #000;
+    color: #000; /* Nero statico per i link */
     margin: 0 30px;
 }
 
-.navbar h1 {
-    color: #000;
-    text-align: center;
+.navbar h1 a {
+    text-decoration: none;
+    color: #000 !important; /* Forziamo il colore nero staticamente */
+}
+
+.navbar h1 a:hover {
+    color: #fff !important; /* Cambia a bianco solo all'hover */
 }
 
 .navbar img {
     height: 80px;
-    margin: 0px;
+    margin: 0;
 }
 
 .navbar a ion-icon {
     font-size: 50px;
     margin-right: 5px;
-    color: #000;
+    color: #000; /* Nero statico per le icone */
 }
 
 .navbar a:hover ion-icon {
-    color: #fff;
+    color: #fff; /* Bianco all'hover per le icone */
 }
 
-.navbar a, .navbar h1:hover {
-    color: #fff;
+.navbar a:hover {
+    color: #fff; /* Bianco all'hover per i link */
 }
