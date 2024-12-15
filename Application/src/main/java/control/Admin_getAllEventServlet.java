@@ -36,9 +36,9 @@ public class Admin_getAllEventServlet extends HttpServlet {
 
         String username = (String) session.getAttribute("username");
 
-        // Verifica se l'utente è un amministratore
+        // Verifica se l'utente ï¿½ un amministratore
         if (!utenteService.is_admin(username)) {
-            response.sendError(HttpServletResponse.SC_FORBIDDEN, "Accesso negato. Solo gli amministratori possono visualizzare questa pagina.");
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Accesso negato. Solo gli amministratori possono visualizzare questa pagina.");
             return;
         }
 
@@ -56,7 +56,7 @@ public class Admin_getAllEventServlet extends HttpServlet {
             request.setAttribute("eventi", eventi);
 
             // Pagina verso cui effettuare il forward
-            final String redirectedPage = "admin_events.jsp";
+            final String redirectedPage = "/pages/ListaEventi.jsp";
 
             // Forward della richiesta alla pagina JSP
             request.getRequestDispatcher(redirectedPage).forward(request, response);

@@ -51,13 +51,13 @@ public class ProfiloServlet extends HttpServlet {
             // Se richiesto, visualizza il profilo di un altro utente (admin)
             username = request.getParameter("username");
             if (username == null || username.isEmpty()) {
-                response.sendRedirect("/pages/errore.jsp"); // Se manca lo username, mostra errore
+                response.sendRedirect("/pages/ErrorPage.jsp"); // Se manca lo username, mostra errore
                 return;
             }
 
             // Verifica che l'utente loggato sia un admin
             if (!utenteService.is_admin(currentUsername)) {
-                response.sendRedirect("/pages/errore.jsp"); // Accesso non autorizzato
+                response.sendRedirect("/pages/ErrorPage.jsp"); // Accesso non autorizzato
                 return;
             }
 
@@ -66,7 +66,7 @@ public class ProfiloServlet extends HttpServlet {
             if (utente == null) {
             	
             	
-                response.sendRedirect("/pages/errore.jsp"); // Gestione errore (utente non trovato)
+                response.sendRedirect("/pages/ErrorPage.jsp"); // Gestione errore (utente non trovato)
                 return;
             }
             request.setAttribute("utente", utente);
@@ -87,7 +87,7 @@ public class ProfiloServlet extends HttpServlet {
             // Ottieni i dati dell'utente loggato
             UtenteBean utente = utenteService.findbyUsername(username);
             if (utente == null) {
-                response.sendRedirect("errore.jsp"); // Gestione errore (utente non trovato)
+//                response.sendRedirect("/pagesErrorPage.jsp"); // Gestione errore (utente non trovato)
                 return;
             }
             request.setAttribute("utente", utente);

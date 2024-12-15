@@ -74,9 +74,9 @@ public class RegisterServlet extends HttpServlet {
         String nome = request.getParameter("nome");
         String cognome = request.getParameter("cognome");
         String email = request.getParameter("email");
-        String pw = request.getParameter("pw");
-        String data_nascita = request.getParameter("data_di_nascita");
-        String redirectedPage = "/register.jsp";
+        String pw = utenteService.hash(request.getParameter("password"));
+        String data_nascita = request.getParameter("data_nascita");
+        String redirectedPage = "/pages/register.jsp";
         boolean registrationSuccess = false; 
         registrationSuccess=utenteService.registra_utente(username, nome, cognome, email, pw, data_nascita);
         if (registrationSuccess) {
@@ -84,7 +84,7 @@ public class RegisterServlet extends HttpServlet {
         } else {
             request.getSession().setAttribute("message", "Registrazione fallita. Riprova.");
             request.getSession().setAttribute("register-error", true);
-            redirectedPage = "/register.jsp";
+            redirectedPage = "/pages/register.jsp";
         }
         
         response.sendRedirect(request.getContextPath() + redirectedPage);

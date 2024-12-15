@@ -14,38 +14,46 @@ import model.prenotazione.PrenotazioneDAO;
 import model.prenotazione.PrenotazioneService;
 import model.utente.UtenteBean;
 
-@WebServlet("/CancellaPrenotazione")
+@WebServlet("/CancellaPrenotazioneServlet")
 public class CancellaPrenotazioneServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    	
+    	
         HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("utente") == null) {
+        if (session == null || session.getAttribute("username") == null) {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Utente non autenticato.");
             return;
         }
 
-        UtenteBean utente = (UtenteBean) session.getAttribute("utente");
-        String username = utente.getUsername();
+        String username = (String) session.getAttribute("username");  // Effettua il cast a String
         
         String eventoIDStr = request.getParameter("eventoID");
         if (eventoIDStr == null || eventoIDStr.isEmpty()) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "ID evento mancante o non valido.");
             return;
         }
+        
+       
 
         try {
             int eventoID = Integer.parseInt(eventoIDStr);
             PrenotazioneService prenotazioneService = new PrenotazioneService();
             boolean success = prenotazioneService.cancella_prenotazione(username, eventoID);
+            
+            
 
             if (success) {
-                response.setStatus(HttpServletResponse.SC_OK);
-                response.getWriter().write("Prenotazione cancellata con successo.");
+                request.setAttribute("successo", "Prenotazione cancellata con successo.");
             } else {
-                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Errore nella cancellazione della prenotazione.");
+                request.setAttribute("errore", "Errore nella cancellazione della prenotazione.");
             }
+
+            // Forward to the event detail page with the event ID
+            request.getRequestDispatcher("/pages/DettaglioEvento.jsp?id=" + eventoID).forward(request, response);
+            
         } catch (NumberFormatException e) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "ID evento non valido.");
         }

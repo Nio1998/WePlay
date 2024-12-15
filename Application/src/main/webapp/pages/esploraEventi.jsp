@@ -21,24 +21,29 @@
     <div class="main-content">
         <!-- Contenitore degli eventi -->
         <div class="event-container">
-            <%
+            <% 
+                String sport = request.getParameter("sport");
                 EventoDao eventoDao = new EventoDao();
                 List<Evento> eventi = eventoDao.getAll();
 
-                // Paginazione
-                int eventiPerPagina = 15; // 3 colonne x 5 righe
-                int currentPage;
-                try {
-                    currentPage = request.getParameter("page") != null ? Integer.parseInt(request.getParameter("page")) : 1;
-                } catch (NumberFormatException e) {
-                    currentPage = 1;
-                }
+                // Numero di eventi per pagina
+                int eventiPerPagina = 10;
 
-                int start = (currentPage - 1) * eventiPerPagina;
-                int end = Math.min(start + eventiPerPagina, eventi.size());
+                // Pagina attuale (recuperata dal parametro della richiesta)
+                String pageParam = request.getParameter("page");
+                int currentPage = (pageParam != null) ? Integer.parseInt(pageParam) : 1;
 
-                for (int i = start; i < end; i++) {
-                    Evento evento = eventi.get(i);
+                // Calcolo totale delle pagine
+                int totalPages = (int) Math.ceil((double) eventi.size() / eventiPerPagina);
+
+                // Determinare l'indice di partenza e fine per gli eventi della pagina corrente
+                int startIndex = (currentPage - 1) * eventiPerPagina;
+                int endIndex = Math.min(startIndex + eventiPerPagina, eventi.size());
+
+                // Estrarre solo gli eventi della pagina corrente
+                List<Evento> eventiPaginati = eventi.subList(startIndex, endIndex);
+
+                for (Evento evento : eventiPaginati) {
             %>
             <div class="card event-card">
                 <div class="card-header">
@@ -51,7 +56,7 @@
                 </div>
                 <div class="card-footer">
                     <p>Posti disponibili: <%= evento.getMassimo_di_partecipanti() %></p>
-                    <a href="${pageContext.request.contextPath}/pages/dettagliEvento.jsp?id=<%= evento.getID() %>" class="details-link">Dettagli</a>
+                    <a href="${pageContext.request.contextPath}/pages/DettaglioEvento.jsp?id=<%= evento.getID() %>" class="details-link">Dettagli</a>
                 </div>
             </div>
             <% } %>
@@ -60,8 +65,6 @@
         <!-- Navigazione tra le pagine -->
         <div class="pagination">
             <% 
-                int totalPages = (int) Math.ceil((double) eventi.size() / eventiPerPagina);
-
                 for (int i = 1; i <= totalPages; i++) { 
                     String linkClass = (i == currentPage) ? "active-page" : "";
             %>

@@ -65,7 +65,8 @@ CREATE TABLE segnalazione (
     ID_evento INT,
     FOREIGN KEY (utente_segnalato) REFERENCES Utente(username),
     FOREIGN KEY (utente_segnalante) REFERENCES Utente(username),
-    FOREIGN KEY (ID_evento) REFERENCES Evento(ID) 
+    FOREIGN KEY (ID_evento) REFERENCES Evento(ID),
+     UNIQUE(utente_segnalato, utente_segnalante, ID_evento)
 );
 
 -- Tabella per le valutazioni
@@ -77,6 +78,7 @@ CREATE TABLE valutazione (
     ID_evento INT,
     FOREIGN KEY (utente_valutato) REFERENCES Utente(username),
     FOREIGN KEY (utente_valutante) REFERENCES Utente(username),
-    FOREIGN KEY (ID_evento) REFERENCES Evento(ID) 
+    FOREIGN KEY (ID_evento) REFERENCES Evento(ID),
+     UNIQUE(utente_valutato, utente_valutante, ID_evento)
 );
 

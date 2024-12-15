@@ -2,7 +2,6 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%@ page import="java.util.*, model.utente.UtenteBean" %>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/CSS/navbar.css">
-
 <%
     // Verifica se l'utente è loggato
     Boolean isLoggedIn = (Boolean) session.getAttribute("isLoggedIn");
@@ -12,6 +11,7 @@
     UtenteBean utente = (UtenteBean) session.getAttribute("utente");
     boolean isAdmin = (utente != null) ? utente.isAdmin() : false;
 %>
+
 
 <head>
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
@@ -31,7 +31,7 @@
         <a href="${pageContext.request.contextPath}/pages/paginaEventi.jsp?sport=tennis">
             <ion-icon name="tennisball-outline"></ion-icon>
         </a>
-        <a href="esploraEventi.jsp">
+        <a href="${pageContext.request.contextPath}/pages/esploraEventi.jsp">
             <h1>ESPLORA EVENTI</h1>
         </a>
         <a href="${pageContext.request.contextPath}/pages/paginaEventi.jsp?sport=basket">
@@ -46,7 +46,7 @@
             <a href="#" id="accountLink" class="user-icon">
                 <ion-icon name="person-circle-outline"></ion-icon>
             </a>
-            <% if (isLoggedIn) { %>
+            <% if (isLoggedIn && !isAdmin) { %>
                 <!-- Menu a tendina per utente loggato -->
                 <div class="dropdown-menu">
                     <a href="${pageContext.request.contextPath}/pages/profilo.jsp">Profilo</a>
@@ -54,7 +54,11 @@
                     <a href="${pageContext.request.contextPath}/pages/eventiCreati.jsp">Eventi creati</a>
                     <a href="${pageContext.request.contextPath}/logout">Logout</a>
                 </div>
-            <% } else { %>
+            <% } else if(isLoggedIn && isAdmin){ %>
+            <script>
+                    document.getElementById("accountLink").setAttribute("href", "${pageContext.request.contextPath}/pages/adminDashboard.jsp");
+                </script>
+            <% } else{ %>
                 <!-- Se non loggato, reindirizza alla pagina di login -->
                 <script>
                     document.getElementById("accountLink").setAttribute("href", "${pageContext.request.contextPath}/pages/login.jsp");

@@ -1,12 +1,15 @@
-/* DettagliEvento.css */
-
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
+body, html {
+    font-family: 'Roboto', sans-serif;
     margin: 0;
     padding: 0;
+    display: flex;
+    flex-direction: column; /* Imposta una disposizione verticale */
+    min-height: 100vh; /* Assicura che il body occupi almeno l'altezza dello schermo */
+    background-color: #f4f4f4;
 }
-
+.main-content{
+	flex: 1;
+}
 .event-details {
     max-width: 800px;
     margin: 20px auto;
@@ -117,18 +120,4 @@ button {
     background-color: #ff0000;
     color: #fff;
     cursor: pointer;
-}
-
-.flash-message {
-    display: none;
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: #ffcc00;
-    color: #000;
-    padding: 10px 20px;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    font-size: 14px;
 }

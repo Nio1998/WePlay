@@ -1,0 +1,99 @@
+/* Stile generico */
+body, html {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
+}
+
+/* Stile del titolo della pagina */
+.page-title {
+    text-align: center;
+    margin-top: 30px;
+}
+
+.page-title h1 {
+    font-size: 36px;
+    color: #00796B;
+}
+
+/* Contenitore del modulo */
+.crea-evento-box {
+    background-color: #FFFFFF;
+    border: 2px solid #00ACC1;
+    border-radius: 10px;
+    padding: 30px;
+    max-width: 500px;
+    margin: 30px auto;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #B0BEC5;
+    border-radius: 5px;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    border-color: #00ACC1;
+    box-shadow: 0 0 5px rgba(0, 172, 193, 0.5);
+}
+
+textarea {
+    height: 100px;
+    resize: none;
+}
+
+/* Pulsanti */
+.buttons {
+    display: flex;
+    justify-content: space-between;
+}
+
+button {
+    padding: 10px;
+    font-size: 16px;
+    background-color: #00ACC1;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    width: 48%;
+}
+
+button:hover {
+    transform: scale(1.05);
+}
+
+button:active {
+    transform: scale(0.95);
+}
+
+button[type="reset"] {
+    background-color: #FF7043;
+}
+
+button[type="reset"]:hover {
+    background-color: #FF5722;
+}
+
+button[type="reset"]:active {
+    background-color: #E64A19;
+}
