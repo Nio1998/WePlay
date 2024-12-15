@@ -50,7 +50,7 @@ public class LoginServlet extends HttpServlet {
                         request.getSession().setAttribute("isLoggedIn", true);
                         request.getSession().setAttribute("username", u.getUsername());
 
-                        redirectedPage = "/WePlay/pages/registrationSuccess.jsp"; // Modifica per destinazione principale
+                        redirectedPage = "/WePlay/pages/index.jsp"; // Modifica per destinazione principale
                         break;
                     }
                 }
