@@ -26,6 +26,7 @@ public class ConDB {
 
     /** Pool di connessioni libere al database. */
     private static List<Connection> freeDbConnections;
+    public static final String dbPassword = "12345";
 
     /**
      * Blocco statico di inizializzazione.
@@ -53,7 +54,7 @@ public class ConDB {
         String port = "3306";
         String db = "WePlay";
         String username = "root";
-        String password = "12345";
+        String password = dbPassword;
 
         // Crea una connessione al database con i parametri specificati
         newConnection = DriverManager.getConnection("jdbc:mysql://" + ip + ":" + port + "/" + db, username, password);
