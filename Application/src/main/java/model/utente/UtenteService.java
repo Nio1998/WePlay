@@ -277,7 +277,7 @@ public class UtenteService {
     
     public void assegnaBan(String username) {
         if (username == null || username.isEmpty()) {
-            throw new IllegalArgumentException("Username non pu� essere nullo o vuoto.");
+            throw new IllegalArgumentException("Username non può essere nullo o vuoto.");
         }
 
         try {

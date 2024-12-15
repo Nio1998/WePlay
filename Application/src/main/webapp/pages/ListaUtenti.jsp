@@ -57,7 +57,7 @@
                                 <input type="hidden" name="username" value="<%= utente.getUsername() %>">
                                 <button type="submit" class="modifica">Timeout</button>
                             </form>
-                            <form action="EliminaUtente" method="post" style="display:inline;">
+                            <form action="${pageContext.request.contextPath}/ApplicaBan" method="post" style="display:inline;">
                                 <input type="hidden" name="username" value="<%= utente.getUsername() %>">
                                 <button type="submit" class="elimina">Ban</button>
                             </form>

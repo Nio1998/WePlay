@@ -13,7 +13,7 @@ import model.utente.UtenteService;
 @WebServlet("/ApplicaBan")
 public class BanServlet extends HttpServlet {
 
-	private static final String ERROR_PAGE = "errore.jsp";
+	private static final String ERROR_PAGE = "/pages/ErrorPage.jsp";
 	
     private static final long serialVersionUID = 1L;
     private UtenteService utenteService;
