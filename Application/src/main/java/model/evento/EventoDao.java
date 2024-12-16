@@ -48,6 +48,8 @@ public class EventoDao {
 	            query.setString(10, e.getStato());
 	            query.executeUpdate();
 	        }
+	        
+	        e.setID(nextId);
 	    } finally {
 	        if (conn != null) {
 	            ConDB.releaseConnection(conn);

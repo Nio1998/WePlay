@@ -43,6 +43,13 @@ public class LoginServlet extends HttpServlet {
                 if (username.equals(u.getUsername())) {
                     String pw = checkPsw(password);
                     if (pw.equals(u.getPw())) {
+                    	if (u.isTimeout() && u.getDataOraFineTimeout() == null) {
+                    		// Bannato
+                    		request.setAttribute("errore", "Impossibile effetuare login, motivazione: Sei bannato!");
+                    		request.getRequestDispatcher("/pages/index.jsp").forward(request, response);
+                    		return;
+                    	}
+                    	
                         control = true;
 
                         // Salva informazioni nella sessione

@@ -19,6 +19,7 @@ import model.Segnalazione.SegnalazioneService;
 @WebServlet("/ProfiloServlet")
 public class ProfiloServlet extends HttpServlet {
 
+
     private static final long serialVersionUID = 1L;
 
     private UtenteService utenteService = new UtenteService();
@@ -28,7 +29,7 @@ public class ProfiloServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(false);
 
-        // Controlla se l'utente è autenticato
+        // Controlla se l'utente ï¿½ autenticato
         if (session == null || session.getAttribute("username") == null) {
             response.sendRedirect(request.getContextPath() + "/pages/login.jsp");
             return;
@@ -58,7 +59,7 @@ public class ProfiloServlet extends HttpServlet {
             int reputazione = utenteService.calcola_reputazione(username);
             request.setAttribute("reputazione", reputazione);
 
-            // Se chi visualizza è admin, recupera le segnalazioni
+            // Se chi visualizza ï¿½ admin, recupera le segnalazioni
             if (isAdmin) {
                 List<Segnalazione> segnalazioni = segnalazioneService.listaSegnalazioni(username);
                 request.setAttribute("segnalazioni", segnalazioni);
@@ -77,4 +78,5 @@ public class ProfiloServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doGet(request, response);
     }
+
 }

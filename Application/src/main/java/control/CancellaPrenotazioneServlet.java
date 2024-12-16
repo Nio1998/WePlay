@@ -2,6 +2,8 @@ package control;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -10,9 +12,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import model.evento.EventoService;
 import model.prenotazione.PrenotazioneDAO;
 import model.prenotazione.PrenotazioneService;
 import model.utente.UtenteBean;
+import model.prenotazione.*;
 
 @WebServlet("/CancellaPrenotazioneServlet")
 public class CancellaPrenotazioneServlet extends HttpServlet {
@@ -43,12 +47,38 @@ public class CancellaPrenotazioneServlet extends HttpServlet {
             return;
         }
         
+        
+        
        
 
         try {
             int eventoID = Integer.parseInt(eventoIDStr);
             PrenotazioneService prenotazioneService = new PrenotazioneService();
+            EventoService eventoService = new EventoService();
             boolean success = prenotazioneService.cancella_prenotazione(username, eventoID);
+            
+            if(prenotazioneService.calcola_partecipanti(eventoID) == (eventoService.dettagli_evento(eventoID).getMassimo_di_partecipanti-1)) {
+            	
+            	PrenotazioneDAO prenotazioneDAO = new PrenotazioneDAO();
+            	List<PrenotazioneBean> prenotazioni = prenotazioneDAO.findPrenotazioniByEvento(eventoID);
+
+                // Trova l'utente con la posizione in coda minima
+                Optional<String> utenteConMinimaPosizione = prenotazioni.stream()
+                    .filter(p -> p.getEventoID() == eventoID) // Filtra solo per l'evento specifico
+                    .min((p1, p2) -> Integer.compare(p1.getPosizioneInCoda(), p2.getPosizioneInCoda())) // Trova il minimo
+                    .map(PrenotazioneBean::getUtenteUsername); // Mappa l'utente associato
+
+                // Stampa il risultato
+                if (utenteConMinimaPosizione.isPresent()) {
+                    System.out.println("Utente con posizione minima: " + utenteConMinimaPosizione.get());
+                    prenotazioneService.prenota_evento(username, eventoID);
+                } else {
+                    System.out.println("Nessun utente trovato per l'evento " + eventoID);
+                }
+              	
+            }
+            	
+            
             
             
 

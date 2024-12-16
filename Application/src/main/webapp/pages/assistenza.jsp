@@ -22,7 +22,7 @@
     <div class="page-title">
         <h1>Modulo di Assistenza</h1>
     </div>
-
+	<div class="main-content">
     <!-- Contenitore del modulo -->
     <div class="crea-evento-box">
         <form id="assistenzaForm" action="${pageContext.request.contextPath}/GestioneAssistenza" method="post">
@@ -44,7 +44,7 @@
             </div>
         </form>
     </div>
-
+	</div>
     <!-- Footer incluso -->
     <jsp:include page="/pages/footer.jsp" />
 </body>

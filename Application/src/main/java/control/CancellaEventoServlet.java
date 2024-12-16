@@ -24,7 +24,7 @@ public class CancellaEventoServlet extends HttpServlet {
         String utenteLoggato = (String) session.getAttribute("username");
 
         if (utenteLoggato == null) {
-            response.sendRedirect("login.jsp");
+            response.sendRedirect(request.getContextPath() + "/pages/login.jsp");
             return;
         }
 
@@ -36,7 +36,7 @@ public class CancellaEventoServlet extends HttpServlet {
 
             if (!eventoService.esiste_evento(eventoId)) {
                 request.setAttribute("errore", "L'evento specificato non esiste.");
-                request.getRequestDispatcher("ErrorPage.jsp").forward(request, response);
+                request.getRequestDispatcher("/pages/ErrorPage.jsp").forward(request, response);
                 return;
             }
 
@@ -45,7 +45,7 @@ public class CancellaEventoServlet extends HttpServlet {
 
             if (!(isAdmin || isOrganizzatore)) {
                 request.setAttribute("errore", "Non sei autorizzato a eliminare questo evento.");
-                request.getRequestDispatcher("ErrorPage.jsp").forward(request, response);
+                request.getRequestDispatcher("/pages/ErrorPage.jsp").forward(request, response);
                 return;
             }
             
@@ -53,9 +53,11 @@ public class CancellaEventoServlet extends HttpServlet {
             if(eventoService.statoEvento(eventoId) != "non iniziato") {
             	request.setAttribute("errore", "Puoi eliminare un evento solo se non è ancora iniziato");
             	if (isOrganizzatore) {
-                	request.getRequestDispatcher("EventiCreati.jsp").forward(request, response);
+                	request.getRequestDispatcher("/EsploraEventiServlet?attributo=organizzatore").forward(request, response);
+                	return;
                 } else if (isAdmin) {
-                	request.getRequestDispatcher("ListaEventi.jsp").forward(request, response);
+                	request.getRequestDispatcher("/pages/ListaEventi.jsp").forward(request, response);
+                	return;
                 }
             } else {
             	eliminato = eventoService.elimina_evento(eventoId);
@@ -63,23 +65,27 @@ public class CancellaEventoServlet extends HttpServlet {
 
             if (eliminato) {
                 if (isOrganizzatore) {
-                    response.sendRedirect("EventiCreati.jsp");
+                    response.sendRedirect(request.getContextPath() + "/pages/EsploraEventiServlet?attributo=organizzatore");
+                    return;
                 } else if (isAdmin) {
-                    response.sendRedirect("ListaEventi.jsp");
+                    response.sendRedirect(request.getContextPath() + "/pages/ListaEventi.jsp");
+                    return;
                 }
             } else {
-                request.setAttribute("errore", "Errore durante l'eliminazione dell'evento. Riprova piÃ¹ tardi.");
+                request.setAttribute("errore", "Errore durante l'eliminazione dell'evento. Riprova più tardi.");
                 
                 if (isOrganizzatore) {
-                	request.getRequestDispatcher("dettaglioEventoCreato.jsp").forward(request, response);
+                	request.getRequestDispatcher("/pages/DettaglioEvento.jsp").forward(request, response);
+                	return;
                 } else if (isAdmin) {
-                	request.getRequestDispatcher("ListaEventi.jsp").forward(request, response);
+                	request.getRequestDispatcher("/pages/ListaEventi.jsp").forward(request, response);
+                	return;
                 }
                 
             }
         } catch (NumberFormatException e) {
             request.setAttribute("errore", "ID evento non valido.");
-            request.getRequestDispatcher("errore.jsp").forward(request, response);
+            request.getRequestDispatcher("/pages/ErrorPage.jsp").forward(request, response);
         }
     }
 }

@@ -35,10 +35,12 @@
                 <span><%= request.getAttribute("errore") %></span>
                 <button class="close-btn" onclick="chiudiMessaggio()">×</button>
             </div>
+
         <% } else if (request.getAttribute("successo") != null) { %>
             <div class="messaggi successo" id="messaggio">
                 <span><%= request.getAttribute("successo") %></span>
                 <button class="close-btn" onclick="chiudiMessaggio()">×</button>
+
             </div>
         <% } %>
 

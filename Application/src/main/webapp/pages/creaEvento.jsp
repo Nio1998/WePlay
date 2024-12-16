@@ -35,6 +35,9 @@
             <div class="crea-evento-box">
                 <form action="${pageContext.request.contextPath}/CreaEventoServlet" method="post" id="creaEventoForm" onsubmit="return validateCreaEventoForm(event)">
 					<div class="form-group">
+						<input type="text" name="titolo" id="titolo" placeholder="Titolo Evento" required>
+					</div>
+					<div class="form-group">
 						<input type="text" name="sport" id="sport" placeholder="Sport"
 							required readonly>
 						<div id="sportOptions" class="dropdown-options"

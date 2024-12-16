@@ -9,6 +9,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import model.prenotazione.*;
 
 import model.evento.EventoService;
 
@@ -26,6 +29,10 @@ public class CreaEventoServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
+        	// Recuperiamo l'username dalla sessione
+            HttpSession session = request.getSession();
+            String username = (String) session.getAttribute("username");
+        	
             // Recupera i parametri dalla richiesta
             String titolo = request.getParameter("titolo");
             String dataInizio = request.getParameter("data");
@@ -40,32 +47,46 @@ public class CreaEventoServlet extends HttpServlet {
             LocalDate dataInizioLocal = LocalDate.parse(dataInizio);
             LocalTime oraInizioLocal = LocalTime.parse(oraInizio);
             
-            // Gestione del parametro maxPartecipanti
+         // Gestione del parametro maxPartecipanti
             int maxPartecipanti = 0;
             try {
-                maxPartecipanti = Integer.parseInt(request.getParameter("massimo_di_partecipanti"));
+                maxPartecipanti = Integer.parseInt(request.getParameter("partecipanti")); // Nome corretto
             } catch (NumberFormatException e) {
-            	System.out.println("Cazzo 1");
-                // Se il valore non è valido, gestisci l'errore
+                System.out.println("Errore: parametro partecipanti non valido");
                 request.setAttribute("errore", "Il numero massimo di partecipanti non è valido.");
                 request.getRequestDispatcher("/pages/ErrorPage.jsp").forward(request, response);
                 return;
             }
 
             // Chiamata al servizio per creare l'evento
-            boolean eventoSuccesso = eventoService.crea_evento(titolo, dataInizioLocal, oraInizioLocal, indirizzo, citta, maxPartecipanti, sport, stato, prezzo);
+            int eventoID = eventoService.crea_evento(titolo, dataInizioLocal, oraInizioLocal, indirizzo, citta, maxPartecipanti, sport, stato, prezzo);
 
             // Gestione del risultato
-            if (eventoSuccesso) {
+            if (eventoID!=-1) {
                 request.setAttribute("successo", "Evento creato con successo.");
-                request.getRequestDispatcher("/pages/index.jsp").forward(request, response);
             } else {
-            	System.out.println("Cazzo 3");
                 request.setAttribute("errore", "Errore nella creazione dell'evento.");
                 request.getRequestDispatcher("/pages/ErrorPage.jsp").forward(request, response);
             }
+            
+            PrenotazioneService prenotazioneService = new PrenotazioneService();
+            boolean prenotazioneSuccesso = prenotazioneService.prenota_evento(username, eventoID);
+            
+         // Gestione del risultato
+            if (!prenotazioneSuccesso) {
+                request.setAttribute("successo", "Prenotato con successo.");
+            } else {
+                request.setAttribute("errore", "Errore nella prenotazione.");
+                request.getRequestDispatcher("/pages/ErrorPage.jsp").forward(request, response);
+            }
+            
+            PrenotazioneDAO prenotazioneDao = new PrenotazioneDAO();
+            PrenotazioneBean prenotazione = prenotazioneDao.get(username, eventoID);
+            prenotazione.setStato("organizzatore");
+            prenotazioneDao.update(prenotazione);
+            
+            response.sendRedirect(request.getContextPath() + "/pages/EsploraEventiServlet?attributo=organizzatore");
         } catch (Exception e) {
-        	System.out.println("Cazzo 4");
             // Gestione di altri errori generali
             e.printStackTrace();
             request.setAttribute("errore", "Si è verificato un errore imprevisto.");
