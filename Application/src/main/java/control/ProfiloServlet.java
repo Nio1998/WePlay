@@ -19,99 +19,64 @@ import model.Segnalazione.SegnalazioneService;
 @WebServlet("/ProfiloServlet")
 public class ProfiloServlet extends HttpServlet {
 
-	private static final long serialVersionUID = 1L;
 
-	private UtenteService utenteService = new UtenteService();
-	private SegnalazioneService segnalazioneService = new SegnalazioneService();
+    private static final long serialVersionUID = 1L;
 
-	@Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		// Recupera la sessione esistente (se non esiste, ritorna null)
-		HttpSession session = request.getSession(false);
+    private UtenteService utenteService = new UtenteService();
+    private SegnalazioneService segnalazioneService = new SegnalazioneService();
 
-		// Controlla se l'utente è autenticato
-		if (session == null || session.getAttribute("username") == null) {
-			response.sendRedirect(request.getContextPath() + "/pages/login.jsp"); // Redirect alla pagina di login se
-																					// non loggato
-			return;
-		}
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession(false);
 
-		// Recupera lo username dalla sessione (utente loggato)
-		String currentUsername = (String) session.getAttribute("username");
+        // Controlla se l'utente � autenticato
+        if (session == null || session.getAttribute("username") == null) {
+            response.sendRedirect(request.getContextPath() + "/pages/login.jsp");
+            return;
+        }
 
-		// Controlla il parametro `putSegnalazioni`
-		boolean putSegnalazioni = "true".equalsIgnoreCase(request.getParameter("putSegnalazioni"));
+        String currentUsername = (String) session.getAttribute("username");
+        boolean isAdmin = utenteService.is_admin(currentUsername);
 
-		String username; // Username del profilo da visualizzare
-		if (putSegnalazioni) {
-			// Se richiesto, visualizza il profilo di un altro utente (admin)
-			username = request.getParameter("username");
-			if (username == null || username.isEmpty()) {
-				response.sendRedirect(request.getContextPath() + "/pages/ErrorPage.jsp"); // Se manca lo username,
-																							// mostra errore
-				return;
-			}
+        // Recupera l'username del profilo da visualizzare
+        String username = request.getParameter("username");
+        if (username == null || username.isEmpty()) {
+            response.sendRedirect(request.getContextPath() + "/pages/ErrorPage.jsp");
+            return;
+        }
 
-			// Verifica che l'utente loggato sia un admin
-			if (!utenteService.is_admin(currentUsername)) {
-				response.sendRedirect(request.getContextPath() + "/pages/ErrorPage.jsp"); // Accesso non autorizzato
-				return;
-			}
+        // Recupera l'utente selezionato
+        UtenteBean utente = utenteService.findbyUsername(username);
+        if (utente == null) {
+            response.sendRedirect(request.getContextPath() + "/pages/ErrorPage.jsp");
+            return;
+        }
 
-			// Ottieni l'utente da visualizzare
-			UtenteBean utente = utenteService.findbyUsername(username);
-			if (utente == null) {
-				response.sendRedirect(request.getContextPath() + "/pages/ErrorPage.jsp"); // Gestione errore (utente non
-																							// trovato)
-				return;
-			}
-			request.setAttribute("utente", utente);
+        request.setAttribute("utente", utente);
 
-			// Calcola le segnalazioni associate all'utente
-			try {
-				List<Segnalazione> segnalazioni = segnalazioneService.listaSegnalazioni(username);
-				request.setAttribute("segnalazioni", segnalazioni);
-			} catch (Exception e) {
-				e.printStackTrace();
-				request.setAttribute("errore", "Errore nel recupero delle segnalazioni.");
-			}
+        try {
+            // Calcola la reputazione dell'utente visualizzato
+            int reputazione = utenteService.calcola_reputazione(username);
+            request.setAttribute("reputazione", reputazione);
 
-		} else {
-			// Visualizza il profilo dell'utente loggato
-			username = currentUsername;
+            // Se chi visualizza � admin, recupera le segnalazioni
+            if (isAdmin) {
+                List<Segnalazione> segnalazioni = segnalazioneService.listaSegnalazioni(username);
+                request.setAttribute("segnalazioni", segnalazioni);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.setAttribute("errore", "Errore nel recupero dei dati del profilo.");
+        }
 
-			// Ottieni i dati dell'utente loggato
-			UtenteBean utente = utenteService.findbyUsername(username);
-			if (utente == null) {
-				response.sendRedirect(request.getContextPath() + "/pages/ErrorPage.jsp"); // Gestione errore (utente non
-																							// trovato)
-				return;
-			}
-			request.setAttribute("utente", utente);
+        // Forward alla JSP
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/pages/profilo.jsp");
+        dispatcher.forward(request, response);
+    }
 
-			// Calcoliamo la reputazione per mandarla alla jsp come intero
-			int reputazione = utenteService.calcola_reputazione(username);
-			request.setAttribute("reputazione", reputazione);
-		}
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        doGet(request, response);
+    }
 
-		// Mostra eventuali messaggi e rimuovili dalla sessione
-		if (session != null) {
-			request.setAttribute("errore", session.getAttribute("errore"));
-			request.setAttribute("successo", session.getAttribute("successo"));
-
-			session.removeAttribute("errore");
-			session.removeAttribute("successo");
-		}
-
-		// Forward alla JSP del profilo
-		RequestDispatcher dispatcher = request.getRequestDispatcher("/pages/profilo.jsp");
-		dispatcher.forward(request, response);
-	}
-
-	@Override
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		doGet(request, response);
-	}
 }

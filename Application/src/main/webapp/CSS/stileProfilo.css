@@ -235,3 +235,48 @@ button:active {
     color: #000000; /* Testo nero */
 }
 
+/* Stile per le tabelle */
+.tabella-segnalazioni {
+    width: 80%; /* Larghezza della tabella */
+    margin: 20px auto; /* Centra la tabella */
+    border-collapse: collapse; /* Elimina lo spazio tra i bordi */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.tabella-segnalazioni th,
+.tabella-segnalazioni td {
+    padding: 10px;
+    border: 1px solid #B0BEC5; /* Bordi grigi */
+    text-align: center;
+}
+
+.tabella-segnalazioni th {
+    background-color: #00ACC1; /* Colore azzurro */
+    color: white; /* Testo bianco */
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.tabella-segnalazioni tr:nth-child(even) {
+    background-color: #E0F7FA; /* Colore alternato per righe pari */
+}
+
+.tabella-segnalazioni tr:nth-child(odd) {
+    background-color: #FFFFFF; /* Colore bianco per righe dispari */
+}
+
+.tabella-segnalazioni tr:hover {
+    background-color: #B2DFDB; /* Hover su righe */
+    transition: background-color 0.3s ease;
+}
+
+/* Titolo tabella */
+.titolo-segnalazioni {
+    font-size: 28px;
+    color: #00796B;
+    margin-bottom: 20px;
+    text-align: center;
+    font-weight: bold;
+}
+
+
