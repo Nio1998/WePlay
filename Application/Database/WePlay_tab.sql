@@ -48,7 +48,7 @@ CREATE TABLE prenotazione (
 																				   -- in coda quando l'evento è pieno e l'utente prenotandosi viene aggiunto in una lista d'attesa aspettando un partecipante che cancella la sua prenotazione
                                                                                    -- attiva quando l'utente è un partecipante effettivo di un evento
                                                                                    -- organizzatore quando l'utente ha creato quell'evento
-    posizione_in_coda INT DEFAULT NULL,
+    posizione_in_coda INT DEFAULT 0,
     PRIMARY KEY (username_utente, ID_evento),
     FOREIGN KEY (username_utente) REFERENCES Utente(username),
     FOREIGN KEY (ID_evento) REFERENCES Evento(ID) ON DELETE CASCADE

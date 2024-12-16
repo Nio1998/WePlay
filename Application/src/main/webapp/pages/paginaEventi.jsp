@@ -122,7 +122,7 @@
                 for (int i = 1; i <= totalPages; i++) { 
                     String linkClass = (i == currentPage) ? "active-page" : "";
             %>
-            <a href="${pageContext.request.contextPath}/pages/esploraEventi.jsp?page=<%= i %>&dataInizio=<%= dataInizio %>&dataFine=<%= dataFine %>&oraInizio=<%= oraInizio %>&prezzoMin=<%= prezzoMin %>&prezzoMax=<%= prezzoMax %>&sport=<%= sport %>&titolo=<%= titolo %>&indirizzo=<%= indirizzo %>&massimoPartecipanti=<%= massimoPartecipanti %>&citta=<%= citta %>&stato=<%= stato %>" class="<%= linkClass %>"><%= i %></a>
+            <a href="${pageContext.request.contextPath}/pages/esploraEventi.jsp?page=<%= i %><%= dataInizio != null ? "&dataInizio="+dataInizio : "" %><%= dataFine != null ? "&dataFine="+dataFine : "" %><%= oraInizio != null ? "&oraInizio="+oraInizio : "" %><%= prezzoMin != null ? "&prezzoMin="+prezzoMin : "" %><%= prezzoMax != null ? "&prezzoMax="+ prezzoMax : "" %><%= sport != null ? "&sport="+sport : "" %><%= titolo != null ? "&titolo="+titolo : "" %><%= indirizzo != null ? "&indirizzo="+indirizzo : "" %><%= massimoPartecipanti != null ? "&massimoPartecipanti="+massimoPartecipanti : "" %><%= citta != null ? "&citta="+citta : "" %><%= stato != null ? "&stato="+stato : "" %>" class="<%= linkClass %>"><%= i %></a>
             <% } %>
         </div>
     </div>

@@ -60,30 +60,30 @@ VALUES
 -- Prenotazioni per eventi non iniziati
 INSERT INTO prenotazione (username_utente, ID_evento, stato, posizione_in_coda) 
 VALUES
-('mario_rossi', 1, 'in accettazione', NULL),
-('luigi_bianchi', 2, 'attiva', NULL),
+('mario_rossi', 1, 'in accettazione', 0),
+('luigi_bianchi', 2, 'attiva', 0),
 ('giulia_verdi', 3, 'in coda', 1),
 ('anna_neri', 4, 'in coda', 2),
-('paolo_toscano', 5, 'attiva', NULL),
-('alessandro_benetti', 6, 'attiva', NULL),
-('maria_costa', 7, 'attiva', NULL),
-('giovanni_roma', 8, 'in accettazione', NULL),
-('marco_ferrari', 9, 'attiva', NULL),
-('francesca_longo', 10, 'in accettazione', NULL);
+('paolo_toscano', 5, 'attiva', 0),
+('alessandro_benetti', 6, 'attiva', 0),
+('maria_costa', 7, 'attiva', 0),
+('giovanni_roma', 8, 'in accettazione', 0),
+('marco_ferrari', 9, 'attiva', 0),
+('francesca_longo', 10, 'in accettazione', 0);
 
 -- Prenotazioni per eventi iniziati
 INSERT INTO prenotazione (username_utente, ID_evento, stato, posizione_in_coda)
 VALUES
-('luca_rossi', 11, 'attiva', NULL),
-('sara_netti', 12, 'attiva', NULL),
-('stefano_mancini', 13, 'attiva', NULL);
+('luca_rossi', 11, 'attiva', 0),
+('sara_netti', 12, 'attiva', 0),
+('stefano_mancini', 13, 'attiva', 0);
 
 -- Prenotazioni per eventi finiti
 INSERT INTO prenotazione (username_utente, ID_evento, stato, posizione_in_coda)
 VALUES
-('mario_rossi', 14, 'attiva', NULL),
-('luigi_bianchi', 15, 'attiva', NULL),
-('giulia_verdi', 16, 'attiva', NULL);
+('mario_rossi', 14, 'attiva', 0),
+('luigi_bianchi', 15, 'attiva', 0),
+('giulia_verdi', 16, 'attiva', 0);
 
 
 

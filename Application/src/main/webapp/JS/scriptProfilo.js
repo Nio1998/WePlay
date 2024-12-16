@@ -20,6 +20,8 @@ function attivaModifica() {
     // Memorizza i valori originali prima di abilitare la modifica
     originalEmail = emailField.value;
     originalPassword = passwordField.value;
+    
+    passwordField.value = "";
 
     // Rimuovi la classe "input-disabilitato" e aggiungi "input-modificabile" per entrambi i campi
     emailField.classList.remove("input-disabilitato");
@@ -53,6 +55,7 @@ function attivaModifica() {
         passwordInput.name = "password";
         form.appendChild(passwordInput);
     }
+    
     passwordInput.value = originalPassword; // Imposta il valore originale
 
     // Modifica la visibilità dei pulsanti
@@ -73,7 +76,7 @@ function annullaModifica(emailOriginale) {
     passwordField.classList.remove("input-modificabile");
     passwordField.classList.add("input-disabilitato");
     passwordField.setAttribute("readonly", "readonly");
-    passwordField.value = "******";
+    passwordField.value = "********";
 
     document.getElementById("modificaDati").style.display = "block";
     document.getElementById("modificaButtons").style.display = "none";

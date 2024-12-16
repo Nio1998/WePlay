@@ -53,7 +53,7 @@
             </div>
             <div class="campo-profilo">
                 <span>Password:</span>
-                <input id="password" name="password" type="password" value="********" readonly class="input-disabilitato" />
+                <input id="password" name="password" type="password" placeholder="&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;" value="********" readonly class="input-disabilitato" />
             </div>
             <div class="campo-profilo">
                 <span>Nome:</span>
