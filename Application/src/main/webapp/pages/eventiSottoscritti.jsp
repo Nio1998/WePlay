@@ -64,7 +64,12 @@
                 </div>
                 <div class="card-footer">
                     <p>Posti disponibili: <%= evento.getMassimo_di_partecipanti() %></p>
-                    <a href="${pageContext.request.contextPath}/pages/DettaglioEvento.jsp?id=<%= evento.getID() %>" class="details-link">Dettagli</a>
+                    <!-- Form che invia la richiesta alla servlet -->
+		            <form action="${pageContext.request.contextPath}/DettagliEvento" method="POST">
+		                <input type="hidden" name="eventoId" value="<%= evento.getID() %>">
+		                <input type="hidden" name="attributo" value="sottoscritti">
+		                <button type="submit" class="details-link">Dettagli</button>
+		            </form>
                 </div>
             </div>
             <% 

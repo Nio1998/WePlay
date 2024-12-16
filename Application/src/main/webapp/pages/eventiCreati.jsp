@@ -26,7 +26,7 @@
                 Object eventiObj = request.getAttribute("eventi");
                 List<Evento> eventi = null;
                 
-
+				
                 if (eventiObj instanceof List<?>) {
                     eventi = (List<Evento>) eventiObj;
                 }
@@ -68,7 +68,13 @@
                     System.out.println("citta " + evento.getCitta());
                     System.out.println("id " + evento.getID());
                     %>
-                    <a href="${pageContext.request.contextPath}/pages/DettaglioEvento.jsp?id=<%= evento.getID() %>" class="details-link">Dettagli</a>
+                    
+                    <form action="${pageContext.request.contextPath}/DettagliEvento" method="POST">
+		                <input type="hidden" name="eventoId" value="<%= evento.getID() %>">
+		                <input type="hidden" name="attributo" value="organizzatore">
+		                <button type="submit" class="details-link">Dettagli</button>
+		            </form>
+		            
                 </div>
             </div>
             <% 
