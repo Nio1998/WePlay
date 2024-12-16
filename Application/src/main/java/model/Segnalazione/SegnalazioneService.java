@@ -14,7 +14,7 @@ public class SegnalazioneService {
 	    }
 	 
     // Metodo per inviare una segnalazione
-    public void inviaSegnalazione(String usernameSegnalante, String usernameSegnalato, int eventoId, String motivo, String stato) throws SQLException {
+    public boolean inviaSegnalazione(String usernameSegnalante, String usernameSegnalato, int eventoId, String motivo) throws SQLException {
         // Verifica preliminare dei parametri
         if (usernameSegnalante == null || usernameSegnalante.isEmpty()) {
             throw new IllegalArgumentException("Il nome utente del segnalante non può essere nullo o vuoto.");
@@ -29,16 +29,18 @@ public class SegnalazioneService {
         }
 
         // Creazione della segnalazione
-        Segnalazione segnalazione = new Segnalazione(usernameSegnalante, usernameSegnalato, stato, motivo, eventoId);
+        Segnalazione segnalazione = new Segnalazione(motivo, "in attesa", usernameSegnalato, usernameSegnalante , eventoId);
 
         // Simula il salvataggio della segnalazione (ad esempio, in un database o log)
         segnalazioneDao.save(segnalazione);
 
-        System.out.println("Segnalazione inviata correttamente: " + segnalazione);
+      
+        return true;
     
  }
     public boolean segnalazioneGiaEffettuata(String usernameSegnalante, String usernameSegnalato, int eventoId ) throws SQLException {
 			if(segnalazioneDao.get(usernameSegnalante, usernameSegnalato, eventoId)) {
+				
     	return true;
 			}
 			return false;
