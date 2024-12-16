@@ -2,7 +2,9 @@ package model.evento;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -221,22 +223,36 @@ public class EventoService {
         
         // Filtriamo gli eventi per includere solo quelli dove lo stato è "organizzatore"
         for (Evento evento : eventi) {
-        	 System.out.println("pre org");
+        	 System.out.println("pre org" + evento);
         	
+        	 String organizzatore = prenotazioneDAO.findOrganizzatoreByEventoID(evento.getID());
+        	 System.out.println("Organizzatore " + organizzatore + "username + " + username);        	 
         	 
-        	 
-        	 if(prenotazioneDAO.findOrganizzatoreByEventoID(evento.getID()).equals(username)) {
-        		 System.out.println("succ org" + evento);
+        	 if(organizzatore != null && organizzatore.equals(username)) {
+        		 System.out.println("succ org12" + evento);
+        		 System.out.println("succ org12");
                  eventiCreati.add(evento);
         		 
         	 }
         	
+        	 System.out.println("mid org" + evento);
         }
         
         // Restituiamo la lista di eventi creati
         System.out.println("fine org");
         return eventiCreati;
     }
+    
+    
+    public long getDurataMillis(Evento evento) {
+        // Prende data_inizio e ora_inizio dall'EventoBean
+        LocalDateTime eventoDateTime = LocalDateTime.of(evento.getData_inizio(), evento.getOra_inizio());
+        // Converte in millisecondi dal 1 gennaio 1970
+        return eventoDateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+    }
+    
+    
+    
 
 
 

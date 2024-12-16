@@ -86,10 +86,9 @@ public class PrenotazioneService {
         return false;
     }
     
-
-  
     
+    public String findOrganizzatoreByEventoID(int eventoID) {
+    	return prenotazioneDAO.findOrganizzatoreByEventoID(eventoID);
+    }
     
-    
-   
 }
