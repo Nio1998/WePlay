@@ -61,7 +61,7 @@ public class EsploraEventiServlet extends HttpServlet {
                     redirectedPage = "/pages/eventiSottoscritti.jsp";  // Per gli eventi sottoscritti
                     break;
                     
-                case "attivi":
+                case "esploraEventi":
                     // Carichiamo gli eventi attivi (non finiti)
                     List<Evento> eventiFiltrati = (List<Evento>) eventoService.filtra_eventi(dataInizio, dataFine, sport, citta, "", "", "", "", "", "", "");
                     if (eventiFiltrati == null) {
@@ -74,13 +74,18 @@ public class EsploraEventiServlet extends HttpServlet {
                     
                 case "organizzatore":
                 	
+                	System.out.println("enter1dfd");
                     //Carichiamo gli eventi creati dall'utente
                     Collection<Evento> eventiCreati = eventoService.visualizza_eventi_creati(username);
+                    System.out.println("after");
+                    
                     if (eventiCreati == null) {
+                    	System.out.println("err1");
                         response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Errore nel recupero degli eventi creati.");
                         return;
                     }
                     request.setAttribute("eventi", eventiCreati);
+                    System.out.println("success");
                     redirectedPage = "/pages/eventiCreati.jsp";  // Per gli eventi creati dall'organizzatore
                     break;
                     

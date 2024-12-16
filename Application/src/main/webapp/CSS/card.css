@@ -57,3 +57,43 @@
 .details-link:hover {
     color: #0056b3;
 }
+
+
+
+/* Stile del bottone all'interno del form */
+form .details-link {
+    display: inline-block;
+    margin-top: 10px;
+    text-decoration: none;
+    color: #007bff;
+    font-weight: bold;
+    background-color: transparent; /* Imposta lo sfondo trasparente */
+    border: none !important; /* Rimuove il bordo con maggiore forza */
+    padding: 10px 20px; /* Aggiungi un po' di spazio interno */
+    cursor: pointer; /* Cambia il cursore al passaggio del mouse */
+    outline: none; /* Rimuove il bordo della selezione */
+    box-shadow: none !important; /* Rimuove eventuali ombre o bordi */
+    transition: color 0.3s, background-color 0.3s;
+}
+
+
+
+.details-link {
+    display: inline-block;
+    margin-top: 10px;
+    text-decoration: none;
+    color: #007bff;
+    font-weight: bold;
+    transition: color 0.3s;
+    border: none;  /* Rimuove il bordo */
+    background: none;  /* Rimuove il background predefinito del bottone */
+    padding: 0;  /* Rimuove il padding predefinito */
+    cursor: pointer;  /* Cambia il cursore per farlo sembrare cliccabile */
+}
+
+.details-link:hover {
+    color: #0056b3;  /* Colore del testo al passaggio del mouse */
+    text-decoration: none;  /* Rimuove eventuali decorazioni (sottolineature) */
+}
+
+
