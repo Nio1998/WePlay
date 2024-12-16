@@ -1,18 +1,20 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="javax.servlet.http.*, javax.servlet.*, java.io.*, model.*" %>
-<%@ page import="model.utente.UtenteBean" %>
-<%
-    // Recupera l'utente dalla session o dalla request
-    UtenteBean utente = (UtenteBean) request.getAttribute("utente");
+<%@ page import="model.utente.UtenteBean"%>
+<%@ page import="model.Segnalazione.Segnalazione"%>
+<%@ page import="java.util.List"%>
 
-    if (utente == null) {
-    	System.out.println("error Profilo");
+<%
+    // Recupera i dati dalla request
+    UtenteBean utenteVisualizzato = (UtenteBean) request.getAttribute("utente"); // Utente di cui si sta visualizzando il profilo
+    UtenteBean utenteLoggato = (UtenteBean) session.getAttribute("utente"); // Utente che sta visualizzando la pagina
+    Integer reputazione = (Integer) request.getAttribute("reputazione");
+    List<Segnalazione> segnalazioni = (List<Segnalazione>) request.getAttribute("segnalazioni");
+
+    // Controlla se l'utente loggato è presente nella sessione
+    if (utenteLoggato == null) {
         response.sendRedirect("login.jsp");
         return;
     }
-
-    // Reputazione per scegliere la faccina
-    int reputazione = (Integer) request.getAttribute("reputazione");
 %>
 <!DOCTYPE html>
 <html lang="it">
@@ -24,56 +26,47 @@
     <script src="JS/scriptProfilo.js" defer></script>
 </head>
 <body>
-
     <jsp:include page="navbar.jsp" />
-    
+
     <div class="profilo-section">
-    
-    			
-			<% if (request.getAttribute("errore") != null || request.getAttribute("successo") != null) { %>
-		    <div class="messaggi <% if (request.getAttribute("errore") != null) { %>errore<% } else if (request.getAttribute("successo") != null) { %>successo<% } %>" id="messaggio">
-		        <span>
-		            <% if (request.getAttribute("errore") != null) { %>
-		                <%= request.getAttribute("errore") %>
-		            <% } else if (request.getAttribute("successo") != null) { %>
-		                <%= request.getAttribute("successo") %>
-		            <% } %>
-		        </span>
-		        <button class="close-btn" onclick="chiudiMessaggio()">×</button>
-		    </div>
-		<% } %>
-		
-        <h1>Ciao, <%= utente.getUsername() %>!</h1>
+        <!-- Messaggi di errore/successo -->
+        <% if (request.getAttribute("errore") != null) { %>
+            <div class="messaggi errore" id="messaggio">
+                <span><%= request.getAttribute("errore") %></span>
+                <button class="close-btn" onclick="chiudiMessaggio()">×</button>
+            </div>
+        <% } else if (request.getAttribute("successo") != null) { %>
+            <div class="messaggi successo" id="messaggio">
+                <span><%= request.getAttribute("successo") %></span>
+                <button class="close-btn" onclick="chiudiMessaggio()">×</button>
+            </div>
+        <% } %>
+
+        <!-- Saluto solo se l'utente visualizzato è lo stesso dell'utente loggato e non è admin -->
+        <% if (!utenteLoggato.isAdmin() && utenteLoggato.getUsername().equals(utenteVisualizzato.getUsername())) { %>
+            <h1>Ciao, <%= utenteVisualizzato.getUsername() %>!</h1>
+        <% } %>
+        
         <div class="profilo-box">
-            <h2>I tuoi dati</h2>
-            <hr>
+            <h2>Dati Profilo</h2>
             <div class="campo-profilo">
-                <span>Username:</span>
-                <span><%= utente.getUsername() %></span>
+                <span>Username:</span> <span><%= utenteVisualizzato.getUsername() %></span>
             </div>
             <div class="campo-profilo">
-                <span>Password:</span>
-                <input id="password" name="password" type="password" value="********" readonly class="input-disabilitato" />
+                <span>Nome:</span> <span><%= utenteVisualizzato.getNome() %></span>
             </div>
             <div class="campo-profilo">
-                <span>Nome:</span>
-                <span><%= utente.getNome() %></span>
+                <span>Cognome:</span> <span><%= utenteVisualizzato.getCognome() %></span>
             </div>
             <div class="campo-profilo">
-                <span>Cognome:</span>
-                <span><%= utente.getCognome() %></span>
+                <span>Email:</span> <span><%= utenteVisualizzato.getEmail() %></span>
             </div>
             <div class="campo-profilo">
-                <span>Email:</span>
-                <input id="email" name="email" type="text" value="<%= utente.getEmail() %>" readonly class="input-disabilitato" />
+                <span>Data di nascita:</span> <span><%= utenteVisualizzato.getDataDiNascita() %></span>
             </div>
-            <div class="campo-profilo">
-                <span>Data di nascita:</span>
-                <span><%= utente.getDataDiNascita() %></span>
-            </div>
-            <div class="campo-profilo">
-                <span>Reputazione:</span>
-                <span>
+            <% if (reputazione != null) { %>
+                <div class="campo-profilo">
+                    <span>Reputazione:</span>
                     <% if (reputazione == -1) { %>
                         <img src="IMG/emojiNegativa.svg" alt="Reputazione Negativa">
                     <% } else if (reputazione == 0) { %>
@@ -81,23 +74,38 @@
                     <% } else { %>
                         <img src="IMG/emojiPositiva.svg" alt="Reputazione Positiva">
                     <% } %>
-                </span>
-            </div>
-
-            <!-- Form che invia alla servlet -->
-            <form action="ModificaDatiServlet" method="POST" id="modificaDatiForm">
-			    <div class="azioni">
-			        <button type="button" id="modificaDati" onclick="attivaModifica()">Modifica Dati</button>
-			        <div id="modificaButtons" style="display: none;">
-			            <button type="button" id="annulla" onclick="annullaModifica('<%= utente.getEmail() %>')">Annulla</button>
-			            <button type="button" id="salva" onclick="salvaDati()">Salva</button>
-			        </div>
-			    </div>
-			</form>
-
-
+                </div>
+            <% } %>
         </div>
+
+        <!-- Segnalazioni (solo per admin) -->
+        <% if (segnalazioni != null && utenteLoggato.isAdmin()) { %>
+            <h2 class="titolo-segnalazioni">Segnalazioni</h2>
+            <% if (!segnalazioni.isEmpty()) { %>
+                <table class="tabella-segnalazioni">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Motivo</th>
+                            <th>Utente Segnalante</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% for (Segnalazione s : segnalazioni) { %>
+                            <tr>
+                                <td><%= s.getId() %></td>
+                                <td><%= s.getMotivazione() %></td>
+                                <td><%= s.getUtenteSegnalante() %></td>
+                            </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            <% } else { %>
+                <p style="text-align: center; color: #00796B;">Non ci sono segnalazioni per questo utente.</p>
+            <% } %>
+        <% } %>
     </div>
+
     <%@ include file="footer.jsp" %>
 </body>
 </html>

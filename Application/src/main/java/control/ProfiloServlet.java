@@ -26,80 +26,49 @@ public class ProfiloServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Recupera la sessione esistente (se non esiste, ritorna null)
         HttpSession session = request.getSession(false);
 
-        // Controlla se l'utente Ã¨ autenticato
+        // Controlla se l'utente è autenticato
         if (session == null || session.getAttribute("username") == null) {
-            response.sendRedirect(request.getContextPath() + "/pages/login.jsp"); // Redirect alla pagina di login se non loggato
+            response.sendRedirect(request.getContextPath() + "/pages/login.jsp");
             return;
         }
 
-        // Recupera lo username dalla sessione (utente loggato)
         String currentUsername = (String) session.getAttribute("username");
+        boolean isAdmin = utenteService.is_admin(currentUsername);
 
-        // Controlla il parametro `putSegnalazioni`
-        boolean putSegnalazioni = "true".equalsIgnoreCase(request.getParameter("putSegnalazioni"));
+        // Recupera l'username del profilo da visualizzare
+        String username = request.getParameter("username");
+        if (username == null || username.isEmpty()) {
+            response.sendRedirect(request.getContextPath() + "/pages/ErrorPage.jsp");
+            return;
+        }
 
-        String username; // Username del profilo da visualizzare
-        if (putSegnalazioni) {
-            // Se richiesto, visualizza il profilo di un altro utente (admin)
-            username = request.getParameter("username");
-            if (username == null || username.isEmpty()) {
-                response.sendRedirect(request.getContextPath() + "/pages/ErrorPage.jsp"); // Se manca lo username, mostra errore
-                return;
-            }
+        // Recupera l'utente selezionato
+        UtenteBean utente = utenteService.findbyUsername(username);
+        if (utente == null) {
+            response.sendRedirect(request.getContextPath() + "/pages/ErrorPage.jsp");
+            return;
+        }
 
-            // Verifica che l'utente loggato sia un admin
-            if (!utenteService.is_admin(currentUsername)) {
-                response.sendRedirect(request.getContextPath() + "/pages/ErrorPage.jsp"); // Accesso non autorizzato
-                return;
-            }
+        request.setAttribute("utente", utente);
 
-            // Ottieni l'utente da visualizzare
-            UtenteBean utente = utenteService.findbyUsername(username);
-            if (utente == null) {
-                response.sendRedirect(request.getContextPath() + "/pages/ErrorPage.jsp"); // Gestione errore (utente non trovato)
-                return;
-            }
-            request.setAttribute("utente", utente);
-
-            // Calcola le segnalazioni associate all'utente
-            try {
-                List<Segnalazione> segnalazioni = segnalazioneService.listaSegnalazioni(username);
-                request.setAttribute("segnalazioni", segnalazioni);
-            } catch (Exception e) {
-                e.printStackTrace();
-                request.setAttribute("errore", "Errore nel recupero delle segnalazioni.");
-            }
-
-        } else {
-            // Visualizza il profilo dell'utente loggato
-            username = currentUsername;
-
-            // Ottieni i dati dell'utente loggato
-            UtenteBean utente = utenteService.findbyUsername(username);
-            if (utente == null) {
-                response.sendRedirect(request.getContextPath() + "/pages/ErrorPage.jsp"); // Gestione errore (utente non trovato)
-                return;
-            }
-            request.setAttribute("utente", utente);
-
-            // Calcoliamo la reputazione per mandarla alla jsp come intero
+        try {
+            // Calcola la reputazione dell'utente visualizzato
             int reputazione = utenteService.calcola_reputazione(username);
             request.setAttribute("reputazione", reputazione);
-        }
-        
-     // Mostra eventuali messaggi e rimuovili dalla sessione
-        if (session != null) {
-            request.setAttribute("errore", session.getAttribute("errore"));
-            request.setAttribute("successo", session.getAttribute("successo"));
 
-            session.removeAttribute("errore");
-            session.removeAttribute("successo");
+            // Se chi visualizza è admin, recupera le segnalazioni
+            if (isAdmin) {
+                List<Segnalazione> segnalazioni = segnalazioneService.listaSegnalazioni(username);
+                request.setAttribute("segnalazioni", segnalazioni);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.setAttribute("errore", "Errore nel recupero dei dati del profilo.");
         }
 
-        // Forward alla JSP del profilo
+        // Forward alla JSP
         RequestDispatcher dispatcher = request.getRequestDispatcher("/pages/profilo.jsp");
         dispatcher.forward(request, response);
     }
