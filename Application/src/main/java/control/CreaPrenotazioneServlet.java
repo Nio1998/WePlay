@@ -32,6 +32,15 @@ public class CreaPrenotazioneServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     	System.out.println("enter 0");
     	
+    	String attributo = (String) request.getParameter("attributo");
+    	if (attributo == null || attributo.isEmpty()) {
+        	request.setAttribute("errore", "Attributo non valido.");
+            request.getRequestDispatcher("/pages/ErrorPage.jsp").forward(request, response);
+            return;
+        }
+    	
+    	
+    	
     	HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("username") == null) {
         	  
@@ -70,11 +79,12 @@ public class CreaPrenotazioneServlet extends HttpServlet {
             // Prenotazione evento
             boolean prenotazioneSuccesso = prenotazioneService.prenota_evento(username, eventoID);
                         
-
+            System.out.println("enter 1");
             // Se la prenotazione ha successo, controlliamo la lista di attesa
             if (prenotazioneSuccesso) {
             	
                 boolean inAttesa = !eventoService.evento_ha_posti_disponibili(eventoID);
+                System.out.println("enter 2");
                 
                 
                 if (inAttesa) {
@@ -83,7 +93,13 @@ public class CreaPrenotazioneServlet extends HttpServlet {
                     request.setAttribute("successo", "Prenotazione effettuata con successo.");
                 }
                 // Forward alla pagina di dettaglio evento
-                request.getRequestDispatcher("/pages/DettaglioEvento.jsp?id=" + eventoID ).forward(request, response);
+                System.out.println("id crea p" + eventoID);
+                
+                request.setAttribute("eventoId", eventoID);
+                request.setAttribute("attributo", attributo);
+                
+                
+                request.getRequestDispatcher("/DettagliEvento").forward(request, response);
             } else {
                 // Gestione errore in caso di prenotazione fallita
                 request.setAttribute("errore", "Errore nella prenotazione dell'evento.");
