@@ -37,13 +37,29 @@ public class DettagliEventoServlet extends HttpServlet {
         	
         	
         	// Recupera l'attributo "attributo" dalla richiesta
-            String attributo = (String) request.getParameter("attributo");
-
-            // Verifica se l'attributo è non null e se è uguale a "esploraEventi"
-            boolean esploraEventi = attributo != null && attributo.equals("esploraEventi");
+            String attributo = null;
+          
             
-            System.out.println("es: " + esploraEventi);
+            
+         // 1. Controlla se esiste un attributo impostato
+            if (request.getAttribute("attributo") != null) {
+            	
+            	attributo = (String) request.getAttribute("attributo");
+            	
+            } else if (request.getParameter("attributo") != null) {
+            	
+            	attributo = request.getParameter("attributo");
+            	
+            	 if (attributo.isEmpty()) {
+                 	
+                     throw new IllegalArgumentException("Attributo non fornito o non valido.");
+                 }
+	          }
+            
+           
 
+         // Verifica se l'attributo è non null e se è uguale a "esploraEventi"
+            boolean esploraEventi = attributo != null && attributo.equals("esploraEventi");
         	
             // Recupero ID evento
             //String idEventoParam =  null;
@@ -85,8 +101,7 @@ public class DettagliEventoServlet extends HttpServlet {
             
             // Recupera lista partecipanti
             Collection<UtenteBean> partecipanti = prenotazioneService.calcola_partecipanti(idEvento);
-            if(partecipanti==null) System.out.println("NULL");
-            else System.out.println("non NULL");
+           
             
            
             
@@ -98,7 +113,7 @@ public class DettagliEventoServlet extends HttpServlet {
            
             boolean isPartecipante = false;
             boolean isOrganizzatore = false;
-            System.out.println("drago1");
+            
             if (currentUser != null) {
             	
                 isPartecipante = partecipanti.stream().anyMatch(p -> p.getUsername().equals(currentUser));
@@ -111,7 +126,7 @@ public class DettagliEventoServlet extends HttpServlet {
                
             }
             
-            System.out.println("drago");
+           
            
             request.setAttribute("isPartecipante", isPartecipante);
             request.setAttribute("isOrganizzatore", isOrganizzatore);
@@ -142,8 +157,7 @@ public class DettagliEventoServlet extends HttpServlet {
                 isWithin24HoursAfterEnd = currentTimeMillis - eventEndMillis <= 24 * 60 * 60 * 1000;
             }
             
-            System.out.println("terminato: " + isTerminato + ", lessThan24h:" + isLessThan24HoursBeforeStart + "isWithin: " +
-            		isWithin24HoursAfterEnd);
+            
             request.setAttribute("isLessThan24HoursBeforeStart", isLessThan24HoursBeforeStart);
             request.setAttribute("isWithin24HoursAfterEnd", isWithin24HoursAfterEnd);
             
@@ -186,10 +200,12 @@ public class DettagliEventoServlet extends HttpServlet {
                             break;
                         }
                     }
+                    
+                   
                     utentiValutazioni.put(u, esito);
                 }
                 
-                System.out.println("succ va");
+                
                 // Imposta la mappa come attributo della richiesta
                 request.setAttribute("utentiValutazione", utentiValutazioni);
                 
@@ -203,7 +219,7 @@ public class DettagliEventoServlet extends HttpServlet {
             // Forward alla JSP
             request.setAttribute("attributo", attributo);
             request.setAttribute("partecipanti", partecipanti);
-            System.out.println("fine");
+           
             RequestDispatcher dispatcher = request.getRequestDispatcher("/pages/DettaglioEvento.jsp");
             dispatcher.forward(request, response);
 
