@@ -340,10 +340,12 @@ public class UtenteDAO {
             stmt.setTimestamp(2, Timestamp.valueOf(dataOraFineTimeout));
             } else stmt.setNull(2,java.sql.Types.TIMESTAMP);
             stmt.setString(3, username);
-
+            
+            System.out.println(dataOraFineTimeout);
+            
             int rowsUpdated = stmt.executeUpdate();
             
-            // Verifica se ï¿½ stato aggiornato almeno un record
+            // Verifica se lo è stato aggiornato almeno un record
 	        if (rowsUpdated == 0) {
 	            throw new SQLException("Update failed: no rows affected for username = " + username);
 	        }
