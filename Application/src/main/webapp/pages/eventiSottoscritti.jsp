@@ -64,10 +64,6 @@
                 </div>
                 <div class="card-footer">
                     <p>Posti disponibili: <%= evento.getMassimo_di_partecipanti() %></p>
-                    <%
-                    System.out.println("citta " + evento.getCitta());
-                    System.out.println("id " + evento.getID());
-                    %>
                     <a href="${pageContext.request.contextPath}/pages/DettaglioEvento.jsp?id=<%= evento.getID() %>" class="details-link">Dettagli</a>
                 </div>
             </div>
@@ -90,7 +86,7 @@
                     for (int i = 1; i <= totalPages; i++) {
                         String linkClass = (i == currentPage) ? "active-page" : "";
             %>
-            <a href="${pageContext.request.contextPath}/pages/eventiCreati.jsp?page=<%= i %>&eventi=<%= eventi %>" class="<%= linkClass %>"><%= i %></a>
+            <a href="${pageContext.request.contextPath}/pages/eventiSottoscritti.jsp?page=<%= i %>&eventi=<%= eventi %>" class="<%= linkClass %>"><%= i %></a>
 
             <% 
                     }
