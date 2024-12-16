@@ -127,6 +127,7 @@ body {
 }
 
 .text-container p {
+	font-style: italic;
     font-size: 22px;
     margin-bottom: 20px;
 }

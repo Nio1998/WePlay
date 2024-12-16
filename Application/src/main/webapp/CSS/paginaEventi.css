@@ -29,7 +29,7 @@ body {
     justify-content: center; /* Centra i filtri orizzontalmente */
     margin: 0 auto;
     padding: 20px;
-    background-color: #ffffff;
+    background-color: #f8f9fa;
     max-width: 1000px; /* Larghezza massima del contenitore */
 }
 
