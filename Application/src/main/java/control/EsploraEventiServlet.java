@@ -57,6 +57,7 @@ public class EsploraEventiServlet extends HttpServlet {
                         response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Errore nel recupero degli eventi sottoscritti.");
                         return;
                     }
+                    
                     request.setAttribute("eventi", eventiSottoscritti);
                     redirectedPage = "/pages/eventiSottoscritti.jsp";  // Per gli eventi sottoscritti
                     break;
