@@ -63,7 +63,7 @@ public class EsploraEventiServlet extends HttpServlet {
                     
                 case "esploraEventi":
                     // Carichiamo gli eventi attivi (non finiti)
-                    List<Evento> eventiFiltrati = (List<Evento>) eventoService.filtra_eventi(dataInizio, dataFine, sport, citta, "", "", "", "", "", "", "");
+                    List<Evento> eventiFiltrati = (List<Evento>) eventoService.filtra_eventi(dataInizio, dataFine, sport, citta, "", "", "", "", "", "", "non finito");
                     if (eventiFiltrati == null) {
                         response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Errore interno nel recupero degli eventi attivi.");
                         return;
