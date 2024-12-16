@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import model.utente.UtenteBean;
+import model.utente.UtenteDAO;
 import model.utente.UtenteService;
 
 @WebServlet("/RegisterServlet")
@@ -77,7 +79,13 @@ public class RegisterServlet extends HttpServlet {
         	request.setAttribute("successo", "Registrazione effettuata con successo!");
             session.setAttribute("successo", "Registrazione effettuata con successo!");
             session.removeAttribute("errore"); // Rimuovi eventuali errori precedenti
-            session.setAttribute("username", username); // Salva il nuovo utente nella sessione
+
+            // Salva il login nella sessione
+            UtenteBean u = utenteService.findbyUsername(username);
+            session.setAttribute("utente", u);
+            session.setAttribute("isLoggedIn", true);
+            session.setAttribute("username", u.getUsername());
+            
          // Redirect alla servlet del profilo
             response.sendRedirect(request.getContextPath() + "/ProfiloServlet");
         } else {
