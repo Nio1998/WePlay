@@ -6,7 +6,7 @@
     UtenteBean utente = (UtenteBean) request.getAttribute("utente");
 
     if (utente == null) {
-    	System.out.println("error reLogin");
+    	System.out.println("error Profilo");
         response.sendRedirect("login.jsp");
         return;
     }

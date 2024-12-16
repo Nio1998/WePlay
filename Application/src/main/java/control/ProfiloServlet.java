@@ -31,14 +31,9 @@ public class ProfiloServlet extends HttpServlet {
 
         // Controlla se l'utente è autenticato
         if (session == null || session.getAttribute("username") == null) {
-        	
-        	
-        	 
-            response.sendRedirect("/pages/login.jsp"); // Redirect alla pagina di login se non loggato
+            response.sendRedirect(request.getContextPath() + "/pages/login.jsp"); // Redirect alla pagina di login se non loggato
             return;
         }
-        
-       
 
         // Recupera lo username dalla sessione (utente loggato)
         String currentUsername = (String) session.getAttribute("username");
@@ -51,22 +46,20 @@ public class ProfiloServlet extends HttpServlet {
             // Se richiesto, visualizza il profilo di un altro utente (admin)
             username = request.getParameter("username");
             if (username == null || username.isEmpty()) {
-                response.sendRedirect("/pages/ErrorPage.jsp"); // Se manca lo username, mostra errore
+                response.sendRedirect(request.getContextPath() + "/pages/ErrorPage.jsp"); // Se manca lo username, mostra errore
                 return;
             }
 
             // Verifica che l'utente loggato sia un admin
             if (!utenteService.is_admin(currentUsername)) {
-                response.sendRedirect("/pages/ErrorPage.jsp"); // Accesso non autorizzato
+                response.sendRedirect(request.getContextPath() + "/pages/ErrorPage.jsp"); // Accesso non autorizzato
                 return;
             }
 
             // Ottieni l'utente da visualizzare
             UtenteBean utente = utenteService.findbyUsername(username);
             if (utente == null) {
-            	
-            	
-                response.sendRedirect("/pages/ErrorPage.jsp"); // Gestione errore (utente non trovato)
+                response.sendRedirect(request.getContextPath() + "/pages/ErrorPage.jsp"); // Gestione errore (utente non trovato)
                 return;
             }
             request.setAttribute("utente", utente);
@@ -87,28 +80,24 @@ public class ProfiloServlet extends HttpServlet {
             // Ottieni i dati dell'utente loggato
             UtenteBean utente = utenteService.findbyUsername(username);
             if (utente == null) {
-//                response.sendRedirect("/pagesErrorPage.jsp"); // Gestione errore (utente non trovato)
+                response.sendRedirect(request.getContextPath() + "/pages/ErrorPage.jsp"); // Gestione errore (utente non trovato)
                 return;
             }
             request.setAttribute("utente", utente);
-           
+
             // Calcoliamo la reputazione per mandarla alla jsp come intero
             int reputazione = utenteService.calcola_reputazione(username);
             request.setAttribute("reputazione", reputazione);
         }
-	        
-	     // Passa eventuali messaggi di errore o successo alla JSP
-	        String errore = (String) request.getAttribute("errore");
-	        if (errore != null) {
-	            request.setAttribute("errore", errore);
-	        }
-	
-	        String successo = (String) request.getAttribute("successo");
-	        if (successo != null) {
-	            request.setAttribute("successo", successo);
-	        }
-	        
         
+     // Mostra eventuali messaggi e rimuovili dalla sessione
+        if (session != null) {
+            request.setAttribute("errore", session.getAttribute("errore"));
+            request.setAttribute("successo", session.getAttribute("successo"));
+
+            session.removeAttribute("errore");
+            session.removeAttribute("successo");
+        }
 
         // Forward alla JSP del profilo
         RequestDispatcher dispatcher = request.getRequestDispatcher("/pages/profilo.jsp");

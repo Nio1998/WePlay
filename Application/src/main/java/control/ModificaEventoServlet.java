@@ -28,7 +28,7 @@ public class ModificaEventoServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             // Recupero parametri dal form
-            int eventoId = Integer.parseInt(request.getParameter("eventoId"));
+            int eventoId = Integer.parseInt(request.getParameter("eventoID"));
             String titolo = request.getParameter("titolo");
             LocalDate data = LocalDate.parse(request.getParameter("data"));
             LocalTime ora = LocalTime.parse(request.getParameter("ora"));
@@ -47,7 +47,7 @@ public class ModificaEventoServlet extends HttpServlet {
                 !eventoService.esiste_evento(eventoId)) {
                 
                 request.setAttribute("errore", "Parametri non validi o evento non esistente.");
-                request.getRequestDispatcher("modificaEvento.jsp").forward(request, response);
+                request.getRequestDispatcher("/pages/modificaEvento.jsp").forward(request, response);
                 return;
             }
 

@@ -35,13 +35,16 @@ function validateCreaEventoForm(event) {
         valid = false;
     }
 
-    // Controllo Data e Ora (minimo il giorno dopo)
-    let today = new Date();
-    let eventDate = new Date(data);
-    if (eventDate <= today) {
-        alert("La data dell'evento deve essere almeno domani.");
-        valid = false;
-    }
+	// Controllo Data (minimo il giorno dopo)
+	let today = new Date(); // Data di oggi
+	today.setHours(0, 0, 0, 0); // Azzeramento ore/minuti/secondi
+	let eventDate = new Date(data); // Data dell'evento
+
+	if (eventDate <= today) {
+	    alert("La data dell'evento deve essere almeno domani.");
+	    valid = false;
+	}
+
 
     // Controllo Partecipanti (minimo 2)
     if (partecipanti < 2) {
