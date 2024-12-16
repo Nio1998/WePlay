@@ -56,6 +56,7 @@ public class Evento {
        @param rs Il ResultSet contenente i dettagli dell'evento.
        @throws SQLException Se si verifica un errore nell'accesso al ResultSet.
      */
+    
     public Evento(ResultSet rs) throws SQLException {
         this.ID = rs.getInt("ID");
         this.data_inizio = rs.getDate("data_inizio").toLocalDate();

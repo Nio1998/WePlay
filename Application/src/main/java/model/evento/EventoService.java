@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import model.prenotazione.PrenotazioneDAO;
 import model.prenotazione.PrenotazioneService;  // Importa PrenotazioneService direttamente per il metodo
 
 public class EventoService {
@@ -212,18 +213,28 @@ public class EventoService {
     	
         // Chiamata al DAO per ottenere la lista di eventi associati all'utente
         List<Evento> eventi = eventoDAO.getEventiById(username);
+        PrenotazioneDAO prenotazioneDAO = new PrenotazioneDAO();
         
         // Lista per contenere gli eventi filtrati con stato "organizzatore"
         List<Evento> eventiCreati = new ArrayList<>();
+        System.out.println("ciao");
         
         // Filtriamo gli eventi per includere solo quelli dove lo stato è "organizzatore"
         for (Evento evento : eventi) {
-            if ("organizzatore".equals(evento.getStato())) {
-                eventiCreati.add(evento);
-            }
+        	 System.out.println("pre org");
+        	
+        	 
+        	 
+        	 if(prenotazioneDAO.findOrganizzatoreByEventoID(evento.getID()).equals(username)) {
+        		 System.out.println("succ org" + evento);
+                 eventiCreati.add(evento);
+        		 
+        	 }
+        	
         }
         
         // Restituiamo la lista di eventi creati
+        System.out.println("fine org");
         return eventiCreati;
     }
 
