@@ -335,6 +335,7 @@ public class EventoDao {
 
 	                    // Aggiungi l'evento alla lista
 	                    Evento evento = new Evento(dataInizio, oraInizio, prezzo, sport, titolo, indirizzo, massimoPartecipanti, citta, stato);
+	                    evento.setID(id);
 	                    eventi.add(evento);
 	                }
 	            }
