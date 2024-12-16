@@ -13,7 +13,7 @@ import model.utente.UtenteService;
 @WebServlet("/ApplicaBan")
 public class BanServlet extends HttpServlet {
 
-	private static final String ERROR_PAGE = "errore.jsp";
+	private static final String ERROR_PAGE = "/pages/ErrorPage.jsp";
 	
     private static final long serialVersionUID = 1L;
     private UtenteService utenteService;
@@ -28,20 +28,26 @@ public class BanServlet extends HttpServlet {
         String username = request.getParameter("username");
 
         if (username == null || username.isEmpty()) {
-        	request.getRequestDispatcher(ERROR_PAGE).forward(request, response);
+            request.getRequestDispatcher(ERROR_PAGE).forward(request, response);
             return;
         }
 
         try {
-            // Assegna un ban permanente all'utente
-            utenteService.assegnaBan(username);
-
-            response.setStatus(HttpServletResponse.SC_OK);
-            response.getWriter().write("Ban permanente assegnato con successo all'utente: " + username);
+            if(utenteService.assegnaBan(username)) {
+            request.setAttribute("successMessage", "Ban permanente assegnato con successo all'utente: " + username);
+            request.getRequestDispatcher("/Admin_getAllUser").forward(request, response);
+            } else {
+            	request.setAttribute("failureMessage", "L'utente " + username + " è già in stato di ban");
+                request.getRequestDispatcher("/Admin_getAllUser").forward(request, response);
+            }
         } catch (IllegalArgumentException e) {
-        	request.getRequestDispatcher(ERROR_PAGE).forward(request, response);
+            e.printStackTrace();
+            request.getRequestDispatcher(ERROR_PAGE).forward(request, response);
         } catch (RuntimeException e) {
-        	response.sendRedirect(request.getContextPath() + ERROR_PAGE);
+            e.printStackTrace();
+            response.sendRedirect(request.getContextPath() + ERROR_PAGE);
         }
+
     }
+
 }

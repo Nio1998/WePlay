@@ -86,7 +86,7 @@ class EventoDAOTest {
   
 
     @Test
-    @Order(5)
+    @Order(4)
     void testGetByFilter() throws SQLException {
 
         // Esegui la query con i nuovi parametri di filtro
@@ -121,7 +121,7 @@ class EventoDAOTest {
     }
 
     @Test
-    @Order(6)
+    @Order(5)
     void testGetEventiBySport() throws SQLException {
         // Arrange: prepara i dati necessari per il test
         String sport = "Beach Volley";
@@ -144,8 +144,9 @@ class EventoDAOTest {
         assertEquals("non iniziato", evento.getStato(), "Lo stato dell'evento non corrisponde.");
     }
 
+    
     @Test
-    @Order(7)
+    @Order(6)
     void testSaveEventoFailure() throws SQLException {
         Evento evento = new Evento(LocalDate.of(2024, 1, 10), LocalTime.of(10, 0), 20.50, "Calc", "Titolo Errato", "Via Roma 10", 22, "Roma", "non iniziato");
        
@@ -155,8 +156,9 @@ class EventoDAOTest {
     } 
     
     
+    
     @Test
-    @Order(8)
+    @Order(7)
     void testSaveEventoAttributiMancanti() {
     	 Evento evento = new Evento(LocalDate.of(2024, 1, 10), LocalTime.of(10, 0), 20.50, null, null, "Via Roma 10", 22, "Roma", "non iniziato");
 
@@ -165,10 +167,11 @@ class EventoDAOTest {
         });
     }
 
+
     
 
     @Test
-    @Order(9)
+    @Order(8)
     void testUpdateEventoFailure() throws SQLException {
         Evento evento = new Evento(LocalDate.of(2024, 1, 10), LocalTime.of(10, 0), 20.50, "Calcio", "Partita amichevole", "Via Roma 10", 22, "Roma", "non iniziato");
         eventoDao.save(evento);
@@ -183,7 +186,7 @@ class EventoDAOTest {
         eventoDao.delete(21); // Pulisce il database
     }
     @Test
-    @Order(11)
+    @Order(9)
     void testUpdateEventoFailureNonPresente() throws SQLException {
         // Creazione di un evento che non viene mai salvato
         Evento evento = new Evento(LocalDate.of(2024, 1, 10), LocalTime.of(10, 0), 20.50, "Calcio", "Partita amichevole", "Via Roma 10", 100, "Roma", "non iniziato");
@@ -220,8 +223,8 @@ class EventoDAOTest {
     
     
     @Test
-    @Order(10)
-    void testDeleteEventoFailure() {
+    @Order(11)
+    void testDeleteEventoFailure() throws SQLException{
         int invalidID = 100; // ID inesistente
 
         // Verifica che venga lanciata un'eccezione quando si tenta di eliminare un evento con un ID non valido
@@ -229,10 +232,13 @@ class EventoDAOTest {
             eventoDao.delete(invalidID);
         }, "Il metodo dovrebbe lanciare una SQLException per un ID inesistente.");
     }
+  
+
 
     
+  
     @Test
-    @Order(11)
+    @Order(12)
     void testGetByFilterFailure() {
         assertThrows(SQLException.class, () -> {
             // Prova ad eseguire la query con criteri che generano un'eccezione
@@ -250,12 +256,13 @@ class EventoDAOTest {
                 null                         // stato
             );
         }, "Il metodo dovrebbe lanciare una SQLException per sport non valido.");
-    }
+  
+  
 
 
     @Test
-    @Order(12)
-    void testGetEventiBySportFailure() {
+    @Order(13)
+    void testGetEventiBySportFailure() throws SQLException {
         // Sport inesistente
         String sport = "Sport Inesistente";
 

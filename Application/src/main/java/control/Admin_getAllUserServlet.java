@@ -16,9 +16,9 @@ import model.utente.UtenteService;
 public class Admin_getAllUserServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
-    private static final String ACCESSO_VIETATO_PAGE = "/AccessoVietato/AccessoVietato.jsp";
-    private static final String ERROR_PAGE = "/ErrorPage.jsp";
-    private static final String ADMIN_USERS_PAGE = "admin_users.jsp";
+    private static final String ACCESSO_VIETATO_PAGE = "/pages/AccessoVietato.jsp";
+    private static final String ERROR_PAGE = "/pages/ErrorPage.jsp";
+    private static final String ADMIN_USERS_PAGE = "/pages/ListaUtenti.jsp";
 
     private UtenteService utenteService = new UtenteService();
 
@@ -38,7 +38,7 @@ public class Admin_getAllUserServlet extends HttpServlet {
 
         String username = (String) session.getAttribute("username");
 
-        // Verifica se l'utente è un amministratore
+        // Verifica se l'utente ï¿½ un amministratore
         if (!utenteService.is_admin(username)) {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             response.sendRedirect(request.getContextPath() + ACCESSO_VIETATO_PAGE);
@@ -69,5 +69,10 @@ public class Admin_getAllUserServlet extends HttpServlet {
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             response.sendRedirect(request.getContextPath() + ERROR_PAGE);
         }
+    }
+    
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        doGet(request, response);
     }
 }

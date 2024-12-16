@@ -3,8 +3,11 @@ package model.evento;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
+import model.prenotazione.PrenotazioneDAO;
 import model.prenotazione.PrenotazioneService;  // Importa PrenotazioneService direttamente per il metodo
 
 public class EventoService {
@@ -94,21 +97,44 @@ public class EventoService {
         }
     }
 
-    public Collection<Evento> filtra_eventi(String dataInizio, String dataFine, String sport, String citta) {
-        LocalDate dataInizioDate = null;
-        LocalDate dataFineDate = null;
-        if (!dataInizio.isEmpty()) dataInizioDate = LocalDate.parse(dataInizio);
-        if (!dataFine.isEmpty()) dataFineDate = LocalDate.parse(dataFine);
-        if (sport.isEmpty()) sport = null;
-        if (citta.isEmpty()) citta = null;
-        
-        try {
-            return eventoDAO.getByFilter(dataInizioDate, dataFineDate, sport, citta);
-        } catch (SQLException e) {
+    
+    public Collection<Evento> filtra_eventi(String dataInizio, String dataFine, String oraInizio, String prezzoMin, String prezzoMax,
+            String sport, String titolo, String indirizzo, String massimoPartecipanti,
+            String citta, String stato) {
+          // Conversione degli input
+          LocalDate dataInizioDate = null;
+          LocalDate dataFineDate = null;
+          LocalTime oraInizioTime = null;
+          Double prezzoMinValue = null;
+          Double prezzoMaxValue = null;
+          Integer massimoPartecipantiValue = null;
+
+          // Parsing dei parametri
+          if (dataInizio != null && !dataInizio.isEmpty()) dataInizioDate = LocalDate.parse(dataInizio);
+          if (dataFine != null && !dataFine.isEmpty()) dataFineDate = LocalDate.parse(dataFine);
+          if (oraInizio != null && !oraInizio.isEmpty()) oraInizioTime = LocalTime.parse(oraInizio);
+          if (prezzoMin != null && !prezzoMin.isEmpty()) prezzoMinValue = Double.parseDouble(prezzoMin);
+          if (prezzoMax != null && !prezzoMax.isEmpty()) prezzoMaxValue = Double.parseDouble(prezzoMax);
+          if (massimoPartecipanti != null && !massimoPartecipanti.isEmpty()) massimoPartecipantiValue = Integer.parseInt(massimoPartecipanti);
+
+          // Gestione dei valori vuoti
+          if (sport != null && sport.isEmpty()) sport = null;
+          if (titolo != null && titolo.isEmpty()) titolo = null;
+          if (indirizzo != null && indirizzo.isEmpty()) indirizzo = null;
+          if (citta != null && citta.isEmpty()) citta = null;
+          if (stato != null && stato.isEmpty()) stato = null;
+
+          try {
+          // Chiamata al DAO con tutti i parametri
+            return eventoDAO.getByFilter(dataInizioDate, dataFineDate, oraInizioTime, prezzoMinValue, prezzoMaxValue,
+                    sport, titolo, indirizzo, massimoPartecipantiValue, citta, stato);
+          } catch (SQLException e) {
             e.printStackTrace();
             return null;
-        }
+          }
     }
+
+    
 
     public Evento dettagli_evento(int id) {
         try {
@@ -118,13 +144,24 @@ public class EventoService {
             return null;
         }
     }
-
-    // Restituisce tutti gli eventi
+      
+   // Restituisce tutti gli eventi
     public Collection<Evento> allEventi() throws SQLException {
-        return filtra_eventi("", "", "", "");
+        return filtra_eventi(
+            "",  // dataInizio
+            "",  // dataFine
+            "",  // oraInizio
+            "",  // prezzoMin
+            "",  // prezzoMax
+            "",  // sport
+            "",  // titolo
+            "",  // indirizzo
+            "",  // massimoPartecipanti
+            "",  // citta
+            ""   // stato
+        );
     }
-
-    // Funzione che controlla se l'evento è pieno
+    
     public boolean evento_ha_posti_disponibili(int evento_id) {
         // Creiamo l'istanza di PrenotazioneService direttamente qui
         PrenotazioneService prenotazioneService = new PrenotazioneService();
@@ -160,4 +197,47 @@ public class EventoService {
             return null;  // In caso di errore, restituiamo null
         }
     }
+    
+    // Funzione che richiama getEventiById e restituisce la lista degli eventi
+    public List<Evento> visualizza_eventi_sottoscritti(String username) {
+        // Chiamata al DAO per ottenere la lista degli eventi
+        List<Evento> eventi = eventoDAO.getEventiById(username);
+        
+        // Restituisce la lista di eventi
+        return eventi;
+    }
+    
+    
+    // Funzione che richiama getEventiById e restituisce la lista degli eventi
+    public List<Evento> visualizza_eventi_creati(String username) {
+    	
+        // Chiamata al DAO per ottenere la lista di eventi associati all'utente
+        List<Evento> eventi = eventoDAO.getEventiById(username);
+        PrenotazioneDAO prenotazioneDAO = new PrenotazioneDAO();
+        
+        // Lista per contenere gli eventi filtrati con stato "organizzatore"
+        List<Evento> eventiCreati = new ArrayList<>();
+        System.out.println("ciao");
+        
+        // Filtriamo gli eventi per includere solo quelli dove lo stato è "organizzatore"
+        for (Evento evento : eventi) {
+        	 System.out.println("pre org");
+        	
+        	 
+        	 
+        	 if(prenotazioneDAO.findOrganizzatoreByEventoID(evento.getID()).equals(username)) {
+        		 System.out.println("succ org" + evento);
+                 eventiCreati.add(evento);
+        		 
+        	 }
+        	
+        }
+        
+        // Restituiamo la lista di eventi creati
+        System.out.println("fine org");
+        return eventiCreati;
+    }
+
+
+
 }

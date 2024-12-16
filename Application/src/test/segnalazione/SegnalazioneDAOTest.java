@@ -1,5 +1,6 @@
 package segnalazione;
 
+import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
@@ -88,33 +89,42 @@ class SegnalazioneDAOTest {
     
     @Test
     @Order(6)
-    void testSaveSegnalazioneFailure() throws SQLException {
-        Segnalazione segnalazione = new Segnalazione("assenza", "in attesa", "mario_rossi", "luigi_bianchi", 17);
-        segnalazioneDAO.save(segnalazione);
+    void testSaveSegnalazioneGiaPresenteFailure() throws SQLException {
+        Segnalazione segnalazione = new Segnalazione("assenza", "in attesa", "mario_rossi", "luigi_bianchi", 16);
+        assertThrows(SQLException.class, () -> {
+            segnalazioneDAO.save(segnalazione);
+        });
         
-        Segnalazione retrieved = segnalazioneDAO.get(17);
-        assertNotEquals("motivo errato", retrieved.getMotivazione(), "La motivazione non dovrebbe essere errata.");
-        segnalazioneDAO.delete(17); // Clean up the database
+        
     }
 
     @Test
     @Order(7)
+    void testSaveSegnalazioneFailure() throws SQLException {
+        Segnalazione segnalazione = new Segnalazione("assenza", "errore", "mario_rossi", "luigi_bianchi", 17);
+        assertThrows(SQLException.class, () -> {
+            segnalazioneDAO.save(segnalazione);
+        });
+        
+        
+    }
+    @Test
+    @Order(8)
     void testUpdateSegnalazioneFailure() throws SQLException {
         Segnalazione segnalazione = new Segnalazione("assenza", "in attesa", "mario_rossi", "luigi_bianchi", 17);
         segnalazioneDAO.save(segnalazione);
 
-        segnalazione.setStato("risolta");
+        segnalazione.setStato("errore");
         segnalazione.setId(17);
-        segnalazioneDAO.update(segnalazione);
-
-        Segnalazione updated = segnalazioneDAO.get(17);
-        assertNotEquals("in attesa", updated.getStato(), "Lo stato non dovrebbe rimanere invariato.");
-        
+       
+        assertThrows(SQLException.class, () -> {
+            segnalazioneDAO.update(segnalazione);
+        });   
         segnalazioneDAO.delete(17); // Clean up the database
     }
 
     @Test
-    @Order(8)
+    @Order(9)
     void testDeleteSegnalazioneFailure() throws SQLException {
         int invalidID = -1; // Non-existent ID
         assertFalse(segnalazioneDAO.delete(invalidID), "Dovrebbe restituire false per un ID inesistente.");
@@ -123,14 +133,7 @@ class SegnalazioneDAOTest {
         assertNotEquals(1, retrieved, "La segnalazione non dovrebbe esistere nel database.");
     }
 
-    @Test
-    @Order(9)
-    void testGetAllSegnalazioniFailureDataMismatch() throws SQLException {
-        Collection<Segnalazione> segnalazioni = segnalazioneDAO.getAll();
-
-        // Assuming there are 15 reports, check for a wrong value
-        assertNotEquals(20, segnalazioni.size(), "Il numero di segnalazioni non dovrebbe essere errato.");
-    }
+   
 
     @Test
     @Order(10)
