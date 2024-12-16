@@ -252,7 +252,6 @@ public class PrenotazioneDAO {
             
             try (ResultSet rs = stmt.executeQuery()) {
             	
-            	 System.out.println("exec??");
                 if (rs.next()) {
                 	
                     organizzatore = rs.getString("username_utente");
@@ -269,7 +268,6 @@ public class PrenotazioneDAO {
 			ConDB.releaseConnection(conn);
 		}
         
-        System.out.println("null??");
         return organizzatore;
     }
 	
