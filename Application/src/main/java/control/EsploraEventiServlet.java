@@ -26,7 +26,7 @@ public class EsploraEventiServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     	
-    	System.out.println("enter");
+    
     	
         String dataInizio = request.getParameter("dataInizio");
         String dataFine = request.getParameter("dataFine");
@@ -45,12 +45,12 @@ public class EsploraEventiServlet extends HttpServlet {
         
         String redirectedPage = "/pages/eventiSottoscritti.jsp";  // Default page
         
-        System.out.println("pre attr");
+       
         if (attributo != null) {
             // Gestiamo i vari casi dell'attributo
             switch (attributo) {
                 case "sottoscritto":
-                	System.out.println("in sottoscritto");
+                	
                     // Carichiamo gli eventi sottoscritti dall'utente
                     Collection<Evento> eventiSottoscritti = eventoService.visualizza_eventi_sottoscritti(username);
                     if (eventiSottoscritti == null) {
