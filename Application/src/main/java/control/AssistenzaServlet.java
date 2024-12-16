@@ -59,6 +59,7 @@ public class AssistenzaServlet extends HttpServlet {
         props.put("mail.smtp.port", "587"); // Porta TLS
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true"); // Abilita TLS
+        props.put("mail.smtp.ssl.trust", "smtp.gmail.com");
 
         // Crea una sessione con autenticazione
         javax.mail.Session session = Session.getInstance(props, new Authenticator() {

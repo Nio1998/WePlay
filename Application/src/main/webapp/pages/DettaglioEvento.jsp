@@ -71,7 +71,10 @@
                 <% if (!isTerminato) { %>
                     <% if ( !attributo.isEmpty() && attributo.equals("organizzatore")) { %>
                         <button class="edit-button">Modifica Evento</button>
-                        <button class="edit-button">Cancella Evento</button>
+                        <form style="display: inline-block;" action="${pageContext.request.contextPath}/CancellaEventoServlet" method="post">
+                            <input type="hidden" name="eventoID" value="<%= evento.getID() %>">
+                            <button class="edit-button" type="submit">Cancella Evento</button>
+                        </form>
                     <% } else if (isPartecipante) { %>
                         <% if (isLessThan24HoursBeforeStart) { %>
                             <div class="warning-message">Se procedi alla cancellazione subirai una penalizzazione!</div>
