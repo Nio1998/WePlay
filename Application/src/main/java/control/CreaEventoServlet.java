@@ -40,13 +40,12 @@ public class CreaEventoServlet extends HttpServlet {
             LocalDate dataInizioLocal = LocalDate.parse(dataInizio);
             LocalTime oraInizioLocal = LocalTime.parse(oraInizio);
             
-            // Gestione del parametro maxPartecipanti
+         // Gestione del parametro maxPartecipanti
             int maxPartecipanti = 0;
             try {
-                maxPartecipanti = Integer.parseInt(request.getParameter("massimo_di_partecipanti"));
+                maxPartecipanti = Integer.parseInt(request.getParameter("partecipanti")); // Nome corretto
             } catch (NumberFormatException e) {
-            	System.out.println("Cazzo 1");
-                // Se il valore non è valido, gestisci l'errore
+                System.out.println("Errore: parametro partecipanti non valido");
                 request.setAttribute("errore", "Il numero massimo di partecipanti non è valido.");
                 request.getRequestDispatcher("/pages/ErrorPage.jsp").forward(request, response);
                 return;
