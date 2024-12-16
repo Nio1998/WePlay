@@ -1,5 +1,6 @@
 package model.utente;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -13,7 +14,7 @@ import java.time.LocalDateTime;
  * @author Carmine
  * @version 1.0
  */
-public class UtenteBean {
+public class UtenteBean implements Serializable {
 
     // Informazioni personali
     private String username;
@@ -25,8 +26,8 @@ public class UtenteBean {
 
     // Stato dell'utente
     private int numTimeout; // Numero di timeout ricevuti
-    private boolean isTimeout; // Indica se l'utente è in timeout
-    private boolean isAdmin; // Indica se l'utente è un amministratore
+    private boolean isTimeout; // Indica se l'utente ï¿½ in timeout
+    private boolean isAdmin; // Indica se l'utente ï¿½ un amministratore
     private LocalDateTime dataOraFineTimeout; // Data e ora di fine timeout
 
     // Valutazioni
@@ -53,8 +54,8 @@ public class UtenteBean {
      * @param email                  l'email dell'utente
      * @param pw                     la password (hashata) dell'utente
      * @param numTimeout             il numero di timeout ricevuti
-     * @param isTimeout              indica se l'utente è attualmente in timeout
-     * @param isAdmin                indica se l'utente è un amministratore
+     * @param isTimeout              indica se l'utente ï¿½ attualmente in timeout
+     * @param isAdmin                indica se l'utente ï¿½ un amministratore
      * @param dataOraFineTimeout     la data e ora in cui termina il timeout (se applicabile)
      * @param numValutazioniNeutre   il numero di valutazioni neutre ricevute
      * @param numValutazioniNegative il numero di valutazioni negative ricevute
