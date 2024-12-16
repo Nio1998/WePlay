@@ -1,21 +1,25 @@
 package control;
-
 import java.io.IOException;
-import java.util.*;
+import java.time.ZoneId;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import javax.servlet.http.HttpSession;
-import model.evento.*;
 
-
-import model.utente.*;
+import model.evento.Evento;
+import model.evento.EventoService;
+import model.prenotazione.PrenotazioneService;
+import model.utente.UtenteBean;
+import model.utente.UtenteService;
 import model.Valutazione.*;
-import model.prenotazione.*;
 
 @WebServlet("/DettagliEvento")
 public class DettagliEventoServlet extends HttpServlet {
@@ -23,79 +27,158 @@ public class DettagliEventoServlet extends HttpServlet {
 
     private EventoService eventoService = new EventoService(); 
     private PrenotazioneService prenotazioneService = new PrenotazioneService();
-    private ValutazioneService valutazioneService = new ValutazioneService();
-    private UtenteService utenteService = new UtenteService();
 
     public DettagliEventoServlet() {
         super();
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        try {
-            // Recupera i parametri dalla richiesta
-            String idEventoParam = request.getParameter("id");
-            String putValutazioneParam = request.getParameter("putValutazione");
+        try {	
+        	
+        	
+        	// Recupera l'attributo "attributo" dalla richiesta
+            String attributo = (String) request.getParameter("attributo");
 
-            // Validazione dei parametri
-            if (idEventoParam == null || idEventoParam.isEmpty()) {
-                throw new IllegalArgumentException("ID evento non fornito o non valido.");
-            }
+            // Verifica se l'attributo è non null e se è uguale a "esploraEventi"
+            boolean esploraEventi = attributo != null && attributo.equals("esploraEventi");
+            
+            System.out.println("es: " + esploraEventi);
 
-            int idEvento;
-            try {
-                idEvento = Integer.parseInt(idEventoParam);
-            } catch (NumberFormatException e) {
-                throw new IllegalArgumentException("ID evento non valido.");
-            }
-
-            if (idEvento <= 0) {
-                throw new IllegalArgumentException("ID evento deve essere maggiore di 0.");
-            }
-
-            // Controlla l'esistenza dell'evento
+        	
+            // Recupero ID evento
+            //String idEventoParam =  null;
+            
+        	int idEvento = 0;
+        	String idEventoParam = null;
+            
+            // 1. Controlla se esiste un attributo impostato
+            if (request.getAttribute("eventoId") != null) {
+            	
+            	idEvento = (int) request.getAttribute("eventoId");
+            	
+            } else if (request.getParameter("eventoId") != null) {
+            	
+            	idEventoParam = request.getParameter("eventoId");
+            	
+            	 if (idEventoParam.isEmpty()) {
+                 	
+                     throw new IllegalArgumentException("ID evento non fornito o non valido.");
+                 }
+            	
+            	idEvento = Integer.parseInt(idEventoParam);
+            	
+	            }
+           
             if (!eventoService.esiste_evento(idEvento)) {
                 throw new IllegalArgumentException("Evento non esistente.");
             }
+           
 
-            // Recupera i dettagli dell'evento
-
-            Evento e = eventoService.dettagli_evento(idEvento);
-
-            if (e == null) {
-                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Errore interno del server (Dettagli Evento).");
+            // Recupera dettagli evento
+            Evento evento = eventoService.dettagli_evento(idEvento);
+            if (evento == null) {
+                response.sendError(HttpServletResponse.SC_NOT_FOUND, "Evento non trovato.");
                 return;
             }
-
-            // Recupera i partecipanti
-            Collection<UtenteBean> utenti = prenotazioneService.calcola_partecipanti(idEvento);
-            if (utenti == null) {
-                utenti = new ArrayList<>();
+            request.setAttribute("evento", evento);
+            
+            
+            // Recupera lista partecipanti
+            Collection<UtenteBean> partecipanti = prenotazioneService.calcola_partecipanti(idEvento);
+            if(partecipanti==null) System.out.println("NULL");
+            else System.out.println("non NULL");
+            
+           
+            
+            // Controlla stato utente corrente
+            HttpSession session = request.getSession(false);
+           
+            String currentUser = (session != null) ? (String) session.getAttribute("username") : null;
+            
+           
+            boolean isPartecipante = false;
+            boolean isOrganizzatore = false;
+            System.out.println("drago1");
+            if (currentUser != null) {
+            	
+                isPartecipante = partecipanti.stream().anyMatch(p -> p.getUsername().equals(currentUser));
+                
+                String organizzatore = prenotazioneService.findOrganizzatoreByEventoID(evento.getID());
+                
+                //questo perchè per gli inserimenti attuali alcuni eventi non hannno organizzatori
+                if(organizzatore !=null)isOrganizzatore = organizzatore.equals(currentUser);
+                
+               
             }
+            
+            System.out.println("drago");
+           
+            request.setAttribute("isPartecipante", isPartecipante);
+            request.setAttribute("isOrganizzatore", isOrganizzatore);
+            
 
-            request.setAttribute("evento", e);
+          
+            // Calcola stato dell'evento
+            boolean isTerminato = "finito".equals(evento.getStato());
+            request.setAttribute("isTerminato", isTerminato);
 
-            // Controlla se è richiesto di gestire le valutazioni
-            boolean putValutazione = putValutazioneParam != null && Boolean.parseBoolean(putValutazioneParam);
+            long currentTimeMillis = System.currentTimeMillis();
+            boolean isLessThan24HoursBeforeStart = false;
+            boolean isWithin24HoursAfterEnd = false;
 
-            if (putValutazione) {
-                HttpSession session = request.getSession(false);
-                if (session == null || session.getAttribute("username") == null) {
-                    throw new IllegalArgumentException("Utente non autenticato.");
-                }
+            if (evento.getData_inizio() != null) {
+                long eventStartMillis = evento.getData_inizio()
+                        .atStartOfDay(ZoneId.systemDefault())
+                        .toInstant()
+                        .toEpochMilli();
 
-                String usernameValutante = (String) session.getAttribute("username");
+                // Aggiungi 2 ore all'orario di inizio per determinare la fine dell'evento
+                long eventEndMillis = eventStartMillis + (2 * 60 * 60 * 1000); // 2 ore in millisecondi
 
-                if (!utenteService.controlla_username_esistente(usernameValutante)) {
+                // Verifica se l'evento inizia entro le prossime 24 ore
+                isLessThan24HoursBeforeStart = eventStartMillis - currentTimeMillis <= 24 * 60 * 60 * 1000;
+
+                // Verifica se siamo entro le 24 ore dalla fine dell'evento
+                isWithin24HoursAfterEnd = currentTimeMillis - eventEndMillis <= 24 * 60 * 60 * 1000;
+            }
+            
+            System.out.println("terminato: " + isTerminato + ", lessThan24h:" + isLessThan24HoursBeforeStart + "isWithin: " +
+            		isWithin24HoursAfterEnd);
+            request.setAttribute("isLessThan24HoursBeforeStart", isLessThan24HoursBeforeStart);
+            request.setAttribute("isWithin24HoursAfterEnd", isWithin24HoursAfterEnd);
+            
+         // Controlla se è richiesto di gestire le valutazioni
+            
+            
+            
+            
+            if (!esploraEventi) {
+            	
+            	
+            	UtenteService utenteService = new UtenteService();
+            	ValutazioneService valutazioneService = new ValutazioneService();
+
+               
+				if (!utenteService.controlla_username_esistente(currentUser)) {
                     throw new IllegalArgumentException("Utente valutante non esistente.");
                 }
 
                 // Recupera le valutazioni effettuate dall'utente loggato
-                List<ValutazioneBean> valutazioni = valutazioneService.calcola_valutazioni_da_utente(usernameValutante, idEvento);
+                List<ValutazioneBean> valutazioni = null;
+				
+                //non so perchè il try catch, mi dava errore
+                try {
+					valutazioni = valutazioneService.calcola_valutazioni_da_utente(currentUser, idEvento);
+				
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 
                 // Mappa per associare ogni utente con la sua valutazione (se presente)
                 Map<UtenteBean, Integer> utentiValutazioni = new HashMap<>();
 
-                for (UtenteBean u : utenti) {
+                for (UtenteBean u : partecipanti) {
                     int esito = -2; // Default: nessuna valutazione
                     for (ValutazioneBean v : valutazioni) {
                         if (v.getUtenteValutato().equals(u.getUsername())) {
@@ -105,29 +188,37 @@ public class DettagliEventoServlet extends HttpServlet {
                     }
                     utentiValutazioni.put(u, esito);
                 }
-
+                
+                System.out.println("succ va");
                 // Imposta la mappa come attributo della richiesta
-                request.setAttribute("utentiValutazioni", utentiValutazioni);
+                request.setAttribute("utentiValutazione", utentiValutazioni);
+                
             } else {
                 // Imposta solo la lista degli utenti come attributo della richiesta
-                request.setAttribute("utenti", utenti);
+                
+               
             }
-
-            // Forward alla JSP dei dettagli evento
-            RequestDispatcher dispatcher = request.getRequestDispatcher("dettagliEvento.jsp");
+            
+           
+            // Forward alla JSP
+            request.setAttribute("attributo", attributo);
+            request.setAttribute("partecipanti", partecipanti);
+            System.out.println("fine");
+            RequestDispatcher dispatcher = request.getRequestDispatcher("/pages/DettaglioEvento.jsp");
             dispatcher.forward(request, response);
 
-        } catch (IllegalArgumentException e) {
-            // Gestione degli errori di validazione
-            request.setAttribute("errore", e.getMessage());
-            RequestDispatcher dispatcher = request.getRequestDispatcher("errore.jsp");
-            dispatcher.forward(request, response);
         } catch (Exception e) {
-            // Gestione di eventuali altri errori
-            e.printStackTrace();
-            request.setAttribute("errore", "Si è verificato un errore inatteso.");
-            RequestDispatcher dispatcher = request.getRequestDispatcher("errore.jsp");
+            request.setAttribute("errore", "Errore: " + e.getMessage());
+            RequestDispatcher dispatcher = request.getRequestDispatcher("/error.jsp");
             dispatcher.forward(request, response);
-        }
+        } 
+        
+    }
+    
+    // Metodo POST che richiama il metodo GET
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // Chiamata al metodo doGet per trattare la richiesta POST come una GET
+        doGet(request, response);
     }
 }
