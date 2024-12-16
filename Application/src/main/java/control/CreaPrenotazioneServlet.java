@@ -39,8 +39,6 @@ public class CreaPrenotazioneServlet extends HttpServlet {
             return;
         }
     	
-    	
-    	
     	HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("username") == null) {
         	  
@@ -48,9 +46,12 @@ public class CreaPrenotazioneServlet extends HttpServlet {
             return;
         }
         
+        
         String username = (String) session.getAttribute("username");  // Prendi l'username dalla sessione
+       
         try {
-            int eventoID = Integer.parseInt(request.getParameter("eventoID"));
+        	
+            int eventoID = Integer.parseInt(request.getParameter("evento")); //ma è l'id
             	
             
             // Precondizioni per la prenotazione

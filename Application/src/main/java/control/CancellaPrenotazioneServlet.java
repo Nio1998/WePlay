@@ -37,7 +37,7 @@ public class CancellaPrenotazioneServlet extends HttpServlet {
 
         String username = (String) session.getAttribute("username");  // Effettua il cast a String
         
-        String eventoIDStr = request.getParameter("eventoID");
+        String eventoIDStr = request.getParameter("evento"); //ma è l'id
         if (eventoIDStr == null || eventoIDStr.isEmpty()) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "ID evento mancante o non valido.");
             return;

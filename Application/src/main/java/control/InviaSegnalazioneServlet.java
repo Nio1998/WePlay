@@ -39,23 +39,40 @@ public class InviaSegnalazioneServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	        HttpSession session = request.getSession();
 	        String usernameSegnalante = (String) session.getAttribute("username");
-	        String usernameSegnalato = request.getParameter("username_segnalato");
-	        String stato = request.getParameter("stato");
-	        int eventoId = (int) 
-	        		session.getAttribute("evento_id");
+	        String usernameSegnalato = request.getParameter("utente_segnalato");
+	        String attributo = request.getParameter("attributo");
+	        
+	        
+	       
+	        
+	        String eventoIdParam = (String) request.getParameter("eventoID");
+	        int eventoId = Integer.parseInt(eventoIdParam);
+	        
 	        String motivo = request.getParameter("motivo");
 	        try {
+	        	
 	        	if(segnalazioneService.segnalazioneGiaEffettuata(usernameSegnalante, usernameSegnalato, eventoId)) {
 	        	 request.setAttribute("errore", "Hai già segnalato l'utente in questo evento");
-	                request.getRequestDispatcher("dettagliEvento.jsp").forward(request, response);
-	                return;
-	            }
-	        	else {
-	            segnalazioneService.inviaSegnalazione(usernameSegnalante, usernameSegnalato ,eventoId, motivo, stato);
+	               
+	        	
+	                
+	            } else {
+	            segnalazioneService.inviaSegnalazione(usernameSegnalante, usernameSegnalato ,eventoId, motivo);
+	            
 	            request.setAttribute("successo", "Hai segnalato l'utente");
-	            request.getRequestDispatcher("dettagliEvento.jsp").forward(request, response);
-	            return;
+	           
+	           
 	        	}
+	        	
+	        	
+	        	 
+	        	
+	        	 request.setAttribute("eventoId", eventoId);
+	        	 request.setAttribute("attributo", attributo);
+	        	 
+	        	
+	        	 request.getRequestDispatcher("/DettagliEvento").forward(request, response);
+	        	
 	        }catch(Exception e){
 	        	 e.printStackTrace();
 	             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Errore interno del server.");
