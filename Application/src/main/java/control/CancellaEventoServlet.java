@@ -54,7 +54,7 @@ public class CancellaEventoServlet extends HttpServlet {
             	request.setAttribute("errore", "Puoi eliminare un evento solo se non è ancora iniziato");
             	if (isOrganizzatore) {
             		System.out.println("NON ELIMINATOoooooooooooooooooooooo");
-                	request.getRequestDispatcher("/pages/eventiCreati.jsp").forward(request, response);
+                	request.getRequestDispatcher("/EsploraEventiServlet?attributo=organizzatore").forward(request, response);
                 	return;
                 } else if (isAdmin) {
                 	request.getRequestDispatcher("/pages/ListaEventi.jsp").forward(request, response);
@@ -67,7 +67,7 @@ public class CancellaEventoServlet extends HttpServlet {
             if (eliminato) {
                 if (isOrganizzatore) {
                 	System.out.println("ELIMINATOoooooooooooooooooooooo");
-                    response.sendRedirect(request.getContextPath() + "/pages/eventiCreati.jsp");
+                    response.sendRedirect(request.getContextPath() + "/pages/EsploraEventiServlet?attributo=organizzatore");
                     return;
                 } else if (isAdmin) {
                     response.sendRedirect(request.getContextPath() + "/pages/ListaEventi.jsp");
