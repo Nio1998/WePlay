@@ -1,4 +1,16 @@
-<%@ page contentType="text/html; charset=UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="javax.servlet.http.*, javax.servlet.*, java.io.*, model.*" %>
+<%@ page import="model.utente.UtenteBean" %>
+<%
+    // Recupera l'utente dalla session o dalla request
+    UtenteBean utente = (UtenteBean) session.getAttribute("utente");
+
+    if (utente == null) {
+    	System.out.println("error reLogin");
+        response.sendRedirect("login.jsp");
+        return;
+    }
+%>
 <!DOCTYPE html>
 <html lang="it">
 <head>
@@ -16,16 +28,12 @@
 	<!-- Import della navbar -->
 	<jsp:include page="navbar.jsp" />
 
-	<main class="main-content">
-		<section class="crea-evento-section">
-			<h1>CREA NUOVO EVENTO</h1>
-			<div class="crea-evento-box">
-				<form action="${pageContext.request.contextPath}/creaEventoServlet"
-					method="post" id="creaEventoForm">
-					<div class="form-group">
-						<input type="text" name="titolo" id="titolo" placeholder="Titolo"
-							required>
-					</div>
+
+    <main class="main-content">
+        <section class="crea-evento-section">
+            <h1>CREA NUOVO EVENTO</h1>
+            <div class="crea-evento-box">
+                <form action="${pageContext.request.contextPath}/CreaEventoServlet" method="post" id="creaEventoForm" onsubmit="return validateCreaEventoForm(event)">
 					<div class="form-group">
 						<input type="text" name="sport" id="sport" placeholder="Sport"
 							required readonly>

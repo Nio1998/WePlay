@@ -14,6 +14,18 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/CSS/login.css">
 </head>
 <body>
+<% if (request.getAttribute("errore") != null || request.getAttribute("successo") != null) { %>
+            <div class="messaggi <% if (request.getAttribute("errore") != null) { %>errore<% } else if (request.getAttribute("successo") != null) { %>successo<% } %>" id="messaggio">
+                <span>
+                    <% if (request.getAttribute("errore") != null) { %>
+                        <%= request.getAttribute("errore") %>
+                    <% } else if (request.getAttribute("successo") != null) { %>
+                        <%= request.getAttribute("successo") %>
+                    <% } %>
+                </span>
+                <button class="close-btn" onclick="chiudiMessaggio()">×</button>
+            </div>
+        <% } %>
     <jsp:include page="navbar.jsp" />
     <main class="main-content">
         <section class="login-section">

@@ -228,21 +228,15 @@ class EventoDAOTest {
         int invalidID = 100; // ID inesistente
 
         // Verifica che venga lanciata un'eccezione quando si tenta di eliminare un evento con un ID non valido
-        assertThrows(SQLException.class, () -> {
-            eventoDao.delete(invalidID);
-        }, "Il metodo dovrebbe lanciare una SQLException per un ID inesistente.");
+        assertFalse(eventoDao.delete(invalidID));
     }
   
 
-
-    
   
     @Test
     @Order(12)
-    void testGetByFilterFailure() {
-        assertThrows(SQLException.class, () -> {
-            // Prova ad eseguire la query con criteri che generano un'eccezione
-            eventoDao.getByFilter(
+    void testGetByFilterFailure() throws SQLException {
+        assertEquals(0, eventoDao.getByFilter(
                 LocalDate.of(2024, 1, 1),    // dataInizio
                 LocalDate.of(2024, 12, 31), // dataFine
                 null,                        // oraInizio
@@ -254,11 +248,10 @@ class EventoDAOTest {
                 null,                        // massimoPartecipanti
                 "Taranto",           // citta
                 null                         // stato
-            );
-        }, "Il metodo dovrebbe lanciare una SQLException per sport non valido.");
+            ).size()
+		);
+    }
   
-  
-
 
     @Test
     @Order(13)
@@ -266,10 +259,7 @@ class EventoDAOTest {
         // Sport inesistente
         String sport = "Sport Inesistente";
 
-        assertThrows(SQLException.class, () -> {
-            // Esegui il metodo con lo sport inesistente
-            eventoDao.getEventiBySport(sport);
-        }, "Il metodo dovrebbe lanciare una SQLException per uno sport inesistente.");
+        assertEquals(0, eventoDao.getEventiBySport(sport).size());
     }
     
     

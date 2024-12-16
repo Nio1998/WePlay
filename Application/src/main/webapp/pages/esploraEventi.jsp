@@ -18,81 +18,30 @@
         <h1>Esplora tutti gli eventi</h1>
     </div>
 
-    <!-- Form dei filtri -->
-    <div class="filters">
-        <form action="${pageContext.request.contextPath}/pages/esploraEventi.jsp" method="get">
-            <!-- Filtro generico per sport -->
-            <div class="filter-inputs">
-                <label for="sport">Sport:</label>
-                <input type="text" name="sport" id="sport" value="${param.sport}" placeholder="Inserisci uno sport">
-            </div>
+<div class="filters">
+    <form action="${pageContext.request.contextPath}/pages/esploraEventi.jsp" method="get" class="filter-form">
+        <!-- Contenitore dei filtri sulla stessa riga -->
+        <div class="filter-box">
+            <label for="sport">Sport:</label>
+            <input type="text" name="sport" id="sport" value="${param.sport}" placeholder="Inserisci uno sport">
+        </div>
 
-            <!-- Filtro per titolo -->
-            <div class="filter-inputs">
-                <label for="titolo">Titolo:</label>
-                <input type="text" name="titolo" id="titolo" value="${param.titolo}" placeholder="Inserisci un titolo">
-            </div>
+        <div class="filter-box">
+            <label for="dataInizio">Data:</label>
+            <input type="date" name="dataInizio" id="dataInizio" value="${param.dataInizio}">
+        </div>
 
-            <!-- Filtro per indirizzo -->
-            <div class="filter-inputs">
-                <label for="indirizzo">Indirizzo:</label>
-                <input type="text" name="indirizzo" id="indirizzo" value="${param.indirizzo}" placeholder="Inserisci un indirizzo">
-            </div>
+        <div class="filter-box">
+            <label for="citta">Città:</label>
+            <input type="text" name="citta" id="citta" value="${param.citta}" placeholder="Inserisci una città">
+        </div>
 
-            <!-- Filtro per massimo partecipanti -->
-            <div class="filter-inputs">
-                <label for="massimoPartecipanti">Massimo Partecipanti:</label>
-                <input type="number" name="massimoPartecipanti" id="massimoPartecipanti" value="${param.massimoPartecipanti}">
-            </div>
-
-            <!-- Filtro per data inizio -->
-            <div class="filter-inputs">
-                <label for="dataInizio">Data Inizio:</label>
-                <input type="date" name="dataInizio" id="dataInizio" value="${param.dataInizio}">
-            </div>
-
-            <!-- Filtro per data fine -->
-            <div class="filter-inputs">
-                <label for="dataFine">Data Fine:</label>
-                <input type="date" name="dataFine" id="dataFine" value="${param.dataFine}">
-            </div>
-
-            <!-- Filtro per ora inizio -->
-            <div class="filter-inputs">
-                <label for="oraInizio">Ora Inizio:</label>
-                <input type="time" name="oraInizio" id="oraInizio" value="${param.oraInizio}">
-            </div>
-
-            <!-- Filtro per prezzo minimo -->
-            <div class="filter-inputs">
-                <label for="prezzoMin">Prezzo Minimo:</label>
-                <input type="number" name="prezzoMin" id="prezzoMin" step="0.01" value="${param.prezzoMin}">
-            </div>
-
-            <!-- Filtro per prezzo massimo -->
-            <div class="filter-inputs">
-                <label for="prezzoMax">Prezzo Massimo:</label>
-                <input type="number" name="prezzoMax" id="prezzoMax" step="0.01" value="${param.prezzoMax}">
-            </div>
-
-            <!-- Filtro per città -->
-            <div class="filter-inputs">
-                <label for="citta">Città:</label>
-                <input type="text" name="citta" id="citta" value="${param.citta}" placeholder="Inserisci una città">
-            </div>
-
-            <!-- Filtro per stato -->
-            <div class="filter-inputs">
-                <label for="stato">Stato:</label>
-                <input type="text" name="stato" id="stato" value="${param.stato}" placeholder="Inserisci uno stato">
-            </div>
-
-            <!-- Bottone di conferma -->
-            <div class="filter-submit">
-                <button type="submit" name="applyFilter" value="true">Applica Filtro</button>
-            </div>
-        </form>
-    </div>
+        <!-- Bottone di conferma -->
+        <div class="filter-submit">
+            <button type="submit" name="applyFilter" value="true">Applica Filtro</button>
+        </div>
+    </form>
+</div>
 
     <div class="main-content">
         <!-- Contenitore degli eventi -->
@@ -109,14 +58,19 @@
                 String massimoPartecipanti = request.getParameter("massimoPartecipanti");
                 String citta = request.getParameter("citta");
                 String stato = request.getParameter("stato");
-
+                
                 // Chiamata al DAO per applicare il filtro
                 EventoService eventoService = new EventoService();
-                Collection<Evento> eventiFiltrati = eventoService.filtra_eventi(dataInizio, dataFine, oraInizio, prezzoMin, prezzoMax, 
-                                                                           sport, titolo, indirizzo, massimoPartecipanti, 
-                                                                           citta, stato);
-
-                // Numero di eventi per pagina
+                Collection<Evento> eventiFiltrati = eventoService.filtra_eventi(dataInizio, null, null, null, null, 
+                                                                           sport, null, null, null, 
+                                                                           citta, "non iniziato");
+	
+             	// Verifica se ci sono eventi
+                if (eventiFiltrati.isEmpty()) {
+                    out.println("<p>No events found matching the filters.</p>");
+                }
+             
+                //Numero di eventi per pagina
                 int eventiPerPagina = 10;
 
                 // Pagina attuale (recuperata dal parametro della richiesta)
@@ -134,13 +88,14 @@
                 // Estrarre solo gli eventi della pagina corrente
                 eventiPaginati = eventiPaginati.subList(startIndex, endIndex);
 
-                for (Evento evento : eventiPaginati) {
+                for (Evento evento : eventiFiltrati) {
             %>
             <div class="card event-card">
                 <div class="card-header">
                     <h2><%= evento.getTitolo() %></h2>
                 </div>
                 <div class="card-body">
+                	<p class="sport"><%= evento.getSport() %></p>
                     <p class="event-description"><%= evento.getCitta() %></p>
                     <p class="event-location">Luogo: <%= evento.getIndirizzo() %></p>
                     <p class="event-date">Data: <%= evento.getData_inizio() %></p>
@@ -161,7 +116,7 @@
             <% } %>
         </div>
 
-        <!-- Navigazione tra le pagine -->
+        <!-- Navigazione tra le pagine --> 
         <div class="pagination">
             <% 
                 for (int i = 1; i <= totalPages; i++) { 
@@ -172,7 +127,7 @@
         </div>
     </div>
 
-    <!-- Footer incluso -->
+   <!-- Footer incluso -->
     <jsp:include page="/pages/footer.jsp" />
 </body>
 </html>

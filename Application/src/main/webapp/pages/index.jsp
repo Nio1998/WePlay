@@ -1,6 +1,13 @@
+<%@ page session="true" %>
 <%@ page contentType="text/html; charset=UTF-8" %>
+<%@ page import="java.util.*, model.utente.UtenteBean" %>
 <!DOCTYPE html>
 <html lang="it">
+<%
+    // Verifica se l'utente è loggato
+    Boolean isLoggedIn = (Boolean) session.getAttribute("isLoggedIn");
+    isLoggedIn = (isLoggedIn != null && isLoggedIn);
+%>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -20,9 +27,18 @@
                     <h1>Unisciti a noi per partecipare e creare eventi sportivi che costruiscono nuove amicizie e valorizzano lo sport!</h1>
                     <p>WePlay è una piattaforma web dedicata a promuovere la partecipazione inclusiva agli eventi sportivi di gruppo. 
                        L'obiettivo è abbattere le barriere di accesso allo sport, creando un ambiente accogliente e aperto a persone di ogni livello di esperienza e con bisogni diversi.</p>
-                    <a href="${pageContext.request.contextPath}/pages/login.jsp">
-                    <button>Iscriviti a WePlay</button>
+                    <a href="#" id="accountLink2">
+                    	<button>Iscriviti a WePlay</button>
                     </a>
+                    <% if (isLoggedIn) { %>
+                		<script>
+            				document.getElementById("accountLink2").setAttribute("href", "${pageContext.request.contextPath}/ProfiloServlet");
+                		</script>
+            		<% } else { %>
+            			<script>
+            				document.getElementById("accountLink2").setAttribute("href", "${pageContext.request.contextPath}/pages/login.jsp");
+                		</script>
+            		<% } %>
                 </div>
                 <div class="intro-image">
                     <img src="${pageContext.request.contextPath}/IMG/logo_WePlay.png" alt="WePlay Logo">

@@ -7,6 +7,7 @@
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     overflow: hidden;
     transition: transform 0.2s;
+    margin: 20px;
 }
 
 .event-card:hover {
@@ -14,7 +15,7 @@
 }
 
 .card-header {
-    background-color: #007bff;
+    background-color: #00ACC1;
     color: #fff;
     padding: 10px;
     text-align: center;
@@ -33,10 +34,36 @@
     color: #333;
 }
 
-.event-location,
+/* Stile per il campo "sport" */
+.sport {
+    font-size: 16px;
+    font-weight: bold;
+    color: #007bff;
+    background-color: #e7f3fe;
+    padding: 8px 12px;
+    border-radius: 5px;
+    display: inline-block;
+    margin-bottom: 10px;
+}
+
+/* Stile per il campo "città" */
+.event-description {
+    font-size: 14px;
+    color: #555;
+}
+
+/* Stile per il campo "luogo" */
+.event-location {
+    font-size: 12px;
+    color: #777;
+    padding: 5px 10px;
+}
+
+/* Stile per il campo "data" */
 .event-date {
     font-size: 12px;
     color: #777;
+    padding: 5px 10px;
 }
 
 .card-footer {
@@ -45,55 +72,50 @@
     text-align: center;
 }
 
+.card-footer p {
+    margin: 5px 0;
+}
+
+/* Stile del bottone "Dettagli" */
 .details-link {
     display: inline-block;
     margin-top: 10px;
     text-decoration: none;
     color: #007bff;
     font-weight: bold;
-    transition: color 0.3s;
+    background-color: transparent;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    outline: none;
+    box-shadow: none;
+    transition: color 0.3s, background-color 0.3s;
 }
 
 .details-link:hover {
     color: #0056b3;
-}
-
-
-
-/* Stile del bottone all'interno del form */
-form .details-link {
-    display: inline-block;
-    margin-top: 10px;
     text-decoration: none;
-    color: #007bff;
-    font-weight: bold;
-    background-color: transparent; /* Imposta lo sfondo trasparente */
-    border: none !important; /* Rimuove il bordo con maggiore forza */
-    padding: 10px 20px; /* Aggiungi un po' di spazio interno */
-    cursor: pointer; /* Cambia il cursore al passaggio del mouse */
-    outline: none; /* Rimuove il bordo della selezione */
-    box-shadow: none !important; /* Rimuove eventuali ombre o bordi */
-    transition: color 0.3s, background-color 0.3s;
 }
 
+/* Aggiustamenti per schermi piccoli */
+@media screen and (max-width: 768px) {
+    .event-card {
+        width: 100%;
+    }
 
+    .card-header h2 {
+        font-size: 16px;
+    }
 
-.details-link {
-    display: inline-block;
-    margin-top: 10px;
-    text-decoration: none;
-    color: #007bff;
-    font-weight: bold;
-    transition: color 0.3s;
-    border: none;  /* Rimuove il bordo */
-    background: none;  /* Rimuove il background predefinito del bottone */
-    padding: 0;  /* Rimuove il padding predefinito */
-    cursor: pointer;  /* Cambia il cursore per farlo sembrare cliccabile */
+    .card-body {
+        padding: 10px;
+    }
+
+    .sport {
+        font-size: 14px;
+    }
+
+    .event-location, .event-date {
+        font-size: 12px;
+    }
 }
-
-.details-link:hover {
-    color: #0056b3;  /* Colore del testo al passaggio del mouse */
-    text-decoration: none;  /* Rimuove eventuali decorazioni (sottolineature) */
-}
-
-

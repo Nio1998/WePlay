@@ -1,8 +1,16 @@
 /* Stile per la pagina di creazione evento */
-body, html {
-    font-family: 'Roboto', sans-serif;
+body {
+    font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
+    background-color: #f8f9fa;
+    display: flex;
+    flex-direction: column; /* Imposta una disposizione verticale */
+    min-height: 100vh; /* Assicura che il body occupi almeno l'altezza dello schermo */
+}
+
+.main-content{
+    flex: 1;
 }
 
 .crea-evento-section {

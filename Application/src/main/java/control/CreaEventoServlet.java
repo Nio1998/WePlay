@@ -28,12 +28,12 @@ public class CreaEventoServlet extends HttpServlet {
         try {
             // Recupera i parametri dalla richiesta
             String titolo = request.getParameter("titolo");
-            String dataInizio = request.getParameter("data_inizio");
-            String oraInizio = request.getParameter("ora_inizio");
+            String dataInizio = request.getParameter("data");
+            String oraInizio = request.getParameter("ora");
             String citta = request.getParameter("citta");
             String indirizzo = request.getParameter("indirizzo");
             String sport = request.getParameter("sport");
-            String stato = request.getParameter("stato");
+            String stato = "non iniziato";
             double prezzo = Double.parseDouble(request.getParameter("prezzo"));
             
             // Converte i parametri data e ora
@@ -45,16 +45,10 @@ public class CreaEventoServlet extends HttpServlet {
             try {
                 maxPartecipanti = Integer.parseInt(request.getParameter("massimo_di_partecipanti"));
             } catch (NumberFormatException e) {
+            	System.out.println("Cazzo 1");
                 // Se il valore non è valido, gestisci l'errore
                 request.setAttribute("errore", "Il numero massimo di partecipanti non è valido.");
-                request.getRequestDispatcher("errore.jsp").forward(request, response);
-                return;
-            }
-            
-            // Controllo che lo stato non sia nullo
-            if (stato == null || stato.trim().isEmpty()) {
-                request.setAttribute("errore", "Lo stato dell'evento è obbligatorio.");
-                request.getRequestDispatcher("errore.jsp").forward(request, response);
+                request.getRequestDispatcher("/pages/ErrorPage.jsp").forward(request, response);
                 return;
             }
 
@@ -64,16 +58,18 @@ public class CreaEventoServlet extends HttpServlet {
             // Gestione del risultato
             if (eventoSuccesso) {
                 request.setAttribute("successo", "Evento creato con successo.");
-                request.getRequestDispatcher("EventiCreati.jsp").forward(request, response);
+                request.getRequestDispatcher("/pages/index.jsp").forward(request, response);
             } else {
+            	System.out.println("Cazzo 3");
                 request.setAttribute("errore", "Errore nella creazione dell'evento.");
-                request.getRequestDispatcher("errore.jsp").forward(request, response);
+                request.getRequestDispatcher("/pages/ErrorPage.jsp").forward(request, response);
             }
         } catch (Exception e) {
+        	System.out.println("Cazzo 4");
             // Gestione di altri errori generali
             e.printStackTrace();
             request.setAttribute("errore", "Si è verificato un errore imprevisto.");
-            request.getRequestDispatcher("errore.jsp").forward(request, response);
+            request.getRequestDispatcher("/pages/ErrorPage.jsp").forward(request, response);
         }
     }
 }
