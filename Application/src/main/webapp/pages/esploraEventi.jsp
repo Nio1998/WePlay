@@ -23,6 +23,7 @@
         <div class="event-container">
             <% 
                 String sport = request.getParameter("sport");
+            	
                 EventoDao eventoDao = new EventoDao();
                 List<Evento> eventi = eventoDao.getAll();
 
