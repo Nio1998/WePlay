@@ -28,7 +28,7 @@ public class EsploraEventiServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     	
-    
+    	
     	
         String dataInizio = request.getParameter("dataInizio");
         String dataFine = request.getParameter("dataFine");
