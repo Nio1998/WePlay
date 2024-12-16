@@ -26,7 +26,7 @@ public class EsploraEventiServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     	
-    	System.out.println("enter");
+    
     	
         String dataInizio = request.getParameter("dataInizio");
         String dataFine = request.getParameter("dataFine");
@@ -43,12 +43,14 @@ public class EsploraEventiServlet extends HttpServlet {
             return;
         }
         
-        String redirectedPage = "eventiSottoscritti.jsp";  // Default page
-
+        String redirectedPage = "/pages/eventiSottoscritti.jsp";  // Default page
+        
+       
         if (attributo != null) {
             // Gestiamo i vari casi dell'attributo
             switch (attributo) {
                 case "sottoscritto":
+                	
                     // Carichiamo gli eventi sottoscritti dall'utente
                     Collection<Evento> eventiSottoscritti = eventoService.visualizza_eventi_sottoscritti(username);
                     if (eventiSottoscritti == null) {
@@ -56,7 +58,7 @@ public class EsploraEventiServlet extends HttpServlet {
                         return;
                     }
                     request.setAttribute("eventi", eventiSottoscritti);
-                    redirectedPage = "eventiSottoscritti.jsp";  // Per gli eventi sottoscritti
+                    redirectedPage = "/pages/eventiSottoscritti.jsp";  // Per gli eventi sottoscritti
                     break;
                     
                 case "attivi":
@@ -67,24 +69,24 @@ public class EsploraEventiServlet extends HttpServlet {
                         return;
                     }
                     request.setAttribute("eventi", eventiFiltrati);
-                    redirectedPage = "EsploraEventi.jsp";  // Per gli eventi attivi
+                    redirectedPage = "/pages/esploraEventi.jsp";  // Per gli eventi attivi
                     break;
                     
                 case "organizzatore":
-                	/*
-                    Carichiamo gli eventi creati dall'utente
+                	
+                    //Carichiamo gli eventi creati dall'utente
                     Collection<Evento> eventiCreati = eventoService.visualizza_eventi_creati(username);
                     if (eventiCreati == null) {
                         response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Errore nel recupero degli eventi creati.");
                         return;
                     }
-                    //request.setAttribute("eventi", eventiCreati);
-                    redirectedPage = "EventiCreati.jsp";  // Per gli eventi creati dall'organizzatore
+                    request.setAttribute("eventi", eventiCreati);
+                    redirectedPage = "/pages/eventiCreati.jsp";  // Per gli eventi creati dall'organizzatore
                     break;
                     
                 default:
                     response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Attributo non valido.");
-                    */
+                    
                     return;
             }
         }
