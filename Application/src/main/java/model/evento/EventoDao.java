@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -75,8 +76,12 @@ public class EventoDao {
                 query.setString(8, e.getCitta());
                 query.setString(9, e.getStato());
                 query.setInt(10, e.getID());
-                query.executeUpdate();  
+                int rowsUpdated = query.executeUpdate();  
            
+            	// Verifica se è stato aggiornato almeno un record
+    	        if (rowsUpdated == 0) {
+    	            throw new SQLException("Update failed: no rows affected for evento ID = " + e.getID());
+    	        }
             }
         } finally {
             ConDB.releaseConnection(conn);
@@ -182,18 +187,24 @@ public class EventoDao {
     }
 
 
-
-	public synchronized Collection<Evento> getByFilter(LocalDate dataInizio, LocalDate dataFine, String sport, String citta) throws SQLException {
-		if (dataInizio == null && dataFine == null && sport == null && citta == null)
+	public synchronized Collection<Evento> getByFilter(LocalDate dataInizio, LocalDate dataFine, LocalTime oraInizio,
+			Double prezzoMin, Double prezzoMax, String sport, String titolo, String indirizzo,
+			Integer massimoPartecipanti, String citta, String stato) throws SQLException {
+		// Controlla se nessun filtro è specificato
+		if (dataInizio == null && dataFine == null && oraInizio == null && prezzoMin == null && prezzoMax == null
+				&& sport == null && titolo == null && indirizzo == null && massimoPartecipanti == null && citta == null
+				&& stato == null) {
 			return getAll();
+		}
 
 		Connection conn = null;
 		try {
 			conn = ConDB.getConnection();
-			ArrayList<String> queryConcat = new ArrayList<String>();
-			ArrayList<Object> filtri = new ArrayList<Object>();
+			ArrayList<String> queryConcat = new ArrayList<>();
+			ArrayList<Object> filtri = new ArrayList<>();
 			String queryString = "SELECT * FROM evento WHERE ";
 
+			// Costruzione della query dinamica con i filtri
 			if (dataInizio != null) {
 				queryConcat.add("data_inizio >= ?");
 				filtri.add(dataInizio);
@@ -202,28 +213,59 @@ public class EventoDao {
 				queryConcat.add("data_inizio <= ?");
 				filtri.add(dataFine);
 			}
+			if (oraInizio != null) {
+				queryConcat.add("ora_inizio = ?");
+				filtri.add(oraInizio);
+			}
+			if (prezzoMin != null) {
+				queryConcat.add("prezzo >= ?");
+				filtri.add(prezzoMin);
+			}
+			if (prezzoMax != null) {
+				queryConcat.add("prezzo <= ?");
+				filtri.add(prezzoMax);
+			}
 			if (sport != null) {
 				queryConcat.add("sport = ?");
 				filtri.add(sport);
+			}
+			if (titolo != null) {
+				queryConcat.add("titolo LIKE ?");
+				filtri.add("%" + titolo + "%");
+			}
+			if (indirizzo != null) {
+				queryConcat.add("indirizzo LIKE ?");
+				filtri.add("%" + indirizzo + "%");
+			}
+			if (massimoPartecipanti != null) {
+				queryConcat.add("massimo_di_partecipanti = ?");
+				filtri.add(massimoPartecipanti);
 			}
 			if (citta != null) {
 				queryConcat.add("citta = ?");
 				filtri.add(citta);
 			}
-			
+			if (stato != null) {
+				queryConcat.add("stato = ?");
+				filtri.add(stato);
+			}
+
+			// Concatenazione della query
 			queryString += queryConcat.get(0);
 			for (int i = 1; i < queryConcat.size(); i++) {
 				queryString += " AND " + queryConcat.get(i);
 			}
 
 			try (PreparedStatement query = conn.prepareStatement(queryString)) {
+				// Imposta i parametri nella query
 				for (int i = 0; i < filtri.size(); i++) {
 					if (filtri.get(i) instanceof String) {
-						query.setString(i+1, (String)filtri.get(i));
+						query.setString(i + 1, (String) filtri.get(i));
 					} else {
-						query.setObject(i+1, filtri.get(i));
+						query.setObject(i + 1, filtri.get(i));
 					}
 				}
+
 				try (ResultSet rs = query.executeQuery()) {
 					ArrayList<Evento> eventiFiltrati = new ArrayList<>();
 					while (rs.next()) {
@@ -235,8 +277,8 @@ public class EventoDao {
 		} finally {
 			ConDB.releaseConnection(conn);
 		}
-		
 	}
+
 	
 	public synchronized List<Evento> getEventiBySport(String sport) throws SQLException {
 	    Connection conn = null;
@@ -268,6 +310,49 @@ public class EventoDao {
 	        ConDB.releaseConnection(conn);
 	    }
 	}
+	
+	
+	
+	public List<Evento> getEventiById(String username) {
+	    List<Evento> eventi = new ArrayList<>();
+	    String query = "SELECT * FROM Evento WHERE ID IN (SELECT ID_evento FROM Prenotazione WHERE username_utente = ?)";
+
+	    Connection conn = null;
+	    try {
+	        conn = ConDB.getConnection();
+	        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+	            stmt.setString(1, username);
+	            
+	            try (ResultSet rs = stmt.executeQuery()) {
+	                while (rs.next()) {
+	                    // Creazione manuale dell'oggetto Evento
+	                    int id = rs.getInt("ID");
+	                    LocalDate dataInizio = rs.getDate("data_inizio").toLocalDate();
+	                    LocalTime oraInizio = rs.getTime("ora_inizio").toLocalTime();
+	                    double prezzo = rs.getDouble("prezzo");
+	                    String sport = rs.getString("sport");
+	                    String titolo = rs.getString("titolo");
+	                    String indirizzo = rs.getString("indirizzo");
+	                    int massimoPartecipanti = rs.getInt("massimo_di_partecipanti");
+	                    String citta = rs.getString("citta");
+	                    String stato = rs.getString("stato");
+
+	                    // Aggiungi l'evento alla lista
+	                    Evento evento = new Evento(dataInizio, oraInizio, prezzo, sport, titolo, indirizzo, massimoPartecipanti, citta, stato);
+	                    evento.setID(id);
+	                    eventi.add(evento);
+	                }
+	            }
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    } finally {
+	        ConDB.releaseConnection(conn);
+	    }
+
+	    return eventi;
+	}
+
 
 
     

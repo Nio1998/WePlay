@@ -234,6 +234,7 @@ public class PrenotazioneDAO {
 		
 		 
         String organizzatore = null;
+       
         String query = "SELECT username_utente FROM prenotazione WHERE ID_evento = ? AND stato = 'organizzatore'";
 
 	Connection conn = null;
@@ -248,23 +249,25 @@ public class PrenotazioneDAO {
             
 
             stmt.setInt(1, eventoID);
-
+            
             try (ResultSet rs = stmt.executeQuery()) {
+            	
                 if (rs.next()) {
                 	
                     organizzatore = rs.getString("username_utente");
                    
+                    
            	     }
           	  }
 	     }
 
         } catch (Exception e) {
+        	
             e.printStackTrace();
         }finally {
 			ConDB.releaseConnection(conn);
 		}
         
-       
         return organizzatore;
     }
 	

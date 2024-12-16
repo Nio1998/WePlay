@@ -1,23 +1,31 @@
 /* Stile generale */
 body, html {
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Arial', sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f2f6fc;
+    background-color: #f4f8ff; /* Sfondo chiaro */
     color: #333;
 }
 
+/* Contenitore principale */
+.container {
+    max-width: 98%; /* Quasi tutta la larghezza dello schermo */
+    margin: 20px auto;
+    padding: 20px;
+    box-sizing: border-box;
+    position: relative; /* Aggiunto per gestire meglio il posizionamento */
+}
+
+/* Titolo */
 h1 {
     text-align: center;
+    color: #17a2b8; /* Blu acceso */
     font-size: 28px;
     margin-bottom: 20px;
-    color: #00ACC1;
 }
 
 /* Bottone Torna alla Dashboard */
 .dashboard-button {
-    position: absolute;
-    margin: 30px 0px;
     background-color: #FFBF00;
     color: black;
     border: none;
@@ -26,6 +34,11 @@ h1 {
     cursor: pointer;
     font-weight: bold;
     text-decoration: none;
+    font-size: 14px;
+    margin-bottom: 30px; /* Separazione dal contenuto sottostante */
+    display: block; /* Garantisce che il bottone sia su una linea separata */
+    margin-top: 20px; /* Aggiunto per un margine top visibile */
+    margin-right: auto; /* Centra il pulsante orizzontalmente */
 }
 
 .dashboard-button:hover {
@@ -33,70 +46,111 @@ h1 {
     color: #fff;
 }
 
-/* Tabella */
-/* Aggiungi uno spazio ai lati della pagina */
-.container {
-    margin: 20px auto; /* Spazio verticale e centratura orizzontale */
-    padding: 20px; /* Spazio interno al contenitore */
-    max-width: 95%; /* Limita la larghezza massima del contenitore */
-    box-sizing: border-box; /* Assicura che padding non allarghi il contenitore */
+/* Sezione Filtri */
+.filters {
+    margin-top: 30px;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Stile per la tabella */
+.filter-inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+label {
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+input, select {
+    padding: 8px 12px;
+    font-size: 14px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+/* Pulsante di invio */
+.filter-submit {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.filter-submit button {
+    background-color: #17a2b8;
+    color: white;
+    padding: 12px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    border: none;
+    transition: background-color 0.3s ease;
+}
+
+.filter-submit button:hover {
+    background-color: #138496;
+}
+
+/* Tabella */
 table {
     width: 100%;
     border-collapse: collapse;
     background-color: white;
-    border-radius: 10px; /* Bordi curvi */
-    overflow: hidden; /* Nasconde eventuali contenuti che superano i bordi */
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15); /* Effetto ombra */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-top: 30px;
 }
 
-/* Spaziatura per le celle */
-th, td {
-    white-space: nowrap;
-    padding: 10px; /* Spaziatura interna per celle */
-    text-align: center;
-    border-bottom: 1px solid #e0e0e0;
-}
-
-thead th {
-    background-color: #00ACC1;
+/* Intestazione della tabella */
+th {
+    background-color: #17a2b8; /* Colore azzurro */
     color: white;
-    padding: 12px 15px;
+    padding: 12px;
     text-align: center;
-    font-size: 16px;
+    font-weight: bold;
+    font-size: 14px;
 }
 
-tbody td {
+/* Celle della tabella */
+td {
     padding: 10px;
     text-align: center;
-    font-size: 14px;
-    border-bottom: 1px solid #e0e0e0;
+    font-size: 13px;
+    border-bottom: 1px solid #ddd;
 }
+
 /* Riga alternata */
 tr:nth-child(even) {
     background-color: #f2f9ff;
 }
 
-/* Rimuovi margine inferiore */
-tbody tr:last-child td {
-    border-bottom: none;
+/* Hover effetto */
+tr:hover {
+    background-color: #e8f4fc;
+    transition: background-color 0.3s;
 }
 
-/* Effetto hover */
-tbody tr:hover {
-    background-color: #E0F2F1;
-    transition: background-color 0.3s ease;
+/* Bottoni di Azione */
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
 }
 
-/* Bottoni */
 button {
-    padding: 6px 12px;
+    padding: 6px 10px;
     border: none;
     border-radius: 5px;
-    font-weight: bold;
     cursor: pointer;
+    font-size: 12px;
+    font-weight: bold;
+    transition: transform 0.2s ease;
 }
 
 button.modifica {
@@ -117,15 +171,42 @@ button.elimina:hover {
     color: #fff;
 }
 
-i.fas.fa-clipboard-list {
+i.fas.fa-user {
     font-size: 2em;
     color: #FFBF00;
 }
 
-/* Aggiungi spazio ai lati in modalità responsive */
+/* Colore per lo stato */
+td.stato {
+    font-weight: bold;
+    color: #007bff;
+}
+
+/* Aggiustamenti per schermi piccoli */
 @media screen and (max-width: 768px) {
-    .container {
-        padding: 10px; /* Riduci padding su schermi più piccoli */
-        max-width: 100%;
+    h1 {
+        font-size: 24px;
+    }
+
+    .filters {
+        padding: 15px;
+    }
+
+    .filter-inputs {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    button {
+        width: 100%; /* Bottoni a larghezza piena su schermi pi� piccoli */
+    }
+
+    table {
+        margin-top: 20px;
+    }
+
+    .dashboard-button {
+        font-size: 14px;
+        padding: 10px 20px;
     }
 }

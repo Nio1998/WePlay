@@ -22,6 +22,13 @@ public class CancellaPrenotazioneServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     	
     	
+    	String attributo = (String) request.getParameter("attributo");
+    	if (attributo == null || attributo.isEmpty()) {
+        	request.setAttribute("errore", "Attributo non valido.");
+            request.getRequestDispatcher("/pages/ErrorPage.jsp").forward(request, response);
+            return;
+        }
+    	
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("username") == null) {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Utente non autenticato.");
@@ -52,7 +59,9 @@ public class CancellaPrenotazioneServlet extends HttpServlet {
             }
 
             // Forward to the event detail page with the event ID
-            request.getRequestDispatcher("/pages/DettaglioEvento.jsp?id=" + eventoID).forward(request, response);
+            request.setAttribute("eventoId", eventoID);
+            request.setAttribute("attributo", attributo);
+            request.getRequestDispatcher("/DettagliEvento").forward(request, response);
             
         } catch (NumberFormatException e) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "ID evento non valido.");

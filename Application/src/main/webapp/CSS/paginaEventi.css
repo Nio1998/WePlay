@@ -9,26 +9,129 @@ body {
     min-height: 100vh; /* Assicura che il body occupi almeno l'altezza dello schermo */
 }
 
+/* Titolo pagina */
 .page-title {
     text-align: center;
     margin: 20px 0;
-    font-size: 24px;
+    font-size: 28px;
     color: #333;
 }
 
-.main-content{
+/* Contenitore principale degli eventi */
+.main-content {
     flex: 1;
+    padding: 20px;
 }
 
+/* Contenitore principale dei filtri */
+.filters {
+    display: flex;
+    justify-content: center; /* Centra i filtri orizzontalmente */
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #ffffff;
+    max-width: 1000px; /* Larghezza massima del contenitore */
+}
+
+/* Form con layout flex */
+.filter-form {
+    display: flex;
+    flex-wrap: wrap; /* I filtri vanno a capo se manca spazio */
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px; /* Spazio tra i filtri */
+    width: 100%;
+}
+
+/* Stile per ciascun box del filtro */
+.filter-box {
+    flex: 1; /* Tutti i filtri occupano lo stesso spazio */
+    min-width: 200px; /* Larghezza minima */
+}
+
+.filter-box label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.filter-box input {
+    width: 100%;
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+/* Bottone di conferma */
+.filter-submit {
+    flex-basis: 100%; /* Occupa l'intera larghezza */
+    text-align: center;
+}
+
+.filter-submit button {
+    padding: 10px 20px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.filter-submit button:hover {
+    background-color: #218838;
+}
+
+
+
+
+/* Griglia degli eventi (Aggiungi margine superiore per distanziare dalle card) */
 .event-container {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 20px;
     padding: 20px;
-    margin: 0 auto;
+    margin: 40px auto 0; /* Aggiungi margine superiore per separare dai filtri */
     max-width: 1200px;
 }
 
+/* Card degli eventi */
+.card {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.card-header {
+    background-color: #007bff;
+    color: white;
+    padding: 15px;
+    text-align: center;
+}
+
+.card-body {
+    padding: 15px;
+    font-size: 14px;
+    color: #555;
+}
+
+.card-footer {
+    padding: 10px;
+    background-color: #f8f9fa;
+    text-align: center;
+    font-size: 12px;
+}
+
+/* Paginazione */
 .pagination {
     display: flex;
     justify-content: center;
@@ -55,6 +158,7 @@ body {
     border-color: #007bff;
 }
 
+/* Stile per il link di pagina */
 .page-link {
     display: inline-block;
     margin: 0 5px;
@@ -74,3 +178,5 @@ body {
 .page-link:hover {
     background-color: #f0f0f0;
 }
+
+

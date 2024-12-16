@@ -215,9 +215,9 @@ public class UtenteService {
 
     
     
-    public void aggiornaTimeoutUtente(String username, boolean isTimeout, LocalDateTime dataOraFineTimeout) {
+    public boolean aggiornaTimeoutUtente(String username, boolean isTimeout, LocalDateTime dataOraFineTimeout) {
         if (username == null || username.isEmpty()) {
-            throw new IllegalArgumentException("Username non puï¿½ essere nullo o vuoto.");
+            throw new IllegalArgumentException("Username non può essere nullo o vuoto.");
         }
         if (dataOraFineTimeout == null) {
             throw new IllegalArgumentException("La data e ora di fine timeout non possono essere nulli.");
@@ -226,14 +226,16 @@ public class UtenteService {
         try {
             // Chiamata al DAO per aggiornare i campi nel database
             utenteDAO.aggiornaTimeout(username, isTimeout, dataOraFineTimeout);
+            return true;
+            
         } catch (Exception e) {
             throw new RuntimeException("Errore durante l'aggiornamento del timeout dell'utente: " + username, e);
         }
     }
     
-    public void assegnaTimeout(String username) {
+    public boolean assegnaTimeout(String username) {
         if (username == null || username.isEmpty()) {
-            throw new IllegalArgumentException("Username non puï¿½ essere nullo o vuoto.");
+        	throw new IllegalArgumentException("Username non può essere nullo o vuoto.");
         }
 
         try {
@@ -241,14 +243,15 @@ public class UtenteService {
             UtenteBean utente = utenteDAO.findByUsername(username);
 
             if (utente == null) {
-                throw new IllegalArgumentException("Utente non trovato.");
+            	throw new IllegalArgumentException("Utente non trovato.");
             }
-
-            // Ottieni il numero di timeout giï¿½ ricevuti
+            
+            // Ottieni il numero di timeout già ricevuti
             int numeroTimeout = utente.getNumTimeout();
-
+          
             // Determina la durata del timeout (in ore) in base al numero di timeout ricevuti
             int durataTimeout = 0;
+            
             if (numeroTimeout == 0) {
                 durataTimeout = 24; // Primo timeout: 24 ore
             } else if (numeroTimeout == 1) {
@@ -266,18 +269,18 @@ public class UtenteService {
 
             // Aggiorna i dati dell'utente nel database
             utenteDAO.aggiornaTimeout(username, true, dataOraFineTimeout);
-
-            // Aggiorna il numero di timeout incrementandolo
-            utente.incrementaNumeroTimeout();
+ 
+            return true;
 
         } catch (Exception e) {
-            throw new RuntimeException("Errore durante l'assegnazione del timeout all'utente: " + username, e);
+            e.printStackTrace();
+        	throw new RuntimeException("Errore durante l'assegnazione del timeout all'utente: " + username, e);
         }
     }
     
     public boolean assegnaBan(String username) {
         if (username == null || username.isEmpty()) {
-            throw new IllegalArgumentException("Username non puÃ² essere nullo o vuoto.");
+            throw new IllegalArgumentException("Username non può essere nullo o vuoto.");
         }
 
         try {
@@ -288,22 +291,25 @@ public class UtenteService {
                 throw new IllegalArgumentException("Utente non trovato.");
             }
 
-            if(!utente.isTimeout()) {
-            // Imposta lo stato di timeout come equivalente al ban
-            utente.setTimeout(true);
-
-            // Imposta dataOraFineTimeout a null per indicare un ban permanente
-            utente.setDataOraFineTimeout(null);
+            if(utente.isTimeout() && utente.getDataOraFineTimeout() == null) {
             
+            	return false;
+            	
+            } else {
+            	// Imposta lo stato di timeout come equivalente al ban
+                utente.setTimeout(true);
 
-            // Aggiorna i dati dell'utente nel database
-            utenteDAO.aggiornaTimeout(username, utente.isTimeout(), utente.getDataOraFineTimeout());
+                // Imposta dataOraFineTimeout a null per indicare un ban permanente
+                utente.setDataOraFineTimeout(null);
+                
 
-            //Log dell'azione di ban
-            System.out.println("Utente " + username + " bannato con successo (ban permanente).");
-            return true;
-            
-            } else return false;
+                // Aggiorna i dati dell'utente nel database
+                utenteDAO.aggiornaTimeout(username, utente.isTimeout(), utente.getDataOraFineTimeout());
+
+                //Log dell'azione di ban
+                System.out.println("Utente " + username + " bannato con successo (ban permanente).");
+                return true;
+            }
 
         } catch (Exception e) {
             throw new RuntimeException("Errore durante l'assegnazione del ban all'utente: " + username, e);

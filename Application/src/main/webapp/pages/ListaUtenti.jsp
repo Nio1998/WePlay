@@ -44,6 +44,18 @@
         <%
             }
         %>
+        
+        <%-- Verifica se c'è un messaggio di timeout e mostra l'alert --%>
+        <%
+            String timeoutMessage = (String) request.getAttribute("timeoutMessage");
+            if (timeoutMessage != null) {
+        %>
+            <script type="text/javascript">
+                showAlert("<%= timeoutMessage %>");
+            </script>
+        <%
+            }
+        %>
 
         <table>
             <thead>
@@ -83,7 +95,7 @@
                     <td><%= utente.getNumValutazioniNegative() %></td>
                     <td>
                         <div class="action-buttons">
-                            <form action="ModificaUtente" method="post" style="display:inline;">
+                            <form action="${pageContext.request.contextPath}/ApplicaTimeout" method="post" style="display:inline;">
                                 <input type="hidden" name="username" value="<%= utente.getUsername() %>">
                                 <button type="submit" class="modifica">Timeout</button>
                             </form>
