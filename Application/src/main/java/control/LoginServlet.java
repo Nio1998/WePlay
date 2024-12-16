@@ -59,10 +59,15 @@ public class LoginServlet extends HttpServlet {
             e.printStackTrace();
         }
 
+     // Gestione dei messaggi di login e pulizia degli attributi
         if (!control) {
             request.getSession().setAttribute("login-error", true);
+            request.getSession().removeAttribute("errore"); // Pulizia degli attributi di errore/successo
+            request.getSession().removeAttribute("successo");
         } else {
-            request.getSession().removeAttribute("login-error");
+        	request.getSession().removeAttribute("login-error");
+        	request.getSession().removeAttribute("errore");
+        	request.getSession().removeAttribute("successo");
         }
 
         response.sendRedirect(redirectedPage);

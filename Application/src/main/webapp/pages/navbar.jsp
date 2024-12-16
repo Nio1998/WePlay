@@ -51,6 +51,7 @@
                 <div class="dropdown-menu">
                     <a href="${pageContext.request.contextPath}/ProfiloServlet">Profilo</a>
                     <a href="${pageContext.request.contextPath}/EsploraEventiServlet?attributo=sottoscritto">Eventi sottoscritti</a>
+                    <a href="${pageContext.request.contextPath}/pages/creaEvento.jsp">Crea evento</a>
                     <a href="${pageContext.request.contextPath}/EsploraEventiServlet?attributo=organizzatore">Eventi creati</a>
                     <a href="${pageContext.request.contextPath}/logout">Logout</a>
                 </div>

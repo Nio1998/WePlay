@@ -29,14 +29,14 @@ public class CancellaEventoServlet extends HttpServlet {
         }
 
         try {
-            int eventoId = Integer.parseInt(request.getParameter("evento_id"));
+            int eventoId = Integer.parseInt(request.getParameter("eventoID"));
 
             EventoService eventoService = new EventoService();
             UtenteService utenteService = new UtenteService();
 
             if (!eventoService.esiste_evento(eventoId)) {
                 request.setAttribute("errore", "L'evento specificato non esiste.");
-                request.getRequestDispatcher("errore.jsp").forward(request, response);
+                request.getRequestDispatcher("ErrorPage.jsp").forward(request, response);
                 return;
             }
 
@@ -45,7 +45,7 @@ public class CancellaEventoServlet extends HttpServlet {
 
             if (!(isAdmin || isOrganizzatore)) {
                 request.setAttribute("errore", "Non sei autorizzato a eliminare questo evento.");
-                request.getRequestDispatcher("errore.jsp").forward(request, response);
+                request.getRequestDispatcher("ErrorPage.jsp").forward(request, response);
                 return;
             }
             

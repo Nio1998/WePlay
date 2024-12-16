@@ -153,14 +153,14 @@
                     <td><%= evento.getStato() %></td>
                     <td>
                         <div class="action-buttons">
-                            <form action="#" method="post" style="display: inline;">
-                                <input type="hidden" name="eventoID" value="<%= evento.getID() %>">
+                            <form action="${pageContext.request.contextPath}/ModificaEventoServlet" method="post" style="display:inline;">
+                          <input type="hidden" name="eventoID" value="<%= evento.getID() %>">
                                 <button type="submit" class="modifica">Modifica</button>
-                            </form>
-                            <form action="#" method="post" style="display: inline;">
-                                <input type="hidden" name="eventoID" value="<%= evento.getID() %>">
-                                <button type="submit" class="elimina">Elimina</button>
-                            </form>
+                    </form>
+                    <form action="${pageContext.request.contextPath}/CancellaEventoServlet" method="post" style="display:inline;">
+                          <input type="hidden" name="eventoID" value="<%= evento.getID() %>">
+                             	<button type="submit" class="elimina">Elimina</button>
+                    </form>
                         </div>
                     </td>
                 </tr>
