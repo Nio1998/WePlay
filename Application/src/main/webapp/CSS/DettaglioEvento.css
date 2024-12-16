@@ -121,3 +121,20 @@ button {
     color: #fff;
     cursor: pointer;
 }
+
+
+.emoji-icon {
+    background-color: transparent !important; /* Forza la trasparenza */
+    border: none !important;
+    box-shadow: none !important; /* Rimuove eventuali ombre */
+}
+
+.event-details {
+    background-color: #fff; /* Assicurati che il contenitore abbia uno sfondo bianco */
+}
+
+.participant-item {
+    background-color: transparent; /* Forza la trasparenza anche su altri contenitori */
+}
+
+
