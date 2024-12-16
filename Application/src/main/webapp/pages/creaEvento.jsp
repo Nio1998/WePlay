@@ -34,7 +34,6 @@
             <h1>CREA NUOVO EVENTO</h1>
             <div class="crea-evento-box">
                 <form action="${pageContext.request.contextPath}/CreaEventoServlet" method="post" id="creaEventoForm" onsubmit="return validateCreaEventoForm(event)">
-					</div>
 					<div class="form-group">
 						<input type="text" name="sport" id="sport" placeholder="Sport"
 							required readonly>
