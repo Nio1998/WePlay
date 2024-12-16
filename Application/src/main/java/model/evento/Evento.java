@@ -1,11 +1,12 @@
 package model.evento;
 
+import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-public class Evento {
+public class Evento implements Serializable {
 
     /* L'identificatore univoco dell'evento. */
     private int ID;

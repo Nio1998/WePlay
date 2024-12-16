@@ -1,6 +1,8 @@
 package model.Valutazione;
 
-public class ValutazioneBean {
+import java.io.Serializable;
+
+public class ValutazioneBean implements Serializable {
     
     private int id; // ID univoco per la valutazione
     private int esito; // Valori ammessi: "-1" (negativa), "0" (neutra), "1" (positiva)
