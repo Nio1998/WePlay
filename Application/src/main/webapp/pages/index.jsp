@@ -13,11 +13,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WePlay - Homepage</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/CSS/index.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+	<link rel="stylesheet" href="CSS/alert.css">
+	<script src="JS/alert.js" defer></script>
 </head>
 <body>
     <header class="header">
         <jsp:include page="/pages/navbar.jsp" />
     </header>
+    
+    <% if (request.getAttribute("errore") != null || request.getAttribute("successo") != null) { %>
+        <div class="messaggi <% if (request.getAttribute("errore") != null) { %>errore<% } else if (request.getAttribute("successo") != null) { %>successo<% } %>" id="messaggio">
+            <span>
+                <% if (request.getAttribute("errore") != null) { %>
+                    <%= request.getAttribute("errore") %>
+                <% } else if (request.getAttribute("successo") != null) { %>
+                    <%= request.getAttribute("successo") %>
+                <% } %>
+            </span>
+            <button class="close-btn" onclick="chiudiMessaggio()">×</button>
+        </div>
+    <% } %>
 
     <!-- Contenitore principale -->
     <main class="main-content">
