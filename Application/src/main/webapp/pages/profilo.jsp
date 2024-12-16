@@ -75,11 +75,11 @@
                 <span>Reputazione:</span>
                 <span>
                     <% if (reputazione == -1) { %>
-                        <img src="IMG/emojiNegativa.png" alt="Reputazione Negativa">
+                        <img src="IMG/emojiNegativa.svg" alt="Reputazione Negativa">
                     <% } else if (reputazione == 0) { %>
-                        <img src="IMG/emojiNeutra.png" alt="Reputazione Neutra">
+                        <img src="IMG/emojiNeutra.svg" alt="Reputazione Neutra">
                     <% } else { %>
-                        <img src="IMG/emojiPositiva.png" alt="Reputazione Positiva">
+                        <img src="IMG/emojiPositiva.svg" alt="Reputazione Positiva">
                     <% } %>
                 </span>
             </div>
