@@ -52,7 +52,6 @@ public class EsploraEventiServlet extends HttpServlet {
             // Gestiamo i vari casi dell'attributo
             switch (attributo) {
                 case "sottoscritto":
-                	
                 	Collection<Evento> eventiSottoscritti = eventoService.visualizza_eventi_sottoscritti(username);
                 	if (eventiSottoscritti == null) {
                 	    response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Errore nel recupero degli eventi sottoscritti.");
