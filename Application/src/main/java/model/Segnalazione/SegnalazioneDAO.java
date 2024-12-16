@@ -15,6 +15,8 @@ public class SegnalazioneDAO {
 	    Connection conn = null;
 	    try {
 	        conn = ConDB.getConnection();
+	        
+	        System.out.println(segnalazione);
 
 	        // Recupera il massimo ID attuale
 	        int nextId = 1; // Default se non ci sono righe
@@ -189,7 +191,7 @@ public class SegnalazioneDAO {
 	        Connection conn = null;
 	        try {
 	            conn = ConDB.getConnection();
-	            try (PreparedStatement query = conn.prepareStatement("SELECT * FROM segnalazione WHERE utente_segnalante = ? AND utente_segnalato = ? AND eventoId = ?")) {
+	            try (PreparedStatement query = conn.prepareStatement("SELECT * FROM segnalazione WHERE utente_segnalante = ? AND utente_segnalato = ? AND ID_evento = ?")) {
 	                query.setString(1, usernameSegnalante);
 			query.setString(2, usernameSegnalato);	
 	                query.setInt(3, eventoId);
@@ -205,6 +207,8 @@ public class SegnalazioneDAO {
 	            ConDB.releaseConnection(conn);
 	        }
 	    }
+	   
+	   
 	public synchronized List<Segnalazione> getAll() throws SQLException {
 	    // Usa ArrayList per istanziare una lista di segnalazioni
 	    List<Segnalazione> segnalazioni = new ArrayList<>();
