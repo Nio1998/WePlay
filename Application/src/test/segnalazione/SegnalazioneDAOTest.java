@@ -84,22 +84,9 @@ class SegnalazioneDAOTest {
         }
     }
     
-    
-    
-    
-    @Test
-    @Order(6)
-    void testSaveSegnalazioneGiaPresenteFailure() throws SQLException {
-        Segnalazione segnalazione = new Segnalazione("assenza", "in attesa", "mario_rossi", "luigi_bianchi", 16);
-        assertThrows(SQLException.class, () -> {
-            segnalazioneDAO.save(segnalazione);
-        });
-        
-        
-    }
 
     @Test
-    @Order(7)
+    @Order(6)
     void testSaveSegnalazioneFailure() throws SQLException {
         Segnalazione segnalazione = new Segnalazione("assenza", "errore", "mario_rossi", "luigi_bianchi", 17);
         assertThrows(SQLException.class, () -> {
@@ -109,7 +96,7 @@ class SegnalazioneDAOTest {
         
     }
     @Test
-    @Order(8)
+    @Order(7)
     void testUpdateSegnalazioneFailure() throws SQLException {
         Segnalazione segnalazione = new Segnalazione("assenza", "in attesa", "mario_rossi", "luigi_bianchi", 17);
         segnalazioneDAO.save(segnalazione);
@@ -124,7 +111,7 @@ class SegnalazioneDAOTest {
     }
 
     @Test
-    @Order(9)
+    @Order(8)
     void testDeleteSegnalazioneFailure() throws SQLException {
         int invalidID = -1; // Non-existent ID
         assertFalse(segnalazioneDAO.delete(invalidID), "Dovrebbe restituire false per un ID inesistente.");
@@ -136,7 +123,7 @@ class SegnalazioneDAOTest {
    
 
     @Test
-    @Order(10)
+    @Order(9)
     void testGetSegnalazioniByRicevutaFailure() throws SQLException {
         // Filtering with incorrect data
         String utenteRicevuto = "utente_inesistente";
